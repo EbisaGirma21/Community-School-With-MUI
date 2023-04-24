@@ -13,14 +13,14 @@
    
 
 # Setup
-##npm
+###npm
 
 ```sh
 npx create-react-app .
 npm i react-router-dom sass @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid
 ```
 
-##yarn
+###yarn
 
 ```sh
 yarn create-react-app .
