@@ -12,9 +12,17 @@
 - Sass - 1.62.0
    
 
-## Setup
+# Setup
+##npm
 
-```
+```sh
 npx create-react-app .
 npm i react-router-dom sass @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid
+```
+
+##yarn
+
+```sh
+yarn create-react-app .
+yard add react-router-dom sass @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid
 ```
