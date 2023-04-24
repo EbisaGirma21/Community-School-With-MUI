@@ -1,0 +1,27 @@
+.academic_calendar {
+    display: flex;
+
+    .academic_calendar-container {
+        width: 100%;
+
+        .container-title {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 22px;
+            position: fixed;
+
+        }
+
+        .container-body {
+            margin-top: 35px;
+        }
+
+        .container-tables {
+            padding-left: 15px;
+            padding-top: 10px;
+        }
+
+    }
+
+
+}

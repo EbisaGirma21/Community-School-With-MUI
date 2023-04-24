@@ -1,0 +1,25 @@
+.student {
+    display: flex;
+
+    .student-container {
+        width: 100%;
+
+        .container-modal {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .container-title {
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 22px;
+            position: fixed;
+        }
+
+        .container-body {
+            margin-top: 35px;
+        }
+
+    }
+}

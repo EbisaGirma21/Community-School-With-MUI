@@ -1,0 +1,35 @@
+.home {
+    display: flex;
+
+    .home-container {
+        width: 100%;
+
+        .container-title {
+            
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 22px;
+            position: fixed;
+            background-color: #eef1ff;
+            width: 100%;
+        }
+
+        .container-body {
+            margin-top: 35px;
+
+            .container-widgets {
+                display: flex;
+                justify-content: space-between;
+                margin-left: 10px;
+                margin-right: 10px;
+
+                .card {
+                    margin-left: 10px;
+                }
+            }
+        }
+
+
+
+    }
+}

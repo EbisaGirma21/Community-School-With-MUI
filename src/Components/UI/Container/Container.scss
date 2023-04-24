@@ -1,0 +1,36 @@
+.container {
+    padding: 10px;
+    margin-top: 71px;
+    margin-left: 270px;
+    transition: all 0.4s ease;
+}
+
+.sidebar-closed {
+    .container {
+        margin-left: 70px !important;
+        transition: all 0.4s ease;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .container {
+        margin-top: 61px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+
+    .sidebar-open {
+        .container {
+            margin-left: 240px !important;
+        }
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .sidebar-open {
+        .container {
+            margin-left: 0px !important;
+        }
+    }
+}

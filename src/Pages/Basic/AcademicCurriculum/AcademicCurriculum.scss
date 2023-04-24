@@ -1,0 +1,27 @@
+.academic_curriculum {
+    display: flex;
+
+    .academic_curriculum-container {
+        width: 100%;
+
+        hr {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .container-title {
+            font-weight: bold;
+            font-size: 22px;
+            position: fixed;
+        }
+
+        .container-body {
+            margin-top: 35px;
+        }
+    }
+
+    .container-body__tables {
+        padding-left: 15px;
+        padding-top: 10px;
+    }
+}
