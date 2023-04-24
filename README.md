@@ -12,9 +12,10 @@
 - Sass - 1.62.0
    
 
-## vmArgs Setup
+## Setup
 
 ```
-----module-path \"E:\\Application\\Java Material\\javafx-sdk-17.0.2\\lib\" --add-modules javafx.controls,javafx.fxml
+npx create-react-app .
+npm i react-router-dom sass @mui/material @emotion/react @emotion/styled @mui/icons-material @mui/x-data-grid
 
 ```
