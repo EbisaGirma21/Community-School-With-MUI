@@ -1,7 +1,7 @@
 import "./Curriculum.scss";
 import { useState } from "react";
 import Navbar from "../../../Components/UI/Navbar/Navbar";
-import Sidebar from "../../../Components/Sidebar/Sidebar";
+import AdminSidebar from "../../../Components/AdminSidebar/AdminSidebar";
 import CurriculumTab from "../../../Components/CurriculumTab/CurriculumTab";
 import Container from "../../../Components/UI/Container/Container";
 
@@ -17,7 +17,7 @@ function Curriculum() {
         sidebarOpen ? "sidebar-open" : "sidebar-closed"
       }`}
     >
-      <Sidebar sidebarOpen={sidebarOpen} />
+      <AdminSidebar sidebarOpen={sidebarOpen} />
       <div className="curriculum-container">
         <Navbar toggleSidebar={toggleSidebar} />
         <Container>

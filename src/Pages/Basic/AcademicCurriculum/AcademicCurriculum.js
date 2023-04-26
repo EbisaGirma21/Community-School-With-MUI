@@ -1,10 +1,10 @@
 import "./AcademicCurriculum.scss";
 import { useState } from "react";
-import Sidebar from "../../../Components/Sidebar/Sidebar";
+import AdminSidebar from "../../../Components/AdminSidebar/AdminSidebar";
 import Datatable from "../../../Components/UI/Datatable/Datatable";
-import Modal from "../../../Components/UI/Container/Container";
+import Modal from "../../..//Components/UI/Modal/Modal";
 import Navbar from "../../../Components/UI/Navbar/Navbar";
-import Dropdown from "../../../Components/Dropdown/Dropdown";
+import Dropdown from "../../../Components/UI/Dropdown/Dropdown";
 import Container from "../../../Components/UI/Container/Container";
 
 function AcademicCurriculum() {
@@ -20,7 +20,7 @@ function AcademicCurriculum() {
         sidebarOpen ? "sidebar-open" : "sidebar-closed"
       }`}
     >
-      <Sidebar sidebarOpen={sidebarOpen} />
+      <AdminSidebar sidebarOpen={sidebarOpen} />
       <div className="academic_curriculum-container">
         <Navbar toggleSidebar={toggleSidebar} />
         <Container>

@@ -1,9 +1,9 @@
 import "./Student.scss";
 import { useState } from "react";
 import Datatable from "../../../Components/UI/Datatable/Datatable";
-import Sidebar from "../../../Components/Sidebar/Sidebar";
+import AdminSidebar from "../../../Components/AdminSidebar/AdminSidebar";
 import Navbar from "../../../Components/UI/Navbar/Navbar";
-import Dropdown from "../../../Components/Dropdown/Dropdown";
+import Dropdown from "../../../Components/UI/Dropdown/Dropdown";
 import { Grid } from "@mui/material";
 import Container from "../../../Components/UI/Container/Container";
 
@@ -17,7 +17,7 @@ function Student() {
     <div
       className={`student ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}
     >
-      <Sidebar sidebarOpen={sidebarOpen} />
+      <AdminSidebar sidebarOpen={sidebarOpen} />
       <div className="student-container">
         <Navbar toggleSidebar={toggleSidebar} />
         <Container>

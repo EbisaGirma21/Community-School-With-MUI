@@ -1,0 +1,50 @@
+.sidebar {
+    width: 270px;
+    height: 100%;
+    transition: all 0.4s ease;
+    box-shadow: none;
+    background-color: #1565c0;
+    color: #fff;
+    margin: 0;
+    position: fixed;
+    overflow-y: auto;
+}
+// When the side bar is closed to 70px
+.sidebar.closed {
+    width: 70px;
+}
+
+// when the screen size is less than 750px
+@media screen and (max-width: 750px) {
+    .sidebar {
+        width: 240px;
+        transition: all 0.4s ease;
+    }
+
+    .sidebar.closed {
+        width: 70px;
+    }
+
+    .sidebar.side-opened {
+        width: 240px;
+        transition: all 0.4s ease;
+    }
+
+}
+
+@media screen and (max-width: 500px) {
+    .sidebar {
+        width: 0px;
+        transition: all 0.4s ease;
+    }
+
+    .sidebar.closed {
+        width: 70px;
+
+    }
+
+    .sidebar.side-opened {
+        width: 0px;
+        opacity: 0;
+    }
+}

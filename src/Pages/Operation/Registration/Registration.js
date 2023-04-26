@@ -1,8 +1,8 @@
 import "./Registration.scss";
 import { useState } from "react";
-import Sidebar from "../../../Components/Sidebar/Sidebar";
+import AdminSidebar from "../../../Components/AdminSidebar/AdminSidebar";
 import Navbar from "../../../Components/UI/Navbar/Navbar";
-import Dropdown from "../../../Components/Dropdown/Dropdown";
+import Dropdown from "../../../Components/UI/Dropdown/Dropdown";
 import { Grid } from "@mui/material";
 import RegistrationTab from "../../../Components/RegistrationTab/RegistrationTab";
 import Container from "../../../Components/UI/Container/Container";
@@ -19,7 +19,7 @@ function Registration() {
         sidebarOpen ? "sidebar-open" : "sidebar-closed"
       }`}
     >
-      <Sidebar sidebarOpen={sidebarOpen} />
+      <AdminSidebar sidebarOpen={sidebarOpen} />
       <div className="registration-container">
         <Navbar toggleSidebar={toggleSidebar} />
         <Container >

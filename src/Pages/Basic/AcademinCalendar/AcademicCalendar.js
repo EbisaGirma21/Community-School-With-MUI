@@ -1,7 +1,7 @@
 import "./AcademicCalendar.scss";
 import { useState } from "react";
 import Navbar from "../../../Components/UI/Navbar/Navbar";
-import Sidebar from "../../../Components/Sidebar/Sidebar";
+import AdminSidebar from "../../../Components/AdminSidebar/AdminSidebar";
 import Datatable from "../../../Components/UI/Datatable/Datatable";
 import Modal from "../../..//Components/UI/Modal/Modal";
 import Container from "../../../Components/UI/Container/Container";
@@ -19,7 +19,7 @@ function AcademicCalendar() {
         sidebarOpen ? "sidebar-open" : "sidebar-closed"
       }`}
     >
-      <Sidebar sidebarOpen={sidebarOpen} />
+      <AdminSidebar sidebarOpen={sidebarOpen} />
       <div className="academic_calendar-container">
         <Navbar toggleSidebar={toggleSidebar} />
         <Container>

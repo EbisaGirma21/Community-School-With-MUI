@@ -4,7 +4,6 @@
     transition: all 0.4s ease;
     box-shadow: none;
     background-color: #1565c0;
-;
     color: #fff;
     margin: 0;
     position: fixed;
@@ -117,7 +116,6 @@
 // When the side bar is closed to 70px
 .sidebar.closed {
     width: 70px;
-   
 
     .top {
         align-items: start;
@@ -153,58 +151,6 @@
 
         .page-title {
             opacity: 0;
-        }
-    }
-}
-
-// when the screen size is less than 750px
-@media screen and (max-width: 750px) {
-    .sidebar {
-        width: 240px;
-        transition: all 0.4s ease;
-    }
-
-    .sidebar.closed {
-        width: 70px;
-       
-    }
-
-    .sidebar.side-opened {
-        width: 240px;
-        transition: all 0.4s ease;
-
-        .top {
-            width: 228px;
-        }
-    }
-
-}
-
-@media screen and (max-width: 500px) {
-    .sidebar {
-        width: 0px;
-        transition: all 0.4s ease;
-    }
-
-    .sidebar.closed {
-        width: 70px;
-
-    }
-
-    .sidebar.side-opened {
-        width: 0px;
-        opacity: 0;
-
-        .top {
-            display: none;
-
-            .sidebar-title {
-                opacity: 0;
-            }
-        }
-
-        .center {
-            display: none;
         }
     }
 }

@@ -1,4 +1,4 @@
-import "./Sidebar.scss";
+import "./AdminSidebar.scss";
 import Typography from "@mui/material/Typography";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
@@ -14,10 +14,11 @@ import SafetyDividerIcon from "@mui/icons-material/SafetyDivider";
 import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import { Link } from "react-router-dom";
+import Sidebar from "../UI/Sidebar/Sidebar";
 
-function Sidebar({ sidebarOpen }) {
+function AdminSidebar({ sidebarOpen }) {
   return (
-    <div className={`sidebar ${sidebarOpen ? "side-opened" : "closed"}`}>
+    <Sidebar sidebarOpen={sidebarOpen}>
       {/* Sidebar top part */}
       <div className="top">
         <Link to="/" className="link">
@@ -30,7 +31,6 @@ function Sidebar({ sidebarOpen }) {
           </Typography>
         </Link>
       </div>
-
       {/* Sidebar Center Part */}
       <div className="center">
         <ul>
@@ -126,8 +126,8 @@ function Sidebar({ sidebarOpen }) {
           </Link>
         </ul>
       </div>
-    </div>
+    </Sidebar>
   );
 }
 
-export default Sidebar;
+export default AdminSidebar;

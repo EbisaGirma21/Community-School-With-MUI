@@ -2,7 +2,7 @@ import "./Home.scss";
 import { useState } from "react";
 import { Grid } from "@mui/material";
 import Navbar from "../../Components/UI/Navbar/Navbar";
-import Sidebar from "../../Components/Sidebar/Sidebar";
+import AdminSidebar from "../../Components/AdminSidebar/AdminSidebar";
 import Widget from "../../Components/UI/Widget/Widget";
 import Container from "../../Components/UI/Container/Container";
 
@@ -16,7 +16,7 @@ function Home() {
 
   return (
     <div className={`home ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}>
-      <Sidebar sidebarOpen={sidebarOpen} />
+      <AdminSidebar sidebarOpen={sidebarOpen} />
       <div className="home-container">
         <Navbar toggleSidebar={toggleSidebar} />
         <Container>
