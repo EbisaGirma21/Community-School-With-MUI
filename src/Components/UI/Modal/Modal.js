@@ -10,7 +10,7 @@ import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useState } from "react";
 
-const Modal = () => {
+const Modal = (props) => {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -30,19 +30,20 @@ const Modal = () => {
       >
         <AddIcon /> New
       </Button>
-      <Dialog open={open} onClose={handleClose} className="dialog-modal__box">
-        <DialogTitle>New Accadamic Session</DialogTitle>
-        <DialogContent className="dialog-modal__box">
-          <TextField
-            autoFocus
-            margin="dense"
-            id="year"
-            label="Academic Year"
-            type="number"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        className="dialog-modal__box"
+        fullWidth
+      >
+        {props.modalBody.map((modals) => (
+          <>
+            <DialogTitle>{modals.title}</DialogTitle>
+            <DialogContent className="dialog-modal__box">
+              {modals.body}
+            </DialogContent>
+          </>
+        ))}
         <DialogActions>
           <Button onClick={handleClose}>
             <ClearIcon />

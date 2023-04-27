@@ -1,6 +1,6 @@
 .enrollment-tab {
     .enrollment-top__items {
-        margin-left: 0;
+        margin-left: 0 !important ;
         margin-bottom: 5px;
 
         .enrollment-top__grid {
@@ -11,7 +11,7 @@
     .table-title {
         text-align: center;
         align-self: center;
-        margin: 10px;
+
     }
 
     .enrollment-table {}

@@ -154,3 +154,18 @@
         }
     }
 }
+
+@media screen and (max-width: 750px) {
+
+    .sidebar.closed {
+        width: 70px;
+    }
+
+    .sidebar.side-opened {
+        .top {
+            width: 226px;
+            transition: all 0.4s ease;
+        }
+    }
+
+}

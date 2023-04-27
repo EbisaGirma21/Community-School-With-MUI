@@ -6,6 +6,7 @@ import Modal from "../../..//Components/UI/Modal/Modal";
 import Navbar from "../../../Components/UI/Navbar/Navbar";
 import Dropdown from "../../../Components/UI/Dropdown/Dropdown";
 import Container from "../../../Components/UI/Container/Container";
+import { TextField } from "@mui/material";
 
 function AcademicCurriculum() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -13,6 +14,25 @@ function AcademicCurriculum() {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
+  const modalBody = [
+    {
+      title: "New Acedamic Session",
+      body: (
+        <div>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="year"
+            label="Academic Year"
+            type="number"
+            fullWidth
+            variant="standard"
+          />
+        </div>
+      ),
+    },
+  ];
 
   return (
     <div
@@ -28,7 +48,7 @@ function AcademicCurriculum() {
           <div className="container-body">
             <Dropdown />
             <hr />
-            <Modal />
+            <Modal modalBody={modalBody} />
             <div className="container-body__tables">
               <Datatable />
             </div>
