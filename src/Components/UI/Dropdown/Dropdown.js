@@ -3,26 +3,34 @@ import "./Dropdown.scss";
 import { useState } from "react";
 
 const Dropdown = () => {
-    const [selectedOption, setSelectedOption] = useState('');
+  const [age, setAge] = useState("");
 
-    const handleChange = (event) => {
-      setSelectedOption(event.target.value);
-    };
+  const handleChange = (event) => {
+    setAge(event.target.value);
+  };
 
   return (
     <div className="dropdown-menu">
-      <FormControl className="dromdown-form">
-        <InputLabel id="demo-simple-select-label" className="dropdown-title">
-          Select a Curriculum
-        </InputLabel>
+      <FormControl
+        sx={{ mt: 1, mb: 2 , minWidth: 300 }}
+      
+        className="dropdown-form"
+        variant="standard"
+      >
+        <InputLabel id="demo-simple-select-helper-label">Curriculum</InputLabel>
         <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={selectedOption}
+          labelId="demo-simple-select-helper-label"
+          id="demo-simple-select-helper"
+          value={age}
+          label="Curriculum"
           onChange={handleChange}
         >
-          <MenuItem value={10}>Curriculmum-1 2015 ( KG - R )</MenuItem>
-          <MenuItem value={10}>Elementary 2015 ( PRM - R )</MenuItem>
+          <MenuItem value="">
+            <p>Curriculum</p>
+          </MenuItem>
+          <MenuItem value={10}>Curriculum-2013-KG</MenuItem>
+          <MenuItem value={20}>Curriculum-2014-KG</MenuItem>
+          <MenuItem value={30}>Curriculum-2015-KG</MenuItem>
         </Select>
       </FormControl>
     </div>

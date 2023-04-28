@@ -1,6 +1,6 @@
 .enrollment-tab {
     .enrollment-top__items {
-        margin-left: 0 !important ;
+        margin-left: 0 !important;
         margin-bottom: 5px;
 
         .enrollment-top__grid {
@@ -14,5 +14,13 @@
 
     }
 
-    .enrollment-table {}
+}
+
+.deregisration {
+    .deregistration-top__grid {
+        display: flex;
+        align-items: center;
+
+    }
+
 }

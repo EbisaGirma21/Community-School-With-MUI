@@ -1,6 +1,5 @@
 import "./Modal.scss";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -28,28 +27,35 @@ const Modal = (props) => {
         variant="contained"
         className="add__button"
       >
-        <AddIcon /> New
-      </Button>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        className="dialog-modal__box"
-        fullWidth
-      >
         {props.modalBody.map((modals) => (
           <>
-            <DialogTitle>{modals.title}</DialogTitle>
-            <DialogContent className="dialog-modal__box">
-              {modals.body}
-            </DialogContent>
+            <AddIcon />
+            {modals.bt_name}
           </>
         ))}
-        <DialogActions>
-          <Button onClick={handleClose}>
+      </Button>
+      <Dialog open={open} onClose={handleClose} sx={{}}>
+        {props.modalBody.map((modals) => (
+          <>
+            <DialogTitle
+              sx={{
+                backgroundColor: "#1565c0",
+                color: "white",
+                borderRadius: 1,
+                mb: 2,
+              }}
+            >
+              {modals.title}
+            </DialogTitle>
+            <DialogContent sx={{ padding: 5 }}>{modals.body}</DialogContent>
+          </>
+        ))}
+        <DialogActions sx={{}}>
+          <Button onClick={handleClose} variant="contained">
             <ClearIcon />
             Cancel
           </Button>
-          <Button onClick={handleClose}>
+          <Button onClick={handleClose} variant="contained">
             <DoneIcon /> Save
           </Button>
         </DialogActions>

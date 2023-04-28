@@ -1,0 +1,25 @@
+.subject {
+    .subject-top__grid {
+        align-items: center;
+    }
+}
+
+.subject-teacher__tab {
+    .subject-teacher__grid {
+        display: flex;
+        align-items: center;
+
+    }
+
+    hr {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    .table-title {
+        text-align: center;
+        align-self: center;
+
+    }
+
+}

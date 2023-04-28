@@ -1,35 +1,40 @@
-import "./AcademicCurriculum.scss";
+import "./Module.scss";
 import { useState } from "react";
+import Navbar from "../../../Components/UI/Navbar/Navbar";
 import AdminSidebar from "../../../Components/AdminSidebar/AdminSidebar";
 import Datatable from "../../../Components/UI/Datatable/Datatable";
-import Modal from "../../..//Components/UI/Modal/Modal";
-import Navbar from "../../../Components/UI/Navbar/Navbar";
-import Dropdown from "../../../Components/UI/Dropdown/Dropdown";
+import Modal from "../../../Components/UI/Modal/Modal";
 import Container from "../../../Components/UI/Container/Container";
 import { TextField } from "@mui/material";
 
-function AcademicCurriculum() {
+function Module() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   // function to toggle sidebar state
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  // // Function to enter data on clicck of button
+  // const createAcedamicSession = (year) => {
+  //   console.log(year);
+  // };
+
+  // MODAL BODY Created for adding acedamic session
+
   const modalBody = [
     {
       bt_name: "New",
-      title: "Add Curriculum",
+      title: "Merge Module",
       body: (
         <div>
-          <Dropdown />
           <TextField
             autoFocus
             margin="dense"
-            id="max-semester"
-            label="Max Semester"
-            type="number"
-            variant="standard"
+            id="moduleTitle"
+            label="Module Title"
+            type="text"
             sx={{ minWidth: 300 }}
+            variant="standard"
           />
         </div>
       ),
@@ -38,20 +43,16 @@ function AcademicCurriculum() {
 
   return (
     <div
-      className={`academic_curriculum ${
-        sidebarOpen ? "sidebar-open" : "sidebar-closed"
-      }`}
+      className={`module ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}
     >
       <AdminSidebar sidebarOpen={sidebarOpen} />
-      <div className="academic_curriculum-container">
+      <div className="module-container">
         <Navbar toggleSidebar={toggleSidebar} />
         <Container>
-          <div className="container-title">Academic Curriculum</div>
+          <div className="container-title">Module</div>
           <div className="container-body">
-            <Dropdown />
-            <hr />
             <Modal modalBody={modalBody} />
-            <div className="container-body__tables">
+            <div className="container-tables">
               <Datatable />
             </div>
           </div>
@@ -61,4 +62,4 @@ function AcademicCurriculum() {
   );
 }
 
-export default AcademicCurriculum;
+export default Module;

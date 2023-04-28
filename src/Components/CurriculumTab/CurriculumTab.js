@@ -3,8 +3,75 @@ import Tab from "../UI/Tab/Tab";
 import Datatable from "../UI/Datatable/Datatable";
 import Modal from "../UI/Modal/Modal";
 import Dropdown from "../UI/Dropdown/Dropdown";
-import { Grid } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 
+// Basic information of Curriculum Form
+const basicInfo = [
+  {
+    bt_name: "New",
+    title: "New Curriculum",
+    body: (
+      <div>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="max-semester"
+          label="Title"
+          type="number"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+        />
+        <TextField
+          autoFocus
+          margin="dense"
+          id="max-semester"
+          label="Curriculum Year"
+          type="number"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+        />
+
+        <Dropdown />
+
+        <Dropdown />
+        <TextField
+          autoFocus
+          margin="dense"
+          id="max-semester"
+          label="Maximum Load"
+          type="number"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+        />
+      </div>
+    ),
+  },
+];
+
+// Subject Information input form
+const subjectInfo = [
+  {
+    bt_name: "Add Subject",
+    title: "Add Subject",
+    body: (
+      <div>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="max-semester"
+          label="Module"
+          type="text"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+        />
+
+        <Dropdown />
+      </div>
+    ),
+  },
+];
+
+// The information passed to tab of curriculum
 const curriculumTab = [
   {
     label: "Basic info",
@@ -12,7 +79,7 @@ const curriculumTab = [
     content: (
       <div>
         <div className="curriculum-modal">
-          <Modal />
+          <Modal modalBody={basicInfo} />
         </div>
         <div className="curriculum-table">
           <Datatable />
@@ -37,7 +104,7 @@ const curriculumTab = [
             </Grid>
           </div>
           <hr />
-          <Modal />
+          <Modal modalBody={subjectInfo} />
         </div>
         <div className="curriculum-table">
           <Datatable />

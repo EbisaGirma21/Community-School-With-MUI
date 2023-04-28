@@ -14,8 +14,16 @@ function AcademicCalendar() {
     setSidebarOpen(!sidebarOpen);
   };
 
+  // // Function to enter data on clicck of button
+  // const createAcedamicSession = (year) => {
+  //   console.log(year);
+  // };
+
+  // MODAL BODY Created for adding acedamic session
+
   const modalBody = [
     {
+      bt_name:"New",
       title: "New Acedamic Session",
       body: (
         <div>
@@ -25,7 +33,7 @@ function AcademicCalendar() {
             id="year"
             label="Academic Year"
             type="number"
-            fullWidth
+            sx={{ minWidth: 300 }}
             variant="standard"
           />
         </div>

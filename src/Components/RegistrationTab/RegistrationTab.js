@@ -1,13 +1,14 @@
 import "./RegistrationTab.scss";
 import Tab from "../UI/Tab/Tab";
 import Datatable from "../UI/Datatable/Datatable";
-import Modal from "../UI/Modal/Modal";
+
 import Dropdown from "../UI/Dropdown/Dropdown";
 import { Button, Grid } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
-const curriculumTab = [
+const registrationTab = [
   {
     label: "Enrollment",
     value: "1",
@@ -45,19 +46,35 @@ const curriculumTab = [
     value: "2",
     content: (
       <>
-        <div className="regisration-subject">
-          <div className="dropdown">
-            <Grid container spacing={1}>
-              <Grid item xs={12} sm={12} md={6} lg={4}>
-                <Dropdown />
-              </Grid>
-              <Grid item xs={12} sm={12} md={6} lg={4}>
-                <Dropdown />
-              </Grid>
+        {" "}
+        <div className="deregisration">
+          <Grid container spacing={1} className="deregistration-top__grid">
+            <Grid item xs={12} sm={12} md={6} lg={4}>
+              <Dropdown />
             </Grid>
-          </div>
-          <hr />
-          <Modal />
+            <Grid item xs={12} sm={12} md={6} lg={4}>
+              <Button variant="contained" color="error">
+                <RemoveIcon /> Deregister selected Student
+              </Button>
+            </Grid>
+          </Grid>
+        </div>
+        <div className="deregistration-table">
+          <Datatable />
+        </div>
+      </>
+    ),
+  },
+  {
+    label: "New Student",
+    value: "3",
+    content: (
+      <>
+        {" "}
+        <div className="regisration-student">
+          <Button variant="contained">
+            <AddIcon /> Register New Student
+          </Button>
         </div>
         <div className="regisration-table">
           <Datatable />
@@ -68,5 +85,5 @@ const curriculumTab = [
 ];
 
 export default function RegisrationTab() {
-  return <Tab tab_contents={curriculumTab} />;
+  return <Tab tab_contents={registrationTab} />;
 }

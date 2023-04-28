@@ -1,9 +1,13 @@
 .dialog-modal {
-    margin-left: 0px;
-    z-index: 0;
-
     .add__button {
         width: auto;
         padding: 10px 15px;
+    }
+
+    .modal-title {
+        background-color: #1565c0 !important;
+    }
+    .modal-bottom{
+        border: 1px solid #1565c0;
     }
 }
