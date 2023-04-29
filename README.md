@@ -10,11 +10,10 @@
 - Material-UI - 5.12.1
 - Mui/x-data-grid - 6.2.0
 - Sass - 1.62.0
-   
 
 ## Setup
 
-Installation commands
+Installation commands for front end
 
 ### npm
 

@@ -12,8 +12,7 @@ const Dropdown = () => {
   return (
     <div className="dropdown-menu">
       <FormControl
-        sx={{ mt: 1, mb: 2 , minWidth: 300 }}
-      
+        sx={{ mb: 2, minWidth: 300 }}
         className="dropdown-form"
         variant="standard"
       >
