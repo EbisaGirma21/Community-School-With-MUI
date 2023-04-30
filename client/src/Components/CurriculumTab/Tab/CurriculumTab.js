@@ -1,52 +1,10 @@
 import "./CurriculumTab.scss";
-import Tab from "../UI/Tab/Tab";
-import Datatable from "../UI/Datatable/Datatable";
-import Modal from "../UI/Modal/Modal";
-import Dropdown from "../UI/Dropdown/Dropdown";
+import Tab from "../../UI/Tab/Tab";
+import Modal from "../../UI/Modal/Modal";
+import Dropdown from "../../UI/Dropdown/Dropdown";
 import { Grid, TextField } from "@mui/material";
-
-// Basic information of Curriculum Form
-const basicInfo = [
-  {
-    bt_name: "New",
-    title: "New Curriculum",
-    body: (
-      <div>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="max-semester"
-          label="Title"
-          type="number"
-          sx={{ minWidth: 300 }}
-          variant="standard"
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="max-semester"
-          label="Curriculum Year"
-          type="number"
-          sx={{ minWidth: 300 }}
-          variant="standard"
-        />
-
-        <Dropdown />
-
-        <Dropdown />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="max-semester"
-          label="Maximum Load"
-          type="number"
-          sx={{ minWidth: 300 }}
-          variant="standard"
-        />
-      </div>
-    ),
-  },
-];
+import CurriculumTable from "../Table/CurriculumTable";
+import CurriculumModals from "../Modals/CurriculumModals";
 
 // Subject Information input form
 const subjectInfo = [
@@ -64,7 +22,6 @@ const subjectInfo = [
           sx={{ minWidth: 300 }}
           variant="standard"
         />
-
         <Dropdown />
       </div>
     ),
@@ -79,10 +36,10 @@ const curriculumTab = [
     content: (
       <div>
         <div className="curriculum-modal">
-          <Modal modalBody={basicInfo} />
-        </div>
-        <div className="curriculum-table">
-          <Datatable />
+          <CurriculumModals/>
+          <div className="curriculum-table">
+            <CurriculumTable />
+          </div>
         </div>
       </div>
     ),
@@ -107,7 +64,7 @@ const curriculumTab = [
           <Modal modalBody={subjectInfo} />
         </div>
         <div className="curriculum-table">
-          <Datatable />
+          <CurriculumTable />
         </div>
       </div>
     ),

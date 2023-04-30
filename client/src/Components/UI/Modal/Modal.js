@@ -9,17 +9,15 @@ import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useState } from "react";
 
-const Modal = (props) => {
+const Modal = ({ title, btnText, children }) => {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
-
   return (
     <div className="dialog-modal">
       <Button
@@ -27,29 +25,25 @@ const Modal = (props) => {
         variant="contained"
         className="add__button"
       >
-        {props.modalBody.map((modals) => (
-          <>
-            <AddIcon />
-            {modals.bt_name}
-          </>
-        ))}
+        <AddIcon />
+        {btnText}
       </Button>
-      <Dialog open={open} onClose={handleClose} sx={{}}>
-        {props.modalBody.map((modals) => (
-          <>
-            <DialogTitle
-              sx={{
-                backgroundColor: "#1565c0",
-                color: "white",
-                borderRadius: 1,
-                mb: 2,
-              }}
-            >
-              {modals.title}
-            </DialogTitle>
-            <DialogContent sx={{ padding: 5 }}>{modals.body}</DialogContent>
-          </>
-        ))}
+      <Dialog open={open} onClose={handleClose}>
+        {/* Modal Title */}
+        <DialogTitle
+          sx={{
+            backgroundColor: "#1565c0",
+            color: "white",
+            borderRadius: 1,
+            mb: 2,
+          }}
+        >
+          {title}
+        </DialogTitle>
+
+        {/* Modal Content */}
+        <DialogContent sx={{ padding: 5 }}>{children}</DialogContent>
+
         <DialogActions sx={{}}>
           <Button onClick={handleClose} variant="contained">
             <ClearIcon />

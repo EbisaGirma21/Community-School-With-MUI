@@ -1,16 +1,25 @@
 import "./Curriculum.scss";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Navbar from "../../../Components/UI/Navbar/Navbar";
 import AdminSidebar from "../../../Components/AdminSidebar/AdminSidebar";
-import CurriculumTab from "../../../Components/CurriculumTab/CurriculumTab";
+import CurriculumTab from "../../../Components/CurriculumTab/Tab/CurriculumTab";
 import Container from "../../../Components/UI/Container/Container";
+import CurriculumContext from "../../../Context/CurriculumContext";
 
 function Curriculum() {
+  // curriculum context state
+  const { fetchCurriculums } = useContext(CurriculumContext);
+  // Loading the data from the curriculum
+  useEffect(() => {
+    fetchCurriculums();
+  }, [fetchCurriculums]);
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   // function to toggle sidebar state
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
+
   return (
     <div
       className={`curriculum ${

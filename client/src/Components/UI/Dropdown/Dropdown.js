@@ -1,35 +1,27 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import "./Dropdown.scss";
-import { useState } from "react";
 
-const Dropdown = () => {
-  const [age, setAge] = useState("");
-
-  const handleChange = (event) => {
-    setAge(event.target.value);
-  };
-
+const Dropdown = ({ options, label, value, onChange }) => {
   return (
     <div className="dropdown-menu">
       <FormControl
-        sx={{ mb: 2, minWidth: 300 }}
+        sx={{ mt: 1, minWidth: 300 }}
         className="dropdown-form"
         variant="standard"
       >
-        <InputLabel id="demo-simple-select-helper-label">Curriculum</InputLabel>
+        <InputLabel id="demo-simple-select-helper-label">{label}</InputLabel>
         <Select
           labelId="demo-simple-select-helper-label"
           id="demo-simple-select-helper"
-          value={age}
-          label="Curriculum"
-          onChange={handleChange}
+          value={value}
+          label={label}
+          onChange={onChange}
         >
-          <MenuItem value="">
-            <p>Curriculum</p>
-          </MenuItem>
-          <MenuItem value={10}>Curriculum-2013-KG</MenuItem>
-          <MenuItem value={20}>Curriculum-2014-KG</MenuItem>
-          <MenuItem value={30}>Curriculum-2015-KG</MenuItem>
+          {options.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </div>

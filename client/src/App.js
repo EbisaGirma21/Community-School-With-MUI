@@ -9,6 +9,7 @@ import Teacher from "./Pages/List/Teacher/Teacher";
 import Module from "./Pages/List/Module/Module";
 import Department from "./Pages/List/Department/Department";
 import AssignTeacher from "./Pages/Operation/AssignTeacher/AssignTeacher";
+import { CurriculumProvider } from "./Context/CurriculumContext";
 
 function App() {
   return (
@@ -23,7 +24,14 @@ function App() {
               <Route path=":academicCalendarId" element={<AccCalendar />} />
             </Route>
             <Route path="curriculum">
-              <Route index element={<Curriculum />} />
+              <Route
+                index
+                element={
+                  <CurriculumProvider>
+                    <Curriculum />
+                  </CurriculumProvider>
+                }
+              />
               <Route path=":curriculumId" element={<Curriculum />} />
             </Route>
             <Route path="academicCurriculum">
