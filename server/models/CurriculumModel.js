@@ -1,4 +1,3 @@
-const GradeModel = require("./GradeModel");
 const mongoose = require("mongoose");
 
 const CurriculumSchema = new mongoose.Schema(
@@ -19,7 +18,7 @@ const CurriculumSchema = new mongoose.Schema(
       default: "PRM",
       enum: ["KG", "PRM", "PRM-II", "SEC", "PREP"],
     },
-    addmissionClassification: {
+    classification: {
       type: String,
       required: true,
       default: "R",
@@ -31,10 +30,10 @@ const CurriculumSchema = new mongoose.Schema(
       min: 20,
       max: 40,
     },
-    curriculumState: {
-      type: Number,
-      required: true,
-    },
+    // curriculumState: {
+    //   type: Number,
+    //   required: true,
+    // },
     grade: [{ type: mongoose.Schema.Types.ObjectId, ref: "GradeModel" }],
   },
   { timestamps: true }

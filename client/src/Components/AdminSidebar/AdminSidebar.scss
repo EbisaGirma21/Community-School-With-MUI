@@ -159,6 +159,7 @@
 
     .sidebar.closed {
         width: 70px;
+        transition: all 0.4s ease;
     }
 
     .sidebar.side-opened {
@@ -168,4 +169,25 @@
         }
     }
 
+}
+
+@media screen and (max-width: 500px) {
+    .sidebar {
+
+        .top {
+            transition: all 0.4s ease;
+        }
+
+    }
+    .sidebar.closed {
+        .top {
+            transition: all 0.4s ease;
+        }
+    }
+
+    .sidebar.side-opened {
+        .top {
+            transition: all 0.4s ease;
+        }
+    }
 }

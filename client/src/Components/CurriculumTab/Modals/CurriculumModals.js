@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Modal from "../../UI/Modal/Modal";
 import { TextField } from "@mui/material";
 import Dropdown from "../../UI/Dropdown/Dropdown";
+import CurriculumContext from "../../../Context/CurriculumContext";
 
 //// Global and Toast references...
 
@@ -13,31 +14,58 @@ const classificationOption = [
 
 const stageOption = [
   { label: "Kindergarten", value: "KG" },
-  { label: "First Cycle Primary", value: "PRM" },
+  { label: "First Cycle Primary", value: "PRM-I" },
   { label: "Second Cycle Primary", value: "PRM-II" },
   { label: "Secondary", value: "SEC" },
   { label: "Preparatory", value: "PREP" },
 ];
 
-const CurriculumModals = () => {
-  const [title, setTitle] = useState("");
+const CurriculumModals = ({ handleClose, open }) => {
+  // useSate for hte for input
+  const [curriculumTitle, setCurriculumTitle] = useState("");
   const [curriculumYear, setCurriculumYear] = useState("");
-  const [maxLoad, setMaxLoad] = useState("");
+  const [totalMaximumLoad, setTotalMaximumLoad] = useState("");
   const [stage, setStage] = useState("");
   const [classification, setClassification] = useState("");
 
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
+  // context creation
+  const { createCurriculum } = useContext(CurriculumContext);
+
+  // Change handler funtions
+  const handleCurriculumTitleChange = (e) => {
+    setCurriculumTitle(e.target.value);
   };
   const handleCurriculumYearChange = (e) => {
     setCurriculumYear(e.target.value);
   };
-  const handleMaxLoadChange = (e) => {
-    setMaxLoad(e.target.value);
+  const handleTotalMaximumLoadChange = (e) => {
+    setTotalMaximumLoad(e.target.value);
+  };
+
+  // submit functions
+  const handleSubmit = () => {
+    createCurriculum(
+      curriculumTitle,
+      curriculumYear,
+      stage,
+      classification,
+      totalMaximumLoad
+    );
+    setCurriculumTitle("");
+    setCurriculumYear("");
+    setClassification("");
+    setStage("");
+    setTotalMaximumLoad("");
   };
 
   return (
-    <Modal title="New Curriculum" btnText="New">
+    <Modal
+      title="New Curriculum"
+      btnText="New"
+      onSubmit={handleSubmit}
+      open={open}
+      handleClose={handleClose}
+    >
       <form>
         <TextField
           margin="dense"
@@ -45,8 +73,8 @@ const CurriculumModals = () => {
           type="text"
           sx={{ minWidth: 300 }}
           variant="standard"
-          value={title}
-          onChange={handleTitleChange}
+          value={curriculumTitle}
+          onChange={handleCurriculumTitleChange}
         />
         <TextField
           margin="dense"
@@ -61,7 +89,9 @@ const CurriculumModals = () => {
           label="Stage"
           options={stageOption}
           value={stage}
-          onChange={(e) => setStage(e.target.value)}
+          onChange={(e) => {
+            setStage(e.target.value);
+          }}
         />
         <Dropdown
           label="Classification"
@@ -69,7 +99,6 @@ const CurriculumModals = () => {
           value={classification}
           onChange={(e) => {
             setClassification(e.target.value);
-            console.log(classification);
           }}
         />
 
@@ -79,8 +108,8 @@ const CurriculumModals = () => {
           type="number"
           sx={{ minWidth: 300 }}
           variant="standard"
-          value={maxLoad}
-          onChange={handleMaxLoadChange}
+          value={totalMaximumLoad}
+          onChange={handleTotalMaximumLoadChange}
         />
       </form>
     </Modal>

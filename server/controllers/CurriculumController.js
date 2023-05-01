@@ -29,9 +29,9 @@ const createCurriculum = async (req, res) => {
     curriculumTitle,
     curriculumYear,
     stage,
-    addmissionClassification,
+    classification,
     totalMaximumLoad,
-    curriculumState,
+    // curriculumState,
   } = req.body;
 
   let emptyFields = [];
@@ -45,15 +45,15 @@ const createCurriculum = async (req, res) => {
   if (!stage) {
     emptyFields.push("stage");
   }
-  if (!addmissionClassification) {
-    emptyFields.push("addmissionClassification");
+  if (!classification) {
+    emptyFields.push("classification");
   }
   if (!totalMaximumLoad) {
     emptyFields.push("totalMaximumLoad");
   }
-  if (!curriculumState) {
-    emptyFields.push("curriculumState");
-  }
+  // if (!curriculumState) {
+  //   emptyFields.push("curriculumState");
+  // }
 
   if (emptyFields.length > 0) {
     return res
@@ -66,9 +66,9 @@ const createCurriculum = async (req, res) => {
       curriculumTitle,
       curriculumYear,
       stage,
-      addmissionClassification,
+      classification,
       totalMaximumLoad,
-      curriculumState,
+      // curriculumState,
     });
     res.status(200).json(curriculum);
   } catch (error) {
