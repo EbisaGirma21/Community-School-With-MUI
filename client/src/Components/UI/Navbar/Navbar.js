@@ -5,7 +5,6 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
@@ -81,7 +80,6 @@ export default function Navbar({ toggleSidebar }) {
         vertical: "top",
         horizontal: "right",
       }}
-     
       id={menuId}
       keepMounted
       transformOrigin={{
@@ -115,7 +113,12 @@ export default function Navbar({ toggleSidebar }) {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+        <IconButton
+          className="icon-button"
+          size="large"
+          aria-label="show 4 new mails"
+          color="inherit"
+        >
           <Badge badgeContent={4} color="error">
             <MailIcon />
           </Badge>
@@ -124,6 +127,7 @@ export default function Navbar({ toggleSidebar }) {
       </MenuItem>
       <MenuItem>
         <IconButton
+          className="icon-button"
           size="large"
           aria-label="show 17 new notifications"
           color="inherit"
@@ -136,6 +140,7 @@ export default function Navbar({ toggleSidebar }) {
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
+          className="icon-button"
           size="large"
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -162,68 +167,64 @@ export default function Navbar({ toggleSidebar }) {
       <AppBar position="static" className="navbar">
         <Toolbar className="items">
           <IconButton
+            className="menuButton icon-button"
             size="large"
             edge="start"
             color="inherit"
             aria-label="open drawer"
-            sx={{ mr: 2 }}
             onClick={handleButtonClick}
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: "none", sm: "block" } }}
-            className="navbar-title"
-          >
-            WKU-CS
-          </Typography>
           <Search className="search-input">
+            <div className="search-input__icon">
+              <SearchIcon className="search-icon" />
+            </div>
             <StyledInputBase
               placeholder="Search"
               inputProps={{ "aria-label": "search" }}
               className="search-input__text"
             />
-            <Button className="search-input__icon">
-              <SearchIcon />
-            </Button>
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
+              className="message-icon icon-button"
               size="large"
               aria-label="show 4 new mails"
-              color="inherit"
             >
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
             </IconButton>
             <IconButton
+              className="notification-icon icon-button"
               size="large"
               aria-label="show 17 new notifications"
-              color="inherit"
             >
               <Badge badgeContent={17} color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            <Button className="user-profile">
+              <div className="user-photo">
+                <img src={require("../../../assets/unnamed.png")} alt="" />
+              </div>
+              <div
+                className="profile-icon icon-button"
+                size="large"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+              >
+                <AccountCircle />
+              </div>
+            </Button>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
+              className="icon-button"
               size="large"
               aria-label="show more"
               aria-controls={mobileMenuId}

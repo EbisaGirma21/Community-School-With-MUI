@@ -19,21 +19,17 @@ const Modal = (props) => {
         {/* Modal Title */}
         <DialogTitle
           sx={{
-            backgroundColor: "#1565c0",
+            backgroundColor: "#1E88E5",
             color: "white",
             borderRadius: 1,
             mb: 2,
           }}
+          variant="contained"
         >
           {title}
         </DialogTitle>
         {/* Modal Content */}
-        <DialogContent
-          sx={{ padding: 5 }}
-         
-        >
-          {children}
-        </DialogContent>
+        <DialogContent sx={{ padding: 5 }}>{children}</DialogContent>
         <DialogActions>
           <Button onClick={handleClose} variant="contained">
             <ClearIcon />

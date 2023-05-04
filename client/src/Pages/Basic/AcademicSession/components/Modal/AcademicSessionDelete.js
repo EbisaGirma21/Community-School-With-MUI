@@ -5,15 +5,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useContext } from "react";
-import CurriculumContext from "../../../Context/CurriculumContext";
+import AcademicSessionContext from "../../../../../Context/AcademicSessionContext";
 
-export default function CurriculumDelete(props) {
-  const { handleClose, open, curriculumId } = props;
+export default function AcademicSessionDelete(props) {
+  const { handleClose, open, academicSessionId } = props;
 
-  const { deleteCurriculumById } = useContext(CurriculumContext);
+  const { deleteAcademicSessionById } = useContext(AcademicSessionContext);
 
   const handleSave = () => {
-    deleteCurriculumById(curriculumId);
+    deleteAcademicSessionById(academicSessionId);
     handleClose();
   };
 
@@ -26,7 +26,7 @@ export default function CurriculumDelete(props) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle variant="contained" id="alert-dialog-title">
-          {"Delete Curriculum"}
+          {"Delete AcademicSession"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

@@ -1,19 +1,36 @@
 import "./Datatable.scss";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridActionsCellItem,
+  GridToolbarContainer,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
 
-export default function Datatable({ tableColumns, tableRows, onDelete }) {
- 
+function CustomToolbar() {
+  return (
+    <GridToolbarContainer>
+      <GridToolbarExport />
+    </GridToolbarContainer>
+  );
+}
+
+export default function Datatable({
+  tableColumns,
+  tableRows,
+  onDelete,
+  onEdit,
+}) {
   const handleEdit = (id) => {
     // Handle edit logic here
+    onEdit(id);
     console.log(`Edit row with ID ${id}`);
   };
 
   const handleDelete = (id) => {
     // Handle delete logic here
     onDelete(id);
-  
   };
 
   const columnsWithActions = [
@@ -52,6 +69,9 @@ export default function Datatable({ tableColumns, tableRows, onDelete }) {
         checkboxSelection
         className="datatable"
         getRowId={(row) => row._id}
+        slots={{
+          toolbar: CustomToolbar,
+        }}
       />
     </div>
   );

@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CurriculumContext from "../../../Context/CurriculumContext";
 import Datatable from "../../UI/Datatable/Datatable";
 import CurriculumDelete from "../Modals/CurriculumDelete";
+import CurriculumUpdate from "../Modals/CurriculumUpdate";
 
 // Curriculum Basic information datatable Column
 const tableColumns = [
@@ -19,24 +20,51 @@ const tableColumns = [
 
 const CurriculumTable = () => {
   // component states
-  const [open, setOpen] = useState(false);
+  const [deleteOpen, setdDeleteOpen] = useState(false);
+  const [editOpen, setdEditOpen] = useState(false);
   const [curriculumId, setCurriculumId] = useState("");
 
   // component context
-  const { curriculum } = useContext(CurriculumContext);
+  const { curriculum, fetchCurriculums } = useContext(CurriculumContext);
+
+  // update local curriculum state when context curriculum changes
+  useEffect(() => {
+    fetchCurriculums();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // toggler funcions
-  const handleOpen = () => {
-    setOpen(true);
+  // funtions open delete modal
+  const handleDeleteOpen = () => {
+    setdDeleteOpen(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  // funtion close delete modal
+  const handleDeleteClose = () => {
+    setdDeleteOpen(false);
     setCurriculumId("");
   };
 
+  // delete handler
   const handleDelete = (id) => {
-    handleOpen();
+    handleDeleteOpen();
+    setCurriculumId(id);
+  };
+
+  // funtions open edit modal
+  const handleEditOpen = () => {
+    setdEditOpen(true);
+  };
+
+  // funtion close Edit modal
+  const handleEditClose = () => {
+    setdEditOpen(false);
+    setCurriculumId("");
+  };
+
+  // edit handler
+  const handleEdit = (id) => {
+    handleEditOpen();
     setCurriculumId(id);
   };
 
@@ -45,11 +73,20 @@ const CurriculumTable = () => {
 
   // toggle delete modal
   let content = "";
-  if (open) {
+  if (deleteOpen) {
     content = (
       <CurriculumDelete
-        open={open}
-        handleClose={handleClose}
+        open={deleteOpen}
+        handleClose={handleDeleteClose}
+        curriculumId={curriculumId}
+      />
+    );
+  }
+  if (editOpen) {
+    content = (
+      <CurriculumUpdate
+        open={editOpen}
+        handleClose={handleEditClose}
         curriculumId={curriculumId}
       />
     );
@@ -59,6 +96,7 @@ const CurriculumTable = () => {
     <div>
       <Datatable
         onDelete={handleDelete}
+        onEdit={handleEdit}
         tableColumns={tableColumns}
         key={curriculum._id}
         tableRows={tableRows}

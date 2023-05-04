@@ -43,12 +43,44 @@ function CurriculumProvider({ children }) {
     setCurriculum(updatedCurriculum);
   };
 
+  // function used to delete curriculum
+  const editCurriculumById = async (
+    id,
+    newCurriculumTitle,
+    newCurriculumYear,
+    newStage,
+    newClassification,
+    newTotalMaximumLoad
+  ) => {
+    const response = await axios.patch(
+      `http://localhost:8000/api/curriculum/${id}`,
+      {
+        curriculumTitle: newCurriculumTitle,
+        curriculumYear: newCurriculumYear,
+        stage: newStage,
+        classification: newClassification,
+        totalMaximumLoad: newTotalMaximumLoad,
+      }
+    );
+
+    const updatedCurriculums = curriculum.map((curriculum) => {
+      if (curriculum._id === id) {
+        return { ...curriculum, ...response.data };
+      }
+
+      return curriculum;
+    });
+    fetchCurriculums();
+    setCurriculum(updatedCurriculums);
+  };
+
   // shared operation between components
   const curriculumOperation = {
     curriculum,
     fetchCurriculums,
     createCurriculum,
     deleteCurriculumById,
+    editCurriculumById,
   };
 
   return (

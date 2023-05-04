@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
 
 const ModuleSchema = new mongoose.Schema({
-  title: {
+  moduleTitle: {
     type: String,
     required: true,
   },
 });
-
-
 
 const Module = mongoose.model("Module", ModuleSchema);
 

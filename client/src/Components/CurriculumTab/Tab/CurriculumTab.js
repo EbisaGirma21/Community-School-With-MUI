@@ -5,10 +5,9 @@ import Dropdown from "../../UI/Dropdown/Dropdown";
 import { Grid, TextField } from "@mui/material";
 import CurriculumTable from "../Table/CurriculumTable";
 import CurriculumModals from "../Modals/CurriculumModals";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
-import CurriculumContext from "../../../Context/CurriculumContext";
 
 // Subject Information input form
 const subjectInfo = [
@@ -34,14 +33,6 @@ const subjectInfo = [
 
 const CurriculumTab = () => {
   const [open, setOpen] = useState(false);
-
-  const { fetchCurriculums } = useContext(CurriculumContext);
-
-  // update local curriculum state when context curriculum changes
-  useEffect(() => {
-    fetchCurriculums();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleOpen = () => {
     setOpen(true);

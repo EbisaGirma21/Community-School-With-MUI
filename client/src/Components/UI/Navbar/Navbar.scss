@@ -1,16 +1,17 @@
 .navbar__parent {
     position: fixed;
     height: 81px;
-    width: calc(100% - 270px);
-    margin-left: 270px;
+    width: calc(100% - 260px);
+    margin-left: 260px;
     transition: all 0.4s ease;
     z-index: 100;
 
 
 
+
     header {
         background-color: #fff;
-        box-shadow: 0 6px 7px -1px rgba(0, 0, 0, 0.1);
+        box-shadow: none;
     }
 
     .navbar {
@@ -21,6 +22,12 @@
         font-weight: 600;
         font-size: 20px;
 
+        .icon-button {
+            align-self: center;
+            height: 40px;
+            width: 40px;
+        }
+
         .navbar-title {
             font-family: 'Poppins';
             font-weight: bold;
@@ -28,25 +35,24 @@
         }
 
         .search-input {
-            border: 1px solid gray;
+            border: 2px solid #1E88E5;
             display: flex;
-            justify-content: space-between;
+            border-radius: 10px;
+
 
             .search-input__icon {
-                background-color: #1565c0;
-                color: white;
-                border-radius: 0%;
-
-                &:hover {
-
-                    border-radius: 0%;
-                    background-color: #0e519e
+                .search-icon {
+                    color: #697586;
+                    margin-top: 10px;
+                    margin-left: 7px;
                 }
             }
 
             .search-input__text {
                 color: black;
-                margin-left: 10px;
+                padding: 0;
+                margin-left: 0;
+
             }
         }
 
@@ -54,7 +60,84 @@
             margin-top: 8px;
             vertical-align: middle;
 
+            .menuButton {
+                background-color: #ede7f6;
+                border-radius: 10px;
+                color: #673AB7;
+                margin-right: 15px;
 
+                &:hover {
+                    color: #ede7f6;
+                    background-color: #673AB7;
+                }
+            }
+
+            .message-icon {
+                background-color: #ede7f6;
+                border-radius: 10px;
+                color: #673AB7;
+                margin-right: 10px;
+
+
+
+                &:hover {
+                    color: #ede7f6;
+                    background-color: #673AB7;
+                }
+            }
+
+            .notification-icon {
+                background-color: #C7E4FC;
+                border-radius: 10px;
+                color: #1E88E5;
+                margin-right: 10px;
+
+
+                &:hover {
+                    color: #C7E4FC;
+                    background-color: #1E88E5;
+                }
+            }
+
+            .user-profile {
+                height: 50px;
+                align-items: center;
+                background-color: #C7E4FC;
+                padding-right: 20px;
+                border-radius: 30px;
+               
+
+                &:hover {
+                    background-color: #1E88E5;
+
+                    .profile-icon {
+                        color: #C7E4FC;
+                      
+                    }
+                }
+
+                .user-photo {
+                    img {
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 100%;
+                        margin-right: 5px;
+                        margin-top: 7px;
+                        object-fit: cover;
+                        border: 5px solid #fff;
+                    }
+                }
+
+                .profile-icon {
+                    margin-left: 2px;
+                    margin-right: 5px;
+                    width: 5px;
+                    height: 5px;
+                    color: #1E88E5;
+                    margin-bottom: 18px;
+                }
+
+            }
         }
     }
 }
@@ -67,19 +150,8 @@
     transition: all 0.4s ease;
 }
 
-@media screen and (max-width: 750px) {
 
-    .closed {
-        margin-left: 70px;
-    }
-
-    .navbar__parent.opened {
-        width: calc(100% - 240px);
-        margin-left: 240px;
-    }
-}
-
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
 
 
     .closed {

@@ -1,38 +1,47 @@
+/* For webkit-based browsers */
+::-webkit-scrollbar {
+    width: 4px;
+
+    /* Set the width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background-color: #fff;
+    /* Set the background color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #fff;
+    border-radius: 3px;
+    &:hover{
+        background-color: #A5ACB6;
+    }
+}
+
 .sidebar {
-    width: 270px;
+    width: 260px;
     height: 100%;
     transition: all 0.4s ease;
     box-shadow: none;
-    background-color: #1565c0;
-    color: #fff;
+    background-color: #fff;
+    color: rgb(104, 97, 97);
     margin: 0;
     position: fixed;
     overflow-y: auto;
+
+    .scroller {
+        width: 5px;
+    }
 }
+
 // When the side bar is closed to 70px
 .sidebar.closed {
     width: 70px;
 }
 
-// when the screen size is less than 750px
-@media screen and (max-width: 750px) {
-    .sidebar {
-        width: 240px;
-        transition: all 0.4s ease;
-    }
 
-    .sidebar.closed {
-        width: 70px;
-    }
 
-    .sidebar.side-opened {
-        width: 240px;
-        transition: all 0.4s ease;
-    }
-
-}
-
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
     .sidebar {
         width: 0px;
         transition: all 0.4s ease;

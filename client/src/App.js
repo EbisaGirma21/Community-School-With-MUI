@@ -1,6 +1,6 @@
 import Home from "./Pages/Home/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AccCalendar from "./Pages/Basic/AcademinCalendar/AcademicCalendar";
+import AcademicSession from "./Pages/Basic/AcademicSession/AcademicSession";
 import AccCurriculum from "./Pages/Basic/AcademicCurriculum/AcademicCurriculum";
 import Curriculum from "./Pages/Basic/Curriculum/Curriculum";
 import Student from "./Pages/List/Student/Student";
@@ -10,6 +10,8 @@ import Module from "./Pages/List/Module/Module";
 import Department from "./Pages/List/Department/Department";
 import AssignTeacher from "./Pages/Operation/AssignTeacher/AssignTeacher";
 import { CurriculumProvider } from "./Context/CurriculumContext";
+import { ModuleProvider } from "./Context/ModuleContext";
+import { AcademicSessionProvider } from "./Context/AcademicSessionContext";
 
 function App() {
   return (
@@ -19,9 +21,16 @@ function App() {
           <Route path="/">
             <Route index element={<Home />} />
             <Route path="login" element={<Home />} />
-            <Route path="academicCalendar">
-              <Route index element={<AccCalendar />} />
-              <Route path=":academicCalendarId" element={<AccCalendar />} />
+            <Route path="academicSession">
+              <Route
+                index
+                element={
+                  <AcademicSessionProvider>
+                    <AcademicSession />
+                  </AcademicSessionProvider>
+                }
+              />
+              <Route path=":academicSessionId" element={<AcademicSession />} />
             </Route>
             <Route path="curriculum">
               <Route
@@ -47,7 +56,14 @@ function App() {
               <Route path=":teacherId" element={<Teacher />} />
             </Route>
             <Route path="modules">
-              <Route index element={<Module />} />
+              <Route
+                index
+                element={
+                  <ModuleProvider>
+                    <Module />
+                  </ModuleProvider>
+                }
+              />
               <Route path=":moduleId" element={<Module />} />
             </Route>
             <Route path="departments">

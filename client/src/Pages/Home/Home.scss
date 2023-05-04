@@ -1,22 +1,17 @@
 .home {
     display: flex;
-
     .home-container {
         width: 100%;
 
         .container-title {
-            
             margin-bottom: 5px;
             font-weight: bold;
             font-size: 22px;
-            position: fixed;
-            background-color: #eef1ff;
+            background-color: #EEF2F6;
             width: 100%;
         }
 
         .container-body {
-            margin-top: 35px;
-
             .container-widgets {
                 display: flex;
                 justify-content: space-between;

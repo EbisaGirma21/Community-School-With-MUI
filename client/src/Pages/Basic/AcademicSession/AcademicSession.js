@@ -1,14 +1,14 @@
-import "./Module.scss";
+import "./AcademicSession.scss";
 import { useState } from "react";
 import Navbar from "../../../Components/UI/Navbar/Navbar";
 import AdminSidebar from "../../../Components/AdminSidebar/AdminSidebar";
 import AddIcon from "@mui/icons-material/Add";
 import Container from "../../../Components/UI/Container/Container";
 import { Button } from "@mui/material";
-import ModuleTable from "./components/Table/ModuleTable";
-import ModuleCreate from "./components/Modal/ModuleCreate";
+import AcademicSessionTable from "./components/Table/AcademicSessionTable";
+import AcademicSessionCreate from "./components/Modal/AcademicSessionCreate";
 
-function Module() {
+function AcademicSession() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   // function to toggle sidebar state
   const toggleSidebar = () => {
@@ -27,15 +27,17 @@ function Module() {
 
   return (
     <div
-      className={`module ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}
+      className={`academic_session ${
+        sidebarOpen ? "sidebar-open" : "sidebar-closed"
+      }`}
     >
       <AdminSidebar sidebarOpen={sidebarOpen} />
-      <div className="module-container">
+      <div className="academic_session-container">
         <Navbar toggleSidebar={toggleSidebar} />
         <Container>
-          <div className="container-title">Module</div>
+          <div className="container-title">Academic Session</div>
           <div className="container-body">
-            <div>
+          <div>
               <Button
                 onClick={handleOpen}
                 variant="contained"
@@ -44,9 +46,9 @@ function Module() {
                 <AddIcon />
                 New
               </Button>
-              <ModuleCreate open={open} handleClose={handleClose} />
+              <AcademicSessionCreate open={open} handleClose={handleClose} />
               <div className="container-tables">
-                <ModuleTable />
+                <AcademicSessionTable />
               </div>
             </div>
           </div>
@@ -56,4 +58,4 @@ function Module() {
   );
 }
 
-export default Module;
+export default AcademicSession;

@@ -1,8 +1,12 @@
 .container {
     padding: 10px;
-    margin-top: 71px;
-    margin-left: 270px;
+    margin-top: 81px;
+    margin-left: 260px;
     transition: all 0.4s ease;
+    border-radius: 1%;
+    background-color: #EEF2F6;
+    min-height: 100vh;
+    height: auto;
 }
 
 .sidebar-closed {
@@ -14,7 +18,7 @@
 
 @media screen and (max-width: 600px) {
     .container {
-        margin-top: 61px;
+        margin-top: 81px;
     }
 }
 
@@ -22,12 +26,12 @@
 
     .sidebar-open {
         .container {
-            margin-left: 240px !important;
+            margin-left: 260px !important;
         }
     }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 600px) {
     .sidebar-open {
         .container {
             padding: 1;

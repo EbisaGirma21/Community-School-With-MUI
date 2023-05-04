@@ -1,24 +1,31 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const cors = require('cors')
+const cors = require("cors");
 
 const CurriculumRoutes = require("./routes/CurriculumRoutes");
+const ModuleRoutes = require("./routes/ModuleRoutes");
+const AcademicSessionRoutes = require("./routes/AcademicSessionRoutes");
+const AcademicCurriculumRoutes = require("./routes/AcademicCurriculumRoutes");
+
 
 // express app
 const app = express();
-app.use(cors()) 
+app.use(cors());
 
 // middleware
 app.use(express.json());
 
 app.use((req, res, next) => {
-  // console.log(req.path, req.method);
+  console.log(req.path, req.method);
   next();
 });
 
 // routes
 app.use("/api/curriculum", CurriculumRoutes);
+app.use("/api/module", ModuleRoutes);
+app.use("/api/academicSession",AcademicSessionRoutes)
+app.use("/api/academicCurriculum",AcademicCurriculumRoutes)
 
 // MONGOOSE CONFIGURATION
 mongoose

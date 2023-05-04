@@ -16,7 +16,7 @@ const CurriculumSchema = new mongoose.Schema(
       type: String,
       required: true,
       default: "PRM",
-      enum: ["KG", "PRM", "PRM-II", "SEC", "PREP"],
+      enum: ["KG", "PRM-I", "PRM-II", "SEC", "PREP"],
     },
     classification: {
       type: String,
