@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 
 // get all AcademicSessions
 const getAcademicSessions = async (req, res) => {
-  const academicSessions = await AcademicSessionModel.find({}).sort({ createdAt: -1 });
+  const academicSessions = await AcademicSessionModel.find({}).sort({
+    createdAt: -1,
+  });
   res.status(200).json(academicSessions);
 };
 
@@ -25,9 +27,7 @@ const getAcademicSession = async (req, res) => {
 
 // create a new AcademicSession
 const createAcademicSession = async (req, res) => {
-  const {
-    academicYear,
-  } = req.body;
+  const { academicYear } = req.body;
 
   let emptyFields = [];
 
@@ -44,7 +44,6 @@ const createAcademicSession = async (req, res) => {
   try {
     const academicSession = await AcademicSessionModel.create({
       academicYear,
-    
     });
     res.status(200).json(academicSession);
   } catch (error) {
@@ -60,7 +59,9 @@ const deleteAcademicSession = async (req, res) => {
     return res.status(400).json({ error: "No such AcademicSession" });
   }
 
-  const academicSession = await AcademicSessionModel.findOneAndDelete({ _id: id });
+  const academicSession = await AcademicSessionModel.findOneAndDelete({
+    _id: id,
+  });
 
   if (!academicSession) {
     return res.status(400).json({ error: "No such AcademicSession" });

@@ -1,12 +1,34 @@
 const AcademicCurriculumModel = require("../models/AcademicCurriculumModel");
 const mongoose = require("mongoose");
+const Curriculum = require("../models/CurriculumModel");
+const AcademicSession = require("../models/AcademicSessionModel");
 
 // get all AcademicCurriculums
 const getAcademicCurriculums = async (req, res) => {
   const academicCurriculums = await AcademicCurriculumModel.find({}).sort({
     createdAt: -1,
   });
-  res.status(200).json(academicCurriculums);
+
+  // Retrieve academic with curriculum information
+  const acCurriculums = await Promise.all(
+    academicCurriculums.map(async (academicCurriculum) => {
+      const curriculum = await Curriculum.findById(
+        academicCurriculum.curriculum.toString()
+      );
+      const academicSession = await AcademicSession.findById(
+        academicCurriculum.academicSession.toString()
+      );
+      return {
+        _id: academicCurriculum._id,
+        academicSession: academicCurriculum.academicSession,
+        curriculumId: curriculum ? curriculum._id : null,
+        curriculumTitle: curriculum ? curriculum.curriculumTitle : null,
+        maxSemester: academicCurriculum.maxSemester,
+        academicYear: academicSession.academicYear,
+      };
+    })
+  );
+  res.status(200).json(acCurriculums);
 };
 
 // get a single AcademicCurriculum
@@ -21,38 +43,72 @@ const getAcademicCurriculum = async (req, res) => {
   if (!academicCurriculum) {
     return res.status(404).json({ error: "No such academicCurriculum" });
   }
+  const curriculum = await Curriculum.findById(
+    academicCurriculum.curriculum.toString()
+  );
+  const acCurriculum = {
+    _id: academicCurriculum._id,
+    academicSession: academicCurriculum.academicSession,
+    curriculumId: curriculum ? curriculum._id : null,
+    curriculumTitle: curriculum ? curriculum.curriculumTitle : null,
+    maxSemester: academicCurriculum.maxSemester,
+  };
 
-  res.status(200).json(academicCurriculum);
+  res.status(200).json(acCurriculum);
+};
+
+// get AcademicCurriculum By Year
+const getAcademicCurriculumByYear = async (req, res) => {
+  const { acYear } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(acYear)) {
+    return res.status(404).json({ error: "No such academicCurriculum" });
+  }
+  const academicCurriculums = await AcademicCurriculumModel.find({
+    academicSession: acYear,
+  });
+
+  if (!academicCurriculums || academicCurriculums.length === 0) {
+    return res.status(404).json([]);
+  }
+
+  const acCurriculums = await Promise.all(
+    academicCurriculums.map(async (academicCurriculum) => {
+      const curriculum = await Curriculum.findById(
+        academicCurriculum.curriculum.toString()
+      );
+
+      return {
+        _id: academicCurriculum._id,
+        academicSession: academicCurriculum.academicSession,
+        curriculumId: curriculum ? curriculum._id : null,
+        curriculumTitle: curriculum
+          ? `${curriculum.curriculumTitle} ${curriculum.curriculumYear} (${curriculum.stage})`
+          : null,
+        maxSemester: academicCurriculum.maxSemester,
+      };
+    })
+  );
+
+  res.status(200).json(acCurriculums);
 };
 
 // create a new AcademicCurriculum
 const createAcademicCurriculum = async (req, res) => {
-  const { academicSession, maxSemester, curriculum } = req.body;
+  const { academicSession, curriculum, maxSemester } = req.body;
 
-  let emptyFields = [];
-
-  if (!academicSession) {
-    emptyFields.push("academicSession");
-  }
-  if (!maxSemester) {
-    emptyFields.push("maxSemester");
-  }
-  if (!curriculum) {
-    emptyFields.push("curriculum");
-  }
-
-  if (emptyFields.length > 0) {
+  if (!academicSession || !curriculum || !maxSemester) {
     return res
       .status(400)
-      .json({ error: "Please fill in all the fields", emptyFields });
+      .json({ error: "Please fill in all the required fields" });
   }
 
   try {
     const academicCurriculum = await AcademicCurriculumModel.create({
       academicSession,
-      maxSemester,
       curriculum,
+      maxSemester,
     });
+
     res.status(200).json(academicCurriculum);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -103,6 +159,7 @@ const updateAcademicCurriculum = async (req, res) => {
 module.exports = {
   getAcademicCurriculums,
   getAcademicCurriculum,
+  getAcademicCurriculumByYear,
   createAcademicCurriculum,
   deleteAcademicCurriculum,
   updateAcademicCurriculum,

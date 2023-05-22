@@ -1,26 +1,31 @@
-import Home from "./Pages/Home/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AcademicSession from "./Pages/Basic/AcademicSession/AcademicSession";
-import AccCurriculum from "./Pages/Basic/AcademicCurriculum/AcademicCurriculum";
-import Curriculum from "./Pages/Basic/Curriculum/Curriculum";
-import Student from "./Pages/List/Student/Student";
-import Registration from "./Pages/Operation/Registration/Registration";
-import Teacher from "./Pages/List/Teacher/Teacher";
-import Module from "./Pages/List/Module/Module";
-import Department from "./Pages/List/Department/Department";
-import AssignTeacher from "./Pages/Operation/AssignTeacher/AssignTeacher";
-import { CurriculumProvider } from "./Context/CurriculumContext";
-import { ModuleProvider } from "./Context/ModuleContext";
-import { AcademicSessionProvider } from "./Context/AcademicSessionContext";
+import AcademicSession from "./pages/AcademicSession/AcademicSession";
+import AccCurriculum from "./pages/AcademicCurriculum/AcademicCurriculum";
+import Curriculum from "./pages/Curriculum/Curriculum";
+import Student from "./pages/Student/Student";
+import Registration from "./pages/Registration/Registration";
+import Teacher from "./pages/Teacher/Teacher";
+import Module from "./pages/Module/Module";
+import Department from "./pages/Department/Department";
+import AssignTeacher from "./pages/AssignTeacher/AssignTeacher";
+import { CurriculumProvider } from "./context/CurriculumContext";
+import { ModuleProvider } from "./context/ModuleContext";
+import { AcademicSessionProvider } from "./context/AcademicSessionContext";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import AcademicCurriculum from "./pages/AcademicCurriculum/AcademicCurriculum";
+import { AcademicCurriculumProvider } from "./context/AcademicCurriculumContext";
+import { GradeProvider } from "./context/GradeContext";
+import { SubjectProvider } from "./context/SubjectContext";
+import Layout from "./components/Layout";
 
 function App() {
   return (
     <div className="app">
       <BrowserRouter>
         <Routes>
-          <Route path="/">
-            <Route index element={<Home />} />
-            <Route path="login" element={<Home />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="login" element={<Dashboard />} />
             <Route path="academicSession">
               <Route
                 index
@@ -37,14 +42,31 @@ function App() {
                 index
                 element={
                   <CurriculumProvider>
-                    <Curriculum />
+                    <GradeProvider>
+                      <SubjectProvider>
+                        <ModuleProvider>
+                          <Curriculum />
+                        </ModuleProvider>
+                      </SubjectProvider>
+                    </GradeProvider>
                   </CurriculumProvider>
                 }
               />
               <Route path=":curriculumId" element={<Curriculum />} />
             </Route>
             <Route path="academicCurriculum">
-              <Route index element={<AccCurriculum />} />
+              <Route
+                index
+                element={
+                  <AcademicSessionProvider>
+                    <CurriculumProvider>
+                      <AcademicCurriculumProvider>
+                        <AcademicCurriculum />
+                      </AcademicCurriculumProvider>
+                    </CurriculumProvider>
+                  </AcademicSessionProvider>
+                }
+              />
               <Route path=":academicCurriculumId" element={<AccCurriculum />} />
             </Route>
             <Route path="students">
@@ -74,7 +96,18 @@ function App() {
               <Route index element={<AssignTeacher />} />
             </Route>
             <Route path="registration">
-              <Route index element={<Registration />} />
+              <Route
+                index
+                element={
+                  <AcademicCurriculumProvider>
+                    <CurriculumProvider>
+                      <GradeProvider>
+                        <Registration />
+                      </GradeProvider>
+                    </CurriculumProvider>
+                  </AcademicCurriculumProvider>
+                }
+              />
             </Route>
           </Route>
         </Routes>

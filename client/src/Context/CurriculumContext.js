@@ -6,10 +6,17 @@ const CurriculumContext = createContext();
 function CurriculumProvider({ children }) {
   const [curriculum, setCurriculum] = useState([]);
 
+  const fetchCurriculumById = async (id) => {
+    const response = await axios.get(
+      `http://localhost:8000/api/curriculum/${id}`
+    );
+    setCurriculum(response.data.data.curriculum);
+  };
+
   //  function  used to fetch data from database
   const fetchCurriculums = async () => {
     const response = await axios.get("http://localhost:8000/api/curriculum");
-    setCurriculum(response.data);
+    setCurriculum(response.data.data.curriculums);
   };
 
   // function used to create curriculum
@@ -28,7 +35,8 @@ function CurriculumProvider({ children }) {
       totalMaximumLoad,
     });
 
-    const updateCurriculum = [...curriculum, response.data];
+    const updateCurriculum = [...curriculum, response.data.data.curriculum];
+    fetchCurriculums();
     setCurriculum(updateCurriculum);
   };
 
@@ -39,7 +47,6 @@ function CurriculumProvider({ children }) {
     const updatedCurriculum = curriculum.filter((curriculum) => {
       return curriculum._id !== id;
     });
-
     setCurriculum(updatedCurriculum);
   };
 
@@ -65,7 +72,7 @@ function CurriculumProvider({ children }) {
 
     const updatedCurriculums = curriculum.map((curriculum) => {
       if (curriculum._id === id) {
-        return { ...curriculum, ...response.data };
+        return { ...curriculum, ...response.data.data.curriculum };
       }
 
       return curriculum;
@@ -77,6 +84,7 @@ function CurriculumProvider({ children }) {
   // shared operation between components
   const curriculumOperation = {
     curriculum,
+    fetchCurriculumById,
     fetchCurriculums,
     createCurriculum,
     deleteCurriculumById,

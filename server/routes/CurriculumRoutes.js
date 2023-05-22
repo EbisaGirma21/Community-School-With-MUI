@@ -5,6 +5,7 @@ const {
   getCurriculum,
   updateCurriculum,
   deleteCurriculum,
+  getSubjectCount,
 } = require("../controllers/CurriculumController");
 
 const router = express.Router();
@@ -23,5 +24,8 @@ router.delete("/:id", deleteCurriculum);
 
 // UPDATE a Curriculum
 router.patch("/:id", updateCurriculum);
+
+// GET subject count in curriculum
+router.patch("/:id", getSubjectCount);
 
 module.exports = router;

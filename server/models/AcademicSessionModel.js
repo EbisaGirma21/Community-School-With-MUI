@@ -11,8 +11,10 @@ const AcademicSessionSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-const AcademicSession = mongoose.model(
-  "AcademicSession",
-  AcademicSessionSchema
-);
+
+// Ensure academicYear is unique across documents
+AcademicSessionSchema.index({ academicYear: 1 }, { unique: true });
+
+const AcademicSession = mongoose.model("AcademicSession", AcademicSessionSchema);
+
 module.exports = AcademicSession;

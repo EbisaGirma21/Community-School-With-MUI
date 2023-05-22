@@ -30,13 +30,42 @@ const CurriculumSchema = new mongoose.Schema(
       min: 20,
       max: 40,
     },
-    // curriculumState: {
-    //   type: Number,
-    //   required: true,
-    // },
-    grade: [{ type: mongoose.Schema.Types.ObjectId, ref: "GradeModel" }],
+    curriculum_state: {
+      type: Number,
+      required: true,
+      default: "1",
+    },
+    grades: [
+      {
+        grade: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Grade",
+        },
+        subjects: [
+          {
+            module: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "Module",
+              required: true,
+            },
+            subject_load: {
+              type: Number,
+              required: true,
+              min: 1,
+              max: 7,
+            },
+          },
+        ],
+      },
+    ],
   },
   { timestamps: true }
 );
+
+CurriculumSchema.index(
+  { curriculumTitle: 1, curriculumYear: 1 },
+  { unique: true }
+);
+
 const Curriculum = mongoose.model("Curriculum", CurriculumSchema);
 module.exports = Curriculum;

@@ -5,6 +5,7 @@ const {
   getAcademicCurriculum,
   updateAcademicCurriculum,
   deleteAcademicCurriculum,
+  getAcademicCurriculumByYear,
 } = require("../controllers/AcademicCurriculumController");
 
 const router = express.Router();
@@ -14,6 +15,9 @@ router.get("/", getAcademicCurriculums);
 
 // GET a single AcademicCurriculum
 router.get("/:id", getAcademicCurriculum);
+
+// GET AcademicCurriculum By Year
+router.get("/year/:acYear", getAcademicCurriculumByYear);
 
 // POST a new AcademicCurriculum
 router.post("/", createAcademicCurriculum);

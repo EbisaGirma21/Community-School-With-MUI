@@ -1,9 +1,9 @@
-const ModuleModel = require("../models/ModuleModel");
+const Module = require("../models/ModuleModel");
 const mongoose = require("mongoose");
 
 // get all Modules
 const getModules = async (req, res) => {
-  const modules = await ModuleModel.find({}).sort({ createdAt: -1 });
+  const modules = await Module.find({}).sort({ createdAt: -1 });
   res.status(200).json(modules);
 };
 
@@ -14,7 +14,7 @@ const getModule = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such module" });
   }
-  const module = await ModuleModel.findById(id);
+  const module = await Module.findById(id);
 
   if (!module) {
     return res.status(404).json({ error: "No such module" });
@@ -42,7 +42,7 @@ const createModule = async (req, res) => {
   }
 
   try {
-    const module = await ModuleModel.create({
+    const module = await Module.create({
       moduleTitle,
     
     });
@@ -60,7 +60,7 @@ const deleteModule = async (req, res) => {
     return res.status(400).json({ error: "No such Module" });
   }
 
-  const module = await ModuleModel.findOneAndDelete({ _id: id });
+  const module = await Module.findOneAndDelete({ _id: id });
 
   if (!module) {
     return res.status(400).json({ error: "No such Module" });
@@ -77,7 +77,7 @@ const updateModule = async (req, res) => {
     return res.status(400).json({ error: "No such Module" });
   }
 
-  const module = await ModuleModel.findOneAndUpdate(
+  const module = await Module.findOneAndUpdate(
     { _id: id },
     {
       ...req.body,

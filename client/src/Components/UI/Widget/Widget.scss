@@ -1,43 +1,5 @@
-// const cardInformaton = [
-//   {
-//     title: "Total Students",
-//     amount: 2632,
-//     buttonType: <SchoolIcon className="icon" />,
-//     bgColor: "#673AB7",
-//     frontCircle: "#5E35B1",
-//     backCircle: "#522EA8",
-//     cardLength: "185px",
-//   },
-//   {
-//     title: "Total Teachers",
-//     amount: 232,
-//     buttonType: <CastForEducationIcon className="icon" />,
-//     bgColor: "#1E88E5",
-//     frontCircle: "#1565C0",
-//     backCircle: "#1A77D2",
-//     cardLength: "185px",
-//   },
-//   {
-//     title: "Male Students",
-//     amount: 1232,
-//     buttonType: <SchoolIcon className="icon" />,
-//     bgColor: "#1E88E5",
-//     frontCircle: "#419CEA",
-//     backCircle: "#3C99EA",
-//     cardLength: "80px",
-//   },
-//   {
-//     title: "Female Students",
-//     amount: 1243,
-//     buttonType: <SchoolIcon className="icon" />,
-//     bgColor: "#fff",
-//     frontCircle: "#FFECB2",
-//     backCircle: "#FFF5D7",
-//     cardLength: "80px",
-//   },
-// ];
 .card {
-    flex: 1px;
+    margin-left: 0;
     padding: 10px;
     -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
     box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);

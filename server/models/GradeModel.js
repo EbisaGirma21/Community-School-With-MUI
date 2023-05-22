@@ -1,28 +1,25 @@
 const mongoose = require("mongoose");
-const SubjectModel =require('./SubjectModel')
 
-const GradeSchema = new mongoose.Schema(
-  {
-    stage: {
-      type: String,
-      required: true,
-      enum: ["KG", "PRM", "PRM-II", "SEC", "PREP"],
-    },
-    level: {
-      type: Number,
-      min: 1,
-      max: 12,
-      required: true,
-    },
-    branch: {
-      type: String,
-      default: "GEN",
-      enum: ["GEN", "NAT", "SOC"],
-    },
-    subjects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subject" }],
+const GradeSchema = new mongoose.Schema({
+  stage: {
+    type: String,
+    required: true,
+    enum: ["KG", "PRM-I", "PRM-II", "SEC", "PREP"],
   },
-  { timestamps: true }
-);
+  level: {
+    type: Number,
+    min: 1,
+    max: 12,
+    required: true,
+  },
+  branch: {
+    type: String,
+    default: "GEN",
+    enum: ["GEN", "NAT", "SOC"],
+  },
+});
+
+GradeSchema.index({ stage: 1, level: 1, branch: 1 }, { unique: true });
 
 const Grade = mongoose.model("Grade", GradeSchema);
 
