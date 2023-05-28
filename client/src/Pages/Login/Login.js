@@ -14,7 +14,7 @@ const ErrorLabel = styled(Box)(() => ({
   marginTop: "10px",
 }));
 export const StyledButton = styled(Button)(() => ({
-  backgroundColor: "#4454c3",
+  backgroundColor: "#5E35B1",
   color: "white",
   margin: "5px",
   marginTop: "10px",
@@ -72,24 +72,29 @@ const Login = () => {
     <>
       <StyledBox>
         <CardWrapper>
-          <Divider>
-            <Typography variant="h4">Login</Typography>
+          <Divider sx={{ m: 2 }}>
+            <Typography variant="h4">WKU-CSMS</Typography>
           </Divider>
           <Typography
-            variant="body1"
-            sx={{ mt: 2, mb: 1, textAlign: "center" }}
+            variant="h6"
+            sx={{
+              mt: 2,
+              mb: 1,
+              textAlign: "center",
+              fontSize: 28,
+              color: "#5E35B1",
+              fontWeight: "550",
+            }}
           >
-            Sign in to your account
+            Hi, Welcome Back
           </Typography>
-          <br />
-          <Box sx={{ mt: 1, mb: 1, textAlign: "center" }}>
-            <StyledButton sx={{ backgroundColor: "#FF5B51" }}>
-              Google
-            </StyledButton>
-            <StyledButton>Twitter</StyledButton>
-            <StyledButton>Facebook</StyledButton>
-          </Box>
-          <Divider sx={{ mt: 2, mb: 2 }}>OR</Divider>
+          <Typography
+            variant="body1"
+            sx={{ mt: 2, mb: 1, textAlign: "center",color:'#697586' }}
+          >
+            Enter your credentials to continue
+          </Typography>
+
           <form onSubmit={handleSubmit}>
             <StyledInput
               type="text"

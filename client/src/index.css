@@ -12,17 +12,21 @@ body {
   width: 5px;
   opacity: 0;
   transition: opacity 0.3s;
+  position: fixed;
 }
 
 ::-webkit-scrollbar-thumb-y {
   opacity: 0;
+  position: fixed;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   border-radius: 4px;
   background-color: #b6b6b6;
+  position: fixed;
 }
 
 :hover::-webkit-scrollbar {
   opacity: 0;
+  position: fixed;
 }

@@ -167,7 +167,7 @@ function SideBar() {
         {
           text: <Typography sx={itemTextStyle}>Dashboard</Typography>,
           icon: <Dashboard sx={{ fontSize: "18px" }} />,
-          path: "/",
+          path: "/dashboard",
         },
         {
           text: <Typography sx={itemTextStyle}>Ac. Session</Typography>,
