@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../context/AuthContext";
+import Header from "../../components/UI/Header";
 
 const ErrorLabel = styled(Box)(() => ({
   backgroundColor: "#FFF0F1",
@@ -70,6 +71,7 @@ const Login = () => {
 
   return (
     <>
+      <Header isLogin={false} />
       <StyledBox>
         <CardWrapper>
           <Divider sx={{ m: 2 }}>
@@ -90,7 +92,7 @@ const Login = () => {
           </Typography>
           <Typography
             variant="body1"
-            sx={{ mt: 2, mb: 1, textAlign: "center",color:'#697586' }}
+            sx={{ mt: 2, mb: 1, textAlign: "center", color: "#697586" }}
           >
             Enter your credentials to continue
           </Typography>
