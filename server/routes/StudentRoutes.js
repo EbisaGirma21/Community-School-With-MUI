@@ -5,23 +5,27 @@ const {
   getStudent,
   updateStudent,
   deleteStudent,
+  getElligibleStudent,
 } = require("../controllers/StudentController");
 
 const router = express.Router();
 
 // GET all Students
-router.get("new/", getStudents);
+router.get("/", getStudents);
 
 // GET a single Student
-router.get("new/:Id", getStudent);
+router.get("/:id", getStudent);
 
 // POST a new Student
-router.post("new/", createStudent);
+router.post("/", createStudent);
 
 // DELETE a Student
-router.delete("new/:Id", deleteStudent);
+router.delete("/:id", deleteStudent);
 
 // UPDATE a Student
-router.patch("new/:Id", updateStudent);
+router.patch("/:id", updateStudent);
+
+// UPDATE a Student
+router.get("/elligible/:gradeId", getElligibleStudent);
 
 module.exports = router;

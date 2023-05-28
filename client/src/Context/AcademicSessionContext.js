@@ -8,13 +8,13 @@ function AcademicSessionProvider({ children }) {
 
   //  function  used to fetch data from database
   const fetchAcademicSessions = async () => {
-    const response = await axios.get("http://localhost:8000/api/academicSession");
+    const response = await axios.get("/academicSession");
     setAcademicSession(response.data);
   };
 
   // function used to create academicSession
   const createAcademicSession = async (academicYear) => {
-    const response = await axios.post("http://localhost:8000/api/academicSession", {
+    const response = await axios.post("/academicSession", {
       academicYear,
     });
 
@@ -24,7 +24,7 @@ function AcademicSessionProvider({ children }) {
 
   // function used to delete academicSession
   const deleteAcademicSessionById = async (id) => {
-    await axios.delete(`http://localhost:8000/api/academicSession/${id}`);
+    await axios.delete(`/academicSession/${id}`);
 
     const updatedAcademicSession = academicSession.filter((academicSession) => {
       return academicSession._id !== id;
@@ -36,7 +36,7 @@ function AcademicSessionProvider({ children }) {
   // function used to delete academicSession
   const editAcademicSessionById = async (id, newAcademicYear) => {
     const response = await axios.patch(
-      `http://localhost:8000/api/academicSession/${id}`,
+      `/academicSession/${id}`,
       {
         academicYear: newAcademicYear,
       }

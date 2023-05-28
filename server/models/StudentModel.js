@@ -1,56 +1,59 @@
 const mongoose = require("mongoose");
 
-const StudentSchema = new mongoose.Schema({
-  first_name: {
-    type: String,
-    required: true,
-  },
-  middle_name: {
-    type: String,
-    required: true,
-  },
-  last_name: {
-    type: String,
-    required: true,
-  },
-  sex: {
-    type: String,
-    required: true,
-    enum: ["Male", "Female"],
-  },
-  birth_date: {
-    type: Date,
-    required: true,
-  },
-  currentEnrollement: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Grade",
-  },
-  previousEnrollement: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Grade",
-  },
-  enrollment_history: [
-    {
-      _year: {
-        type: Number,
+const StudentSchema = new mongoose.Schema(
+  {
+    _id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    birthDate: {
+      type: Date,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      default: "REG",
+      enum: ["REG", "ONP", "PAS", "FAL"],
+    },
+    studentType: {
+      type: String,
+      enum: ["NOR", "TRN"],
+    },
+    currentEnrollement: {
+      academicCurriculum: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "AcademicCurriculum",
       },
-      _grade: {
+      grade: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Grade",
       },
-      _student_id: {
+      section: {
         type: mongoose.Schema.Types.ObjectId,
-      },
-      _status: {
-        type: String,
-        required: true,
-        default: "REG",
-        enum: ["REG", "ONP", "PAS", "FAL"],
+        ref: "Section",
       },
     },
-  ],
-});
+    enrollment_history: [
+      {
+        _academicCurriculum: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "AcademicCurriculum",
+        },
+        _grade: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Grade",
+        },
+        _section: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Section",
+        },
+      },
+    ],
+  },
+  { timestamps: true },
+  { _id: false }
+);
 
 const Student = mongoose.model("Student", StudentSchema);
 

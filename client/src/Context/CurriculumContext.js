@@ -7,15 +7,13 @@ function CurriculumProvider({ children }) {
   const [curriculum, setCurriculum] = useState([]);
 
   const fetchCurriculumById = async (id) => {
-    const response = await axios.get(
-      `http://localhost:8000/api/curriculum/${id}`
-    );
+    const response = await axios.get(`/curriculum/${id}`);
     setCurriculum(response.data.data.curriculum);
   };
 
   //  function  used to fetch data from database
   const fetchCurriculums = async () => {
-    const response = await axios.get("http://localhost:8000/api/curriculum");
+    const response = await axios.get("/curriculum");
     setCurriculum(response.data.data.curriculums);
   };
 
@@ -27,7 +25,7 @@ function CurriculumProvider({ children }) {
     classification,
     totalMaximumLoad
   ) => {
-    const response = await axios.post("http://localhost:8000/api/curriculum", {
+    const response = await axios.post("/curriculum", {
       curriculumTitle,
       curriculumYear,
       stage,
@@ -42,7 +40,7 @@ function CurriculumProvider({ children }) {
 
   // function used to delete curriculum
   const deleteCurriculumById = async (id) => {
-    await axios.delete(`http://localhost:8000/api/curriculum/${id}`);
+    await axios.delete(`/curriculum/${id}`);
 
     const updatedCurriculum = curriculum.filter((curriculum) => {
       return curriculum._id !== id;
@@ -60,7 +58,7 @@ function CurriculumProvider({ children }) {
     newTotalMaximumLoad
   ) => {
     const response = await axios.patch(
-      `http://localhost:8000/api/curriculum/${id}`,
+      `/curriculum/${id}`,
       {
         curriculumTitle: newCurriculumTitle,
         curriculumYear: newCurriculumYear,

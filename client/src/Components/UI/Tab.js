@@ -15,13 +15,12 @@ export default function Tabs(props) {
     <Box sx={{ width: "100%", typography: "body1" }}>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <TabList onChange={handleChange}  aria-label="lab API tabs example">
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
             {props.tab_contents.map((tab_content) => (
               <Tab
                 key={tab_content.id}
                 label={tab_content.label}
                 value={tab_content.value || 1}
-              
               />
             ))}
           </TabList>
@@ -31,7 +30,7 @@ export default function Tabs(props) {
             value={tab_content.value}
             key={tab_content.id}
             className="tab-body"
-            sx={{ p: 1 }}
+            sx={{ p: 1, m: 0 }}
           >
             {tab_content.content}
           </TabPanel>

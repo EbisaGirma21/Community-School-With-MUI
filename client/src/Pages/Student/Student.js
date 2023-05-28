@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 
 function Student() {
-  return <Box>Student</Box>;
+  return <Box>Up on progress</Box>;
 }
 
 export default Student;

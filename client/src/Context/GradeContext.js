@@ -8,15 +8,13 @@ function GradeProvider({ children }) {
 
   //  function  used to fetch data from database
   const fetchGrades = async () => {
-    const response = await axios.get("http://localhost:8000/api/grade");
+    const response = await axios.get("/grade");
     setGrade(response.data.data.grade);
   };
 
   //  fetching hte grades by stage
   const fetchGradeByStage = async (stage) => {
-    const response = await axios.get(
-      `http://localhost:8000/api/grade/stage/${stage}`
-    );
+    const response = await axios.get(`/grade/stage/${stage}`);
     setGrade(response.data);
   };
 

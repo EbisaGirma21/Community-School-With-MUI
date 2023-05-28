@@ -1,8 +1,8 @@
- import React from 'react'
- 
- export const Home = () => {
-   return (
-     <div>Home</div>
-   )
- }
- 
+import React from "react";
+import Header from "../../components/UI/Header";
+
+export const Home = () => {
+  return <Header>
+    
+  </Header>;
+};

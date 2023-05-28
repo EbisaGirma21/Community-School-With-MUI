@@ -1,6 +1,6 @@
 import Dropdown from "../../components/UI/Dropdown";
 import { Box, Grid, Typography } from "@mui/material";
-import RegistrationTab from "./RegistrationTab";
+import RegistrationTab from "./components/RegistrationTab";
 import { useContext, useEffect, useState } from "react";
 import AcademicCurriculumContext from "../../context/AcademicCurriculumContext";
 import CurriculumContext from "../../context/CurriculumContext";
@@ -47,6 +47,7 @@ function Registration() {
           // Handle any errors
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acCurriculumId]);
 
   // Fetch grade when curriculum is fetched
@@ -60,6 +61,7 @@ function Registration() {
           // Handle any errors
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acCurriculumId, curriculum]);
 
   // gradeOption
@@ -72,8 +74,12 @@ function Registration() {
 
   return (
     <Box>
-      <Typography>Registrations</Typography>
-      <Grid container spacing={1}>
+      <Typography sx={{ m: 1 }}>Registrations</Typography>
+      <Grid
+        container
+        spacing={1}
+        sx={{ p: 1, border: "1px solid #dbdde0", borderRadius: "10px" }}
+      >
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Dropdown
             label="Academic Curriculum"
@@ -98,7 +104,7 @@ function Registration() {
           />
         </Grid>
       </Grid>
-      <RegistrationTab />
+      <RegistrationTab acCurriculumId={acCurriculumId} gradeId={gradeId} />
     </Box>
   );
 }

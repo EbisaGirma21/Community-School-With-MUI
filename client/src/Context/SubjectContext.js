@@ -8,16 +8,14 @@ function SubjectProvider({ children }) {
 
   //  function  used to fetch data from database
   const fetchSubjects = async (curriculumId, gradeId) => {
-    const response = await axios.get(
-      `http://localhost:8000/api/subject/${curriculumId}/${gradeId}`
-    );
+    const response = await axios.get(`/subject/${curriculumId}/${gradeId}`);
     setSubject(response.data.data.subjects);
   };
 
   //  function  used to fetch data from database
   const fetchSubjectById = async (curriculumId, gradeId, id) => {
     const response = await axios.get(
-      `http://localhost:8000/api/subject/year/${curriculumId}/${gradeId}/${id}`
+      `/subject/year/${curriculumId}/${gradeId}/${id}`
     );
     setSubject(response.data.data.subject);
   };
@@ -30,7 +28,7 @@ function SubjectProvider({ children }) {
     subjectLoad
   ) => {
     console.log(subject);
-    const response = await axios.post("http://localhost:8000/api/subject", {
+    const response = await axios.post("/subject", {
       curriculumId,
       gradeId,
       subjects: modules,
@@ -42,9 +40,7 @@ function SubjectProvider({ children }) {
 
   // function used to delete subject
   const deleteSubjectById = async (curriculumId, gradeId, id) => {
-    await axios.delete(
-      `http://localhost:8000/api/subject/${curriculumId}/${gradeId}/${id}`
-    );
+    await axios.delete(`/subject/${curriculumId}/${gradeId}/${id}`);
 
     const updatedSubject = subject.filter((subject) => {
       return subject._id !== id;
@@ -56,7 +52,7 @@ function SubjectProvider({ children }) {
   // function used to delete subject
   const editSubjectById = async (curriculumId, gradeId, id, subjectLoad) => {
     const response = await axios.patch(
-      `http://localhost:8000/api/subject/${curriculumId}/${gradeId}/${id}`,
+      `/subject/${curriculumId}/${gradeId}/${id}`,
       {
         subjectLoad,
       }

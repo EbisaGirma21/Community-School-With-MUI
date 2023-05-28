@@ -16,6 +16,8 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import ToggleProvider from "../context/SidebarContext";
 import { useContext, useState } from "react";
 import { Button, useMediaQuery } from "@mui/material";
+import { Logout } from "../context/LogoutContext";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -111,6 +113,13 @@ export default function Navbar() {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const { logout } = Logout();
+  const navigate = useNavigate();
+  const handleLogoutClick = () => {
+    logout();
+    navigate("/login");
+  };
+
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -162,7 +171,7 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
     </Menu>
   );
 

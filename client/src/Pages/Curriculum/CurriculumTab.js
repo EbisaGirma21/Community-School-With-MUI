@@ -6,7 +6,7 @@ import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
 
-import SubjectTable from "./components/SubjectTable";
+import SubjectTable from "../Subject/components/SubjectTable";
 
 const CurriculumTab = () => {
   const [open, setOpen] = useState(false);
@@ -18,7 +18,6 @@ const CurriculumTab = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
 
   // The information passed to tab of curriculum
   const curriculumTab = [

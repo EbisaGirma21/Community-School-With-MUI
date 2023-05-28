@@ -23,10 +23,11 @@ import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import SidebarContext from "../context/SidebarContext";
 import { styled } from "@mui/material/styles";
 import ActivePageContext from "../context/ActivePageContext";
+import GradingIcon from "@mui/icons-material/Grading";
 
 function SideBar() {
   const { isSidebarOpen } = useContext(SidebarContext);
@@ -158,90 +159,176 @@ function SideBar() {
     color: "#774FBF",
   };
 
-  // main side items
-  const mainItems = [
-    {
-      text: <Typography sx={itemTextStyle}>Dashboard</Typography>,
-      icon: <Dashboard sx={{ fontSize: "18px" }} />,
-      path: "/",
-    },
-  ];
+  const [menuItems, setMenuItems] = useState(() => getMenuItems());
+  function getMenuItems() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user.role === "director") {
+      return [
+        {
+          text: <Typography sx={itemTextStyle}>Dashboard</Typography>,
+          icon: <Dashboard sx={{ fontSize: "18px" }} />,
+          path: "/",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Ac. Session</Typography>,
+          icon: <CalendarMonthOutlinedIcon sx={{ fontSize: "18px" }} />,
+          path: "academicSession",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Curriculum</Typography>,
+          icon: <StyleIcon sx={{ fontSize: "18px" }} />,
+          path: "curriculum",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Ac. Curriculum</Typography>,
+          icon: <SourceOutlinedIcon sx={{ fontSize: "18px" }} />,
+          path: "academicCurriculum",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Students</Typography>,
+          icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
+          path: "students",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Teachers</Typography>,
+          icon: <CastForEducationIcon sx={{ fontSize: "18px" }} />,
+          path: "teachers",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Modules</Typography>,
+          icon: <ViewModuleIcon sx={{ fontSize: "18px" }} />,
+          path: "modules",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Departments</Typography>,
+          icon: <SafetyDividerIcon sx={{ fontSize: "18px" }} />,
+          path: "departments",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Ass. Teachers</Typography>,
+          icon: <AssignmentReturnIcon sx={{ fontSize: "18px" }} />,
+          path: "assignTeacher",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Registration</Typography>,
+          icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
+          path: "registration",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Student Result</Typography>,
+          icon: <GradingIcon sx={{ fontSize: "18px" }} />,
+          path: "result",
+        },
+      ];
+    } else if (user.role === "teacher") {
+      return [
+        {
+          text: <Typography sx={itemTextStyle}>Students</Typography>,
+          icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
+          path: "students",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Registration</Typography>,
+          icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
+          path: "registration",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Student Result</Typography>,
+          icon: <GradingIcon sx={{ fontSize: "18px" }} />,
+          path: "result",
+        },
+      ];
+    } else {
+      return [
+        {
+          text: <Typography sx={itemTextStyle}>Club</Typography>,
+          icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
+          path: "students",
+        },
+        {
+          text: <Typography sx={itemTextStyle}>Result</Typography>,
+          icon: <GradingIcon sx={{ fontSize: "18px" }} />,
+          path: "result",
+        },
+      ];
+    }
+  }
 
-  // basic side items
-  const basicItems = [
-    {
-      text: <Typography sx={itemTextStyle}>Ac. Session</Typography>,
-      icon: <CalendarMonthOutlinedIcon sx={{ fontSize: "18px" }} />,
-      path: "/academicSession",
-    },
-    {
-      text: <Typography sx={itemTextStyle}>Curriculum</Typography>,
-      icon: <StyleIcon sx={{ fontSize: "18px" }} />,
-      path: "/curriculum",
-    },
-    {
-      text: <Typography sx={itemTextStyle}>Ac. Curriculum</Typography>,
-      icon: <SourceOutlinedIcon sx={{ fontSize: "18px" }} />,
-      path: "/academicCurriculum",
-    },
-  ];
+  // // basic side items
+  // const basicItems = [
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Ac. Session</Typography>,
+  //     icon: <CalendarMonthOutlinedIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/academicSession",
+  //   },
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Curriculum</Typography>,
+  //     icon: <StyleIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/curriculum",
+  //   },
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Ac. Curriculum</Typography>,
+  //     icon: <SourceOutlinedIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/academicCurriculum",
+  //   },
+  // ];
 
-  // basic side items
-  const listItems = [
-    {
-      text: <Typography sx={itemTextStyle}>Students</Typography>,
-      icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
-      path: "/students",
-    },
-    {
-      text: <Typography sx={itemTextStyle}>Teachers</Typography>,
-      icon: <CastForEducationIcon sx={{ fontSize: "18px" }} />,
-      path: "/teachers",
-    },
-    {
-      text: <Typography sx={itemTextStyle}>Modules</Typography>,
-      icon: <ViewModuleIcon sx={{ fontSize: "18px" }} />,
-      path: "/modules",
-    },
-    {
-      text: <Typography sx={itemTextStyle}>Departments</Typography>,
-      icon: <SafetyDividerIcon sx={{ fontSize: "18px" }} />,
-      path: "/departments",
-    },
-  ];
+  // // basic side items
+  // const listItems = [
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Students</Typography>,
+  //     icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/students",
+  //   },
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Teachers</Typography>,
+  //     icon: <CastForEducationIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/teachers",
+  //   },
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Modules</Typography>,
+  //     icon: <ViewModuleIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/modules",
+  //   },
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Departments</Typography>,
+  //     icon: <SafetyDividerIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/departments",
+  //   },
+  // ];
 
-  // basic side items
-  const operationItems = [
-    {
-      text: <Typography sx={itemTextStyle}>Ass. Teachers</Typography>,
-      icon: <AssignmentReturnIcon sx={{ fontSize: "18px" }} />,
-      path: "/assignTeacher",
-    },
-    {
-      text: <Typography sx={itemTextStyle}>Registration</Typography>,
-      icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
-      path: "/registration",
-    },
-    {
-      text: <Typography sx={itemTextStyle}>Setting</Typography>,
-      icon: <SettingsApplicationsIcon sx={{ fontSize: "18px" }} />,
-      path: "/setting",
-    },
-  ];
+  // // basic side items
+  // const operationItems = [
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Ass. Teachers</Typography>,
+  //     icon: <AssignmentReturnIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/assignTeacher",
+  //   },
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Registration</Typography>,
+  //     icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/registration",
+  //   },
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Setting</Typography>,
+  //     icon: <SettingsApplicationsIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/setting",
+  //   },
+  // ];
 
-  // basic side items
-  const userItems = [
-    {
-      text: <Typography sx={itemTextStyle}>Profile</Typography>,
-      icon: <AccountCircleIcon sx={{ fontSize: "18px" }} />,
-      path: "/profile",
-    },
-    {
-      text: <Typography sx={itemTextStyle}>Logout</Typography>,
-      icon: <ExitToAppIcon sx={{ fontSize: "18px" }} />,
-      path: "/logout",
-    },
-  ];
+  // // basic side items
+  // const userItems = [
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Profile</Typography>,
+  //     icon: <AccountCircleIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/profile",
+  //   },
+  //   {
+  //     text: <Typography sx={itemTextStyle}>Logout</Typography>,
+  //     icon: <ExitToAppIcon sx={{ fontSize: "18px" }} />,
+  //     path: "/logout",
+  //   },
+  // ];
 
   // returned drawer
   return (
@@ -270,8 +357,8 @@ function SideBar() {
       {/* list of admin page */}
       <Box sx={{ marginTop: "83px", padding: "0" }}>
         <List sx={styledList}>
-          <Typography sx={itemTitleStyle}>Main</Typography>
-          {mainItems.map((item) => (
+          {/* <Typography sx={itemTitleStyle}>Main</Typography> */}
+          {menuItems.map((item) => (
             <Link to={item.path} key={item.path} style={styledLink}>
               <ListItemButton sx={styledButton}>
                 <StyledIconWrapper>{item.icon}</StyledIconWrapper>
@@ -280,7 +367,7 @@ function SideBar() {
             </Link>
           ))}
         </List>
-        <List sx={styledList}>
+        {/* <List sx={styledList}>
           <Typography sx={itemTitleStyle}>Basic</Typography>
           {basicItems.map((item) => (
             <Link to={item.path} key={item.path} style={styledLink}>
@@ -323,7 +410,7 @@ function SideBar() {
               </ListItemButton>
             </Link>
           ))}
-        </List>
+        </List> */}
       </Box>
     </Drawer>
   );

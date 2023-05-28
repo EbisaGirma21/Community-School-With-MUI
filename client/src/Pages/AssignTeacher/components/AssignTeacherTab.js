@@ -1,63 +1,16 @@
 import Tab from "../../../components/UI/Tab";
-import Datatable from "../../../components/UI/Datatable";
-import Dropdown from "../../../components/UI/Dropdown";
-import { Button, Grid } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { Box } from "@mui/material";
 
 const assignTeacherTab = [
   {
-    label: "Subject Teachers",
+    label: "Home Room Teacher",
     value: "1",
-    content: (
-      <div className="subject-teacher__tab">
-        <div className="subject-teacher-top__items">
-          <Grid container spacing={1} className="subject-teacher__grid">
-            <Grid item xs={12} sm={12} md={6} lg={4}>
-              <Dropdown />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={4}>
-              <Button variant="contained">
-                <AddIcon /> Assign Teacher
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
-        <hr />
-        <p className="table-title">Subject Teacher</p>
-        <hr />
-        <div className="subject-teacher__table">
-          <Datatable />
-        </div>
-      </div>
-    ),
+    content: <Box></Box>,
   },
   {
-    label: "Subject",
+    label: "Subject Teachers",
     value: "2",
-    content: (
-      <>
-        {" "}
-        <div className="subject">
-          <Grid container spacing={4} className="subject-top__grid">
-            <Grid item xs={12} sm={12} md={6} lg={4}>
-              <Dropdown />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={3}>
-              <Dropdown />
-            </Grid>
-            <Grid item xs={12} sm={12} md={6} lg={3}>
-              <Button variant="contained">
-                <AddIcon />
-                Assessiment Weight
-              </Button>
-            </Grid>
-          </Grid>
-        </div>
-        <div className="subject-table">
-          <Datatable />
-        </div>
-      </>
-    ),
+    content: <Box></Box>,
   },
 ];
 

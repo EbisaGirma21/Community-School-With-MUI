@@ -8,13 +8,13 @@ function ModuleProvider({ children }) {
 
   //  function  used to fetch data from database
   const fetchModules = async () => {
-    const response = await axios.get("http://localhost:8000/api/module");
+    const response = await axios.get("/module");
     setModule(response.data);
   };
 
   // function used to create module
   const createModule = async (moduleTitle) => {
-    const response = await axios.post("http://localhost:8000/api/module", {
+    const response = await axios.post("/module", {
       moduleTitle,
     });
 
@@ -24,7 +24,7 @@ function ModuleProvider({ children }) {
 
   // function used to delete module
   const deleteModuleById = async (id) => {
-    await axios.delete(`http://localhost:8000/api/module/${id}`);
+    await axios.delete(`/module/${id}`);
 
     const updatedModule = module.filter((module) => {
       return module._id !== id;
@@ -36,7 +36,7 @@ function ModuleProvider({ children }) {
   // function used to delete module
   const editModuleById = async (id, newModuleTitle) => {
     const response = await axios.patch(
-      `http://localhost:8000/api/module/${id}`,
+      `/module/${id}`,
       {
         moduleTitle: newModuleTitle,
       }

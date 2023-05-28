@@ -1,6 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import AcademicSession from "./pages/AcademicSession/AcademicSession";
-import AccCurriculum from "./pages/AcademicCurriculum/AcademicCurriculum";
 import Curriculum from "./pages/Curriculum/Curriculum";
 import Student from "./pages/Student/Student";
 import Registration from "./pages/Registration/Registration";
@@ -17,15 +16,29 @@ import { AcademicCurriculumProvider } from "./context/AcademicCurriculumContext"
 import { GradeProvider } from "./context/GradeContext";
 import { SubjectProvider } from "./context/SubjectContext";
 import Layout from "./components/Layout";
-
+import { DepartmentProvider } from "./context/DepartmentContext";
+import { TeacherProvider } from "./context/TeacherContext";
+import { NewStudentProvider } from "./context/NewStudentContext";
+import axios from "axios";
+import { Box } from "@mui/material";
+import Login from "./pages/Login/Login";
+import { Home } from "./pages/Home/Home";
+import Result from "./pages/Result/Result";
 function App() {
+  axios.defaults.baseURL = "http://localhost:8000/api";
+  const user = localStorage.getItem("user");
+
   return (
-    <div className="app">
+    <Box>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="login" element={<Login />} />
+          <Route
+            path="/dashboard"
+            element={user !== null ? <Layout /> : <Navigate to="/login" />}
+          >
             <Route index element={<Dashboard />} />
-            <Route path="login" element={<Dashboard />} />
             <Route path="academicSession">
               <Route
                 index
@@ -35,7 +48,6 @@ function App() {
                   </AcademicSessionProvider>
                 }
               />
-              <Route path=":academicSessionId" element={<AcademicSession />} />
             </Route>
             <Route path="curriculum">
               <Route
@@ -52,7 +64,6 @@ function App() {
                   </CurriculumProvider>
                 }
               />
-              <Route path=":curriculumId" element={<Curriculum />} />
             </Route>
             <Route path="academicCurriculum">
               <Route
@@ -67,15 +78,19 @@ function App() {
                   </AcademicSessionProvider>
                 }
               />
-              <Route path=":academicCurriculumId" element={<AccCurriculum />} />
             </Route>
             <Route path="students">
               <Route index element={<Student />} />
-              <Route path=":studentId" element={<Student />} />
             </Route>
             <Route path="teachers">
-              <Route index element={<Teacher />} />
-              <Route path=":teacherId" element={<Teacher />} />
+              <Route
+                index
+                element={
+                  <TeacherProvider>
+                    <Teacher />
+                  </TeacherProvider>
+                }
+              />
             </Route>
             <Route path="modules">
               <Route
@@ -86,14 +101,30 @@ function App() {
                   </ModuleProvider>
                 }
               />
-              <Route path=":moduleId" element={<Module />} />
             </Route>
             <Route path="departments">
-              <Route index element={<Department />} />
-              <Route path=":departmentId" element={<Department />} />
+              <Route
+                index
+                element={
+                  <DepartmentProvider>
+                    <Department />
+                  </DepartmentProvider>
+                }
+              />
             </Route>
-            <Route path="ass_teacher">
-              <Route index element={<AssignTeacher />} />
+            <Route path="assignTeacher">
+              <Route
+                index
+                element={
+                  <AcademicCurriculumProvider>
+                    <CurriculumProvider>
+                      <GradeProvider>
+                        <AssignTeacher />
+                      </GradeProvider>
+                    </CurriculumProvider>
+                  </AcademicCurriculumProvider>
+                }
+              />
             </Route>
             <Route path="registration">
               <Route
@@ -102,17 +133,24 @@ function App() {
                   <AcademicCurriculumProvider>
                     <CurriculumProvider>
                       <GradeProvider>
-                        <Registration />
+                        <SubjectProvider>
+                          <NewStudentProvider>
+                            <Registration />
+                          </NewStudentProvider>
+                        </SubjectProvider>
                       </GradeProvider>
                     </CurriculumProvider>
                   </AcademicCurriculumProvider>
                 }
               />
             </Route>
+            <Route path="result">
+              <Route index element={<Result />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
-    </div>
+    </Box>
   );
 }
 

@@ -9,7 +9,7 @@ function AcademicCurriculumProvider({ children }) {
   //  function  used to fetch data from database
   const fetchAcademicCurriculums = async () => {
     const response = await axios.get(
-      "http://localhost:8000/api/academicCurriculum"
+      "/academicCurriculum"
     );
     setAcademicCurriculum(response.data);
   };
@@ -18,7 +18,7 @@ function AcademicCurriculumProvider({ children }) {
   const fetchAcademicCurriculumByYear = async (acYear) => {
     setAcademicCurriculum([]);
     const response = await axios.get(
-      `http://localhost:8000/api/academicCurriculum/year/${acYear}`
+      `/academicCurriculum/year/${acYear}`
     );
     setAcademicCurriculum(response.data);
   };
@@ -31,7 +31,7 @@ function AcademicCurriculumProvider({ children }) {
   ) => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/academicCurriculum",
+        "/academicCurriculum",
         {
           academicSession,
           curriculum,
@@ -48,7 +48,7 @@ function AcademicCurriculumProvider({ children }) {
 
   // function used to delete academicCurriculum
   const deleteAcademicCurriculumById = async (id) => {
-    await axios.delete(`http://localhost:8000/api/academicCurriculum/${id}`);
+    await axios.delete(`/academicCurriculum/${id}`);
 
     const updatedAcademicCurriculum = academicCurriculum.filter(
       (academicCurriculum) => {
@@ -67,7 +67,7 @@ function AcademicCurriculumProvider({ children }) {
     newMaxSemester
   ) => {
     const response = await axios.patch(
-      `http://localhost:8000/api/academicCurriculum/${id}`,
+      `/academicCurriculum/${id}`,
       {
         curriculum: newCurriculum,
         maxSemester: newMaxSemester,

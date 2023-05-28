@@ -1,7 +1,9 @@
 const Grade = require("../models/GradeModel");
 
 const getGrades = async (req, res) => {
-  const grades = await Grade.find({});
+  const grades = await Grade.find({}).sort({
+    createdAt: -1,
+  });
   try {
     res.status(200).json({
       status: "Success",
@@ -160,6 +162,7 @@ async function IsPreviousGradeExist(grade) {
     });
   }
 }
+
 
 module.exports = {
   getGrades,
