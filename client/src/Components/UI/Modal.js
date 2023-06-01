@@ -6,20 +6,29 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DoneIcon from "@mui/icons-material/Done";
 import ClearIcon from "@mui/icons-material/Clear";
 import { Box } from "@mui/material";
+import styled from "@emotion/styled";
+
+const ErrorLabel = styled(Box)(() => ({
+  backgroundColor: "#FFF0F1",
+  border: "1px solid #e5a9ac",
+  padding: "5px",
+  borderRadius: "10px",
+  color: "#864348",
+  marginTop: "10px",
+}));
 
 const Modal = (props) => {
   const { title, children, onSubmit, handleClose, open } = props;
-  const handleSave = () => {
-    onSubmit();
-    handleClose();
+  const handleSave = (e) => {
+    onSubmit(e);
   };
   return (
     <Box sx={{ margin: "10px" }}>
-      <Dialog open={open} onClose={handleClose} >
+      <Dialog open={open} onClose={handleClose}>
         {/* Modal Title */}
         <DialogTitle
           sx={{
-            backgroundColor: "#1E88E5",
+            backgroundColor: "#5e35b1",
             color: "white",
             mb: 2,
           }}
@@ -33,15 +42,18 @@ const Modal = (props) => {
           <Button
             onClick={handleClose}
             variant="contained"
-            sx={{ background: "#1E88E5" }}
+            sx={{ background: "#5e35b1" }}
           >
             <ClearIcon />
             Cancel
           </Button>
           <Button
-            onClick={handleSave}
+            onClick={(e) => {
+              handleSave(e);
+              handleClose();
+            }}
             variant="contained"
-            sx={{ background: "#1E88E5" }}
+            sx={{ background: "#5e35b1" }}
           >
             <DoneIcon /> Save
           </Button>

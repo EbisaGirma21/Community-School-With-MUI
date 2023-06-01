@@ -24,9 +24,11 @@ import { Box } from "@mui/material";
 import Login from "./pages/Login/Login";
 import { Home } from "./pages/Home/Home";
 import Result from "./pages/Result/Result";
+import AuthContext from "./context/AuthContext";
+import { useContext } from "react";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
-  const user = localStorage.getItem("user");
+  const { user } = useContext(AuthContext);
 
   return (
     <Box>

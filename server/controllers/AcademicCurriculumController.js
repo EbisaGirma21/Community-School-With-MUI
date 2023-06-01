@@ -5,30 +5,37 @@ const AcademicSession = require("../models/AcademicSessionModel");
 
 // get all AcademicCurriculums
 const getAcademicCurriculums = async (req, res) => {
-  const academicCurriculums = await AcademicCurriculumModel.find({}).sort({
-    createdAt: -1,
-  });
+  try {
+    const academicCurriculums = await AcademicCurriculumModel.find({}).sort({
+      createdAt: -1,
+    });
 
-  // Retrieve academic with curriculum information
-  const acCurriculums = await Promise.all(
-    academicCurriculums.map(async (academicCurriculum) => {
-      const curriculum = await Curriculum.findById(
-        academicCurriculum.curriculum.toString()
-      );
-      const academicSession = await AcademicSession.findById(
-        academicCurriculum.academicSession.toString()
-      );
-      return {
-        _id: academicCurriculum._id,
-        academicSession: academicCurriculum.academicSession,
-        curriculumId: curriculum ? curriculum._id : null,
-        curriculumTitle: curriculum ? curriculum.curriculumTitle : null,
-        maxSemester: academicCurriculum.maxSemester,
-        academicYear: academicSession.academicYear,
-      };
-    })
-  );
-  res.status(200).json(acCurriculums);
+    // Retrieve academic with curriculum information
+    const acCurriculums = await Promise.all(
+      academicCurriculums.map(async (academicCurriculum) => {
+        const curriculum = await Curriculum.findById(
+          academicCurriculum.curriculum.toString()
+        );
+        const academicSession = await AcademicSession.findById(
+          academicCurriculum.academicSession.toString()
+        );
+        return {
+          _id: academicCurriculum._id,
+          academicSession: academicCurriculum.academicSession,
+          curriculumId: curriculum ? curriculum._id : null,
+          curriculumTitle: curriculum ? curriculum.curriculumTitle : null,
+          maxSemester: academicCurriculum.maxSemester,
+          academicYear: academicSession.academicYear,
+        };
+      })
+    );
+
+    res.status(200).json(acCurriculums);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Something went wrong. Please try again later." });
+  }
 };
 
 // get a single AcademicCurriculum
@@ -108,7 +115,6 @@ const createAcademicCurriculum = async (req, res) => {
       curriculum,
       maxSemester,
     });
-
     res.status(200).json(academicCurriculum);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -118,41 +124,38 @@ const createAcademicCurriculum = async (req, res) => {
 // delete a AcademicCurriculum
 const deleteAcademicCurriculum = async (req, res) => {
   const { id } = req.params;
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "No such AcademicCurriculum" });
+    return res.status(400).json({ error: "Invalid AcademicCurriculum ID" });
   }
-
-  const academicCurriculum = await AcademicCurriculumModel.findOneAndDelete({
-    _id: id,
-  });
-
-  if (!academicCurriculum) {
-    return res.status(400).json({ error: "No such AcademicCurriculum" });
+  try {
+    const academicCurriculum = await AcademicCurriculumModel.findOneAndDelete({
+      _id: id,
+    });
+    if (!academicCurriculum) {
+      return res.status(404).json({ error: "AcademicCurriculum not found" });
+    }
+    res.status(204).json(academicCurriculum);
+  } catch (error) {
+    console.error(error); // Log the error for debugging purposes
+    res.status(500).json({ error: "Failed to delete AcademicCurriculum" });
   }
-
-  res.status(200).json(academicCurriculum);
 };
 
 // update a AcademicCurriculum
 const updateAcademicCurriculum = async (req, res) => {
   const { id } = req.params;
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such AcademicCurriculum" });
   }
-
   const academicCurriculum = await AcademicCurriculumModel.findOneAndUpdate(
     { _id: id },
     {
       ...req.body,
     }
   );
-
   if (!academicCurriculum) {
     return res.status(400).json({ error: "No such AcademicCurriculum" });
   }
-
   res.status(200).json(academicCurriculum);
 };
 

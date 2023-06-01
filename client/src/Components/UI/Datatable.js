@@ -25,7 +25,6 @@ export default function Datatable({
   const handleEdit = (id) => {
     // Handle edit logic here
     onEdit(id);
-    console.log(`Edit row with ID ${id}`);
   };
 
   const handleDelete = (id) => {
@@ -63,9 +62,7 @@ export default function Datatable({
     <Box
       style={{
         height: 500,
-        width: "fit-content",
         m: 1,
-        backgroundColor: "#fff",
       }}
     >
       <DataGrid

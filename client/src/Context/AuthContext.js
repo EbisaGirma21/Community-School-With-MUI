@@ -5,6 +5,7 @@ const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
 
   const login = async (email, password) => {
     setIsLoading(true);
@@ -23,6 +24,7 @@ const AuthProvider = ({ children }) => {
         return false;
       } else {
         localStorage.setItem("user", JSON.stringify(json));
+        setUser(JSON.parse(localStorage.getItem("user")));
         setIsLoading(false);
         return true;
       }
@@ -34,6 +36,7 @@ const AuthProvider = ({ children }) => {
   };
   const valueToShare = {
     login,
+    user,
     isLoading,
     error,
   };

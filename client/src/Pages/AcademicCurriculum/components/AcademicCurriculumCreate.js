@@ -13,7 +13,9 @@ const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
   const [maxSemester, setMaxSemester] = useState("");
 
   // context creation
-  const { createAcademicCurriculum } = useContext(AcademicCurriculumContext);
+  const { createAcademicCurriculum } = useContext(
+    AcademicCurriculumContext
+  );
   const { curriculum, fetchCurriculums } = useContext(CurriculumContext);
 
   //   fetch curriculum useEffect
@@ -33,10 +35,17 @@ const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
   };
 
   // submit functions
-  const handleSubmit = () => {
-    createAcademicCurriculum(academicYear, curriculumId, maxSemester);
-    setCurriculumId("");
-    setMaxSemester("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await createAcademicCurriculum(
+      academicYear,
+      curriculumId,
+      maxSemester
+    );
+    if (success) {
+      setCurriculumId("");
+      setMaxSemester("");
+    }
   };
 
   return (
@@ -46,6 +55,7 @@ const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+     
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <Dropdown
