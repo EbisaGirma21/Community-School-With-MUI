@@ -12,8 +12,8 @@ import SubjectCreate from "./SubjectCreate";
 
 // Subject Basic information datatable Column
 const tableColumns = [
-  { field: "moduleTitle", headerName: "Subject", width: 150 },
-  { field: "subjectLoad", headerName: "Subject Load", width: 150 },
+  { field: "moduleTitle", headerName: "Subject",flex: 1, minWidth: 150  },
+  { field: "subjectLoad", headerName: "Subject Load",flex: 1, minWidth: 150  },
 ];
 
 const SubjectTable = () => {
@@ -30,6 +30,9 @@ const SubjectTable = () => {
   // Subject Information input form
   const [curriculumId, setCurriculumId] = useState("");
   const [gradeId, setGradeId] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
+
+
   const { curriculum, fetchCurriculums } = useContext(CurriculumContext);
   const { grade, fetchGradeByStage } = useContext(GradeContext);
   const { subject, fetchSubjects } = useContext(SubjectContext);
@@ -61,7 +64,7 @@ const SubjectTable = () => {
   const gradeOption = !curriculumId
     ? [{ label: "Not found", value: 1 }]
     : grade.map((gr) => ({
-        label: `Grade - ${gr.level}`,
+        label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
         value: gr._id,
       }));
 
@@ -69,6 +72,7 @@ const SubjectTable = () => {
   const [deleteOpen, setdDeleteOpen] = useState(false);
   const [editOpen, setdEditOpen] = useState(false);
   const [subjectId, setSubjectId] = useState("");
+
 
   // update local subject state when context subject changes
   useEffect(() => {
@@ -191,6 +195,7 @@ const SubjectTable = () => {
         tableColumns={tableColumns}
         key={subject._id}
         tableRows={tableRows}
+        setSelectedRows={setSelectedRows}
         getRowId={(row) => row._id || subject.indexOf(row)}
       />
       {content}

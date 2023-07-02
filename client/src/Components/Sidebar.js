@@ -31,7 +31,10 @@ import GradingIcon from "@mui/icons-material/Grading";
 
 function SideBar() {
   const { isSidebarOpen } = useContext(SidebarContext);
-  const { toggleActivePage, isActivePage } = useContext(ActivePageContext);
+
+  const [isActivePage, setIsActivePage] = useState(
+    JSON.parse(localStorage.getItem("path"))
+  );
   const theme = createTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -93,7 +96,26 @@ function SideBar() {
     background: "#fff",
     borderRadius: 2,
     height: "46px",
+    marginBottom: "3px",
     padding: isSidebarOpen ? "10px 16px 10px 24px" : "15px",
+    "&:hover": {
+      background: "#EDE7F6",
+      borderRadius: 2,
+      color: "#774FBF",
+    },
+  };
+
+  const styledActiveButton = {
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    textAlign: "left",
+    height: "46px",
+    padding: isSidebarOpen ? "10px 16px 10px 24px" : "15px",
+    background: "#EDE7F6",
+    borderRadius: 2,
+    marginBottom: "3px",
+    color: "#774FBF",
     "&:hover": {
       background: "#EDE7F6",
       borderRadius: 2,
@@ -254,6 +276,10 @@ function SideBar() {
     }
   }
 
+  const handleClick = (path) => {
+    localStorage.setItem("path", JSON.stringify(path));
+    setIsActivePage(JSON.parse(localStorage.getItem("path")));
+  };
   // // basic side items
   // const basicItems = [
   //   {
@@ -360,7 +386,12 @@ function SideBar() {
           {/* <Typography sx={itemTitleStyle}>Main</Typography> */}
           {menuItems.map((item) => (
             <Link to={item.path} key={item.path} style={styledLink}>
-              <ListItemButton sx={styledButton}>
+              <ListItemButton
+                onClick={() => handleClick(item.path)}
+                sx={
+                  isActivePage === item.path ? styledActiveButton : styledButton
+                }
+              >
                 <StyledIconWrapper>{item.icon}</StyledIconWrapper>
                 <ListItemText sx={listStyle}>{item.text}</ListItemText>
               </ListItemButton>

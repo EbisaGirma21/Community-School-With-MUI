@@ -34,6 +34,7 @@ const createUser = async (
   const password = "ABCabc123@#";
 
   try {
+    console.log(firstName, middleName, lastName, gender, email, role, password);
     // Create the user
     const user = await User.createUser(
       firstName,

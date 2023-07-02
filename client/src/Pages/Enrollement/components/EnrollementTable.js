@@ -1,21 +1,22 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import Datatable from "../../../components/UI/Datatable";
-import ElligibleStudentContext from "../../../context/ElligibleContext";
+import EnrollmentContext from "../../../context/EnrollmentContext";
 
 // NewStudent Basic information datatable Column
 const tableColumns = [
-  { field: "firstName", headerName: "First Name", width: 150 },
-  { field: "middleName", headerName: "Middle Name", width: 150 },
-  { field: "lastName", headerName: "Last Name", width: 150 },
-  { field: "gender", headerName: "Gender", width: 150 },
+  { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150  },
+  { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150  },
+  { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150  },
+  { field: "gender", headerName: "Gender", flex: 1, minWidth: 150  },
 ];
 
 const EnrollmentTable = ({ displayed, gradeId }) => {
   // component states
+  const [selectedRows, setSelectedRows] = useState([]);
 
-  const { elligibleStudent, fetchElligibleStudents } = useContext(
-    ElligibleStudentContext
-  );
+
+  const { elligibleStudent, fetchElligibleStudents } =
+    useContext(EnrollmentContext);
 
   // update local newStudent state when context newStudent changes
   useEffect(() => {
@@ -35,6 +36,7 @@ const EnrollmentTable = ({ displayed, gradeId }) => {
         tableColumns={tableColumns}
         tableRows={tableRows}
         key={elligibleStudent._id}
+        setSelectedRows={setSelectedRows}
         getRowId={(row) => row._id || elligibleStudent.indexOf(row)}
       />
     </div>

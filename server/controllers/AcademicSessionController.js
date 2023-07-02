@@ -1,4 +1,5 @@
 const AcademicSessionModel = require("../models/AcademicSessionModel");
+const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 const mongoose = require("mongoose");
 
 // get all AcademicSessions
@@ -36,9 +37,7 @@ const createAcademicSession = async (req, res) => {
   }
 
   if (emptyFields.length > 0) {
-    return res
-      .status(400)
-      .json({ error: "Please fill in all the fields", emptyFields });
+    return res.status(400).json({ error: "Please fill in all the fields" });
   }
 
   try {
@@ -58,6 +57,13 @@ const deleteAcademicSession = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such AcademicSession" });
   }
+  const exist = await AcademicCurriculum.findOne({ academicSession: id });
+  if (exist) {
+    return res.status(405).json({
+      error:
+        "Deletion is not allowed once Academic Curriculum registered on it!",
+    });
+  }
 
   const academicSession = await AcademicSessionModel.findOneAndDelete({
     _id: id,
@@ -76,6 +82,17 @@ const updateAcademicSession = async (req, res) => {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such AcademicSession" });
+  }
+  const { academicYear } = req.body;
+
+  let emptyFields = [];
+
+  if (!academicYear) {
+    emptyFields.push("academicYear");
+  }
+
+  if (emptyFields.length > 0) {
+    return res.status(400).json({ error: "Please fill in all the fields" });
   }
 
   const academicSession = await AcademicSessionModel.findOneAndUpdate(

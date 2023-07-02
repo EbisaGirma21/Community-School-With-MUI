@@ -6,6 +6,7 @@ const {
   updateStudent,
   deleteStudent,
   getElligibleStudent,
+  enrollStudents,
 } = require("../controllers/StudentController");
 
 const router = express.Router();
@@ -22,10 +23,15 @@ router.post("/", createStudent);
 // DELETE a Student
 router.delete("/:id", deleteStudent);
 
+// Enroll Student
+router.patch("/enroll", enrollStudents);
+
 // UPDATE a Student
 router.patch("/:id", updateStudent);
 
-// UPDATE a Student
+
+// Get a  Elligible Student
 router.get("/elligible/:gradeId", getElligibleStudent);
+
 
 module.exports = router;

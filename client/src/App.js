@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AcademicSession from "./pages/AcademicSession/AcademicSession";
 import Curriculum from "./pages/Curriculum/Curriculum";
 import Student from "./pages/Student/Student";
@@ -26,6 +28,7 @@ import { Home } from "./pages/Home/Home";
 import Result from "./pages/Result/Result";
 import AuthContext from "./context/AuthContext";
 import { useContext } from "react";
+import { SectionProvider } from "./context/SectionContext";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
   const { user } = useContext(AuthContext);
@@ -121,7 +124,11 @@ function App() {
                   <AcademicCurriculumProvider>
                     <CurriculumProvider>
                       <GradeProvider>
-                        <AssignTeacher />
+                        <SectionProvider>
+                          <TeacherProvider>
+                            <AssignTeacher />
+                          </TeacherProvider>
+                        </SectionProvider>
                       </GradeProvider>
                     </CurriculumProvider>
                   </AcademicCurriculumProvider>
@@ -152,6 +159,11 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        toastStyle={{ width: "450px", right: "120px" }}
+      />
     </Box>
   );
 }

@@ -30,7 +30,10 @@ const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       setIsLoading(false);
-      setError("An error occurred during login. Please try again later.");
+      setError(
+        "An error occurred during login. Please try again later.",
+        error.message
+      );
       return false;
     }
   };

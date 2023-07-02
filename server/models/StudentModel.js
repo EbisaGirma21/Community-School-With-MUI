@@ -21,15 +21,15 @@ const StudentSchema = new mongoose.Schema(
       enum: ["NOR", "TRN"],
     },
     currentEnrollement: {
-      academicCurriculum: {
+      _academicCurriculum: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "AcademicCurriculum",
       },
-      grade: {
+      _grade: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Grade",
       },
-      section: {
+      _section: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Section",
       },

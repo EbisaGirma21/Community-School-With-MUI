@@ -6,7 +6,7 @@ import DepartmentContext from "../../../context/DepartmentContext";
 
 // Department Basic information datatable Column
 const tableColumns = [
-  { field: "departmentName", headerName: "Name", width: 150 },
+  { field: "departmentName", headerName: "Name", flex: 1, minWidth: 150 },
 ];
 
 const DepartmentTable = () => {
@@ -14,6 +14,7 @@ const DepartmentTable = () => {
   const [deleteOpen, setdDeleteOpen] = useState(false);
   const [editOpen, setdEditOpen] = useState(false);
   const [departmentId, setDepartmentId] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // component context
   const { department, fetchDepartments } = useContext(DepartmentContext);
@@ -91,6 +92,7 @@ const DepartmentTable = () => {
         tableColumns={tableColumns}
         key={department._id}
         tableRows={tableRows}
+        setSelectedRows={setSelectedRows}
         getRowId={(row) => row._id || department.indexOf(row)}
       />
       {content}

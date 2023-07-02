@@ -1,5 +1,5 @@
 import Dropdown from "../../components/UI/Dropdown";
-import { Box, Grid,Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import AssignTeacherTab from "./components/AssignTeacherTab";
 import { useContext, useEffect, useState } from "react";
 import AcademicCurriculumContext from "../../context/AcademicCurriculumContext";
@@ -68,7 +68,7 @@ function AssignTeacher() {
   const gradeOption = !acCurriculumId
     ? [{ label: "Not found", value: 1 }]
     : grade.map((gr) => ({
-        label: `Grade - ${gr.level}`,
+        label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
         value: gr._id,
       }));
 
@@ -104,7 +104,7 @@ function AssignTeacher() {
           />
         </Grid>
       </Grid>
-      <AssignTeacherTab />
+      <AssignTeacherTab gradeId={gradeId} acCurriculumId={acCurriculumId} />
     </Box>
   );
 }

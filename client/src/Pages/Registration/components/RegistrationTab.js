@@ -4,9 +4,8 @@ import Section from "../../Section/Section";
 import { SectionProvider } from "../../../context/SectionContext";
 import Enrollement from "../../Enrollement/Enrollement";
 import NewStudent from "../../NewStudent/NewStudent";
-import TransferStudent from "../../TransferStudent/TransferStudent";
 import Deregistration from "../../Deregistration/Deregistration";
-import { ElligibleStudentProvider } from "../../../context/ElligibleContext";
+import { ElligibleStudentProvider } from "../../../context/EnrollmentContext";
 
 export default function RegisrationTab({ acCurriculumId, gradeId }) {
   const registrationTab = [
@@ -20,20 +19,11 @@ export default function RegisrationTab({ acCurriculumId, gradeId }) {
         </Box>
       ),
     },
+
     {
       id: "2",
-      label: "Transfer Student",
-      value: "2",
-      content: (
-        <Box>
-          <TransferStudent />
-        </Box>
-      ),
-    },
-    {
-      id: "3",
       label: "Section",
-      value: "3",
+      value: "2",
       content: (
         <>
           <Box>
@@ -45,9 +35,9 @@ export default function RegisrationTab({ acCurriculumId, gradeId }) {
       ),
     },
     {
-      id: "4",
+      id: "3",
       label: "Enrollment",
-      value: "4",
+      value: "3",
       content: (
         <Box>
           <Box>
@@ -64,9 +54,9 @@ export default function RegisrationTab({ acCurriculumId, gradeId }) {
       ),
     },
     {
-      id: "5",
+      id: "4",
       label: "Deregistration",
-      value: "5",
+      value: "4",
       content: (
         <Box>
           <Deregistration />

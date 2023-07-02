@@ -30,6 +30,7 @@ const getSubjects = async (req, res) => {
     // Retrieve subjects with module information
     const subjects = await Promise.all(
       grade.subjects.map(async (subject) => {
+        
         const module = await Module.findById(subject.module.toString());
         return {
           _id: subject._id,

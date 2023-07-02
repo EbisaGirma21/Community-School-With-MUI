@@ -14,12 +14,14 @@ const tableColumns = [
   {
     field: "curriculumTitle",
     headerName: "Curriculum",
-    width: 250,
+    flex: 1,
+    minWidth: 150,
   },
   {
     field: "maxSemester",
     headerName: "Semesters",
-    width: 150,
+    flex: 1,
+    minWidth: 150,
   },
 ];
 
@@ -29,6 +31,7 @@ const AcademicCurriculumTable = () => {
   const [editOpen, setdEditOpen] = useState(false);
   const [academicCurriculumId, setAcademicCurriculumId] = useState("");
   const [academicYear, setAcademicYear] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // modal constant
   const [open, setOpen] = useState(false);
@@ -161,6 +164,7 @@ const AcademicCurriculumTable = () => {
         tableColumns={tableColumns}
         key={academicCurriculum._id}
         tableRows={tableRows}
+        setSelectedRows={setSelectedRows}
         getRowId={(row) => row._id || academicCurriculum.indexOf(row)}
       />
       {content}

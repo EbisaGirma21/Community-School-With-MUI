@@ -43,7 +43,14 @@ const CardWrapper = styled(Box)(() => ({
   padding: "50px",
   minHeight: "440px",
   marginTop: "200px",
+  backgroundColor: "#fff",
 }));
+const styledImage = {
+  width: "100px",
+  borderRadius: "50%",
+  objectFit: "cover",
+  textAlign: "center",
+};
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -68,59 +75,74 @@ const Login = () => {
       setPassword("");
     }
   };
+  // changing active page to dashboard
+  localStorage.setItem("path", JSON.stringify("/dashboard"));
 
   return (
     <>
-      <Header isLogin={false} />
-      <StyledBox>
-        <CardWrapper>
-          <Divider sx={{ m: 2 }}>
-            <Typography variant="h4">WKU-CSMS</Typography>
-          </Divider>
-          <Typography
-            variant="h6"
-            sx={{
-              mt: 2,
-              mb: 1,
-              textAlign: "center",
-              fontSize: 28,
-              color: "#5E35B1",
-              fontWeight: "550",
-            }}
-          >
-            Hi, Welcome Back
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{ mt: 2, mb: 1, textAlign: "center", color: "#697586" }}
-          >
-            Enter your credentials to continue
-          </Typography>
+      <Box sx={{ backgroundColor: "#EDF0FE", height: "100vh" }}>
+        <Header isLogin={false} />
+        <StyledBox>
+          <CardWrapper>
+            <Box sx={{ display: "flex", justifyContent: "center" }}>
+              <img
+                src={require("../../assets/unnamed.png")}
+                alt={"W"}
+                loading="Wolkite"
+                style={styledImage}
+              />
+            </Box>
+            <Divider sx={{ m: 2 }}>
+              <Typography variant="h4" sx={{ fontFamily: "Fruktur" }}>
+                WKU-CSMS
+              </Typography>
+            </Divider>
+            <Typography
+              variant="h6"
+              sx={{
+                mt: 2,
+                mb: 1,
+                textAlign: "center",
+                fontSize: 28,
+                color: "#5E35B1",
+                fontWeight: "400",
+                fontFamily: "Pattaya",
+              }}
+            >
+              Hi, Welcome Back
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ mt: 2, mb: 1, textAlign: "center", color: "#697586" }}
+            >
+              Enter your credentials to continue
+            </Typography>
 
-          <form onSubmit={handleSubmit}>
-            <StyledInput
-              type="text"
-              placeholder="Username"
-              fullWidth
-              value={username}
-              onChange={handleUsernameChange}
-            />
-            <StyledInput
-              type="password"
-              placeholder="Password"
-              fullWidth
-              value={password}
-              onChange={handlePasswordChange}
-            />
+            <form onSubmit={handleSubmit}>
+              <StyledInput
+                type="text"
+                placeholder="Username"
+                fullWidth
+                value={username}
+                onChange={handleUsernameChange}
+              />
+              <StyledInput
+                type="password"
+                placeholder="Password"
+                fullWidth
+                value={password}
+                onChange={handlePasswordChange}
+              />
 
-            <StyledButton type="submit" disabled={isLoading} fullWidth>
-              Login
-            </StyledButton>
-            {error && <ErrorLabel>{error}</ErrorLabel>}
-          </form>
-          <Link to="/forgot-password">Forgot password?</Link>
-        </CardWrapper>
-      </StyledBox>
+              <StyledButton type="submit" disabled={isLoading} fullWidth>
+                Login
+              </StyledButton>
+              {error && <ErrorLabel>{error}</ErrorLabel>}
+            </form>
+            <Link to="/forgot-password">Forgot password?</Link>
+          </CardWrapper>
+        </StyledBox>
+      </Box>
     </>
   );
 };

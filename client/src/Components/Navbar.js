@@ -151,6 +151,7 @@ export default function Navbar() {
       : `calc(100% - ${collapse}px)`,
     transition: "0.2s",
     boxShadow: "none",
+    paddingLeft: "4px !important",
   };
 
   const menuId = "primary-search-account-menu";

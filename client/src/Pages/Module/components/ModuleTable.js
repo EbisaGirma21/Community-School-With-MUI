@@ -6,7 +6,7 @@ import ModuleContext from "../../../context/ModuleContext";
 
 // Module Basic information datatable Column
 const tableColumns = [
-  { field: "moduleTitle", headerName: "Title", width: 150 },
+  { field: "moduleTitle", headerName: "Title", flex: 1, minWidth: 150  },
 ];
 
 const ModuleTable = () => {
@@ -14,6 +14,7 @@ const ModuleTable = () => {
   const [deleteOpen, setdDeleteOpen] = useState(false);
   const [editOpen, setdEditOpen] = useState(false);
   const [moduleId, setModuleId] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // component context
   const { module, fetchModules } = useContext(ModuleContext);
@@ -91,6 +92,7 @@ const ModuleTable = () => {
         tableColumns={tableColumns}
         key={module._id}
         tableRows={tableRows}
+        setSelectedRows={setSelectedRows}
         getRowId={(row) => row._id || module.indexOf(row)}
       />
       {content}

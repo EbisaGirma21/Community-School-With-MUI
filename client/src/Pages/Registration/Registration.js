@@ -68,7 +68,7 @@ function Registration() {
   const gradeOption = !acCurriculumId
     ? [{ label: "Not found", value: 1 }]
     : grade.map((gr) => ({
-        label: `Grade - ${gr.level}`,
+        label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
         value: gr._id,
       }));
 

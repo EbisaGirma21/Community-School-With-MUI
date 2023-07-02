@@ -12,9 +12,25 @@ function ElligibleStudentProvider({ children }) {
     setElligibleStudent(response.data);
   };
 
+  const enrollStudents = async (
+    elligibleStudent,
+    gradeId,
+    sectionId,
+    acCurriculumId
+  ) => {
+    const response = await axios.patch("/student/enroll", {
+      elligibleStudent,
+      gradeId,
+      sectionId,
+      acCurriculumId,
+    });
+    fetchElligibleStudents(gradeId);
+  };
+
   // shared operation between components
   const elligibleStudentOperation = {
     elligibleStudent,
+    enrollStudents,
     fetchElligibleStudents,
   };
 

@@ -1,10 +1,26 @@
 const Section = require("../models/SectionModel");
+const User = require("../models/UserModel");
 const mongoose = require("mongoose");
 
 // get all Sections
 const getSections = async (req, res) => {
   const sections = await Section.find({}).sort({ createdAt: -1 });
-  res.status(200).json(sections);
+
+  const sectionData = await Promise.all(
+    sections.map(async (section) => {
+      const user = await User.findById(section.homeRoomTeacher);
+      return {
+        ...section._doc,
+        home_room_teacher: user
+          ? user.gender === "Male"
+            ? `Mr ${user.firstName} ${user.middleName}`
+            : `Mrs ${user.firstName} ${user.middleName}`
+          : "TBA",
+      };
+    })
+  );
+
+  res.status(200).json(sectionData);
 };
 
 // get a single Section

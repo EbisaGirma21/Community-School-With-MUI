@@ -7,9 +7,8 @@ const AcademicSessionUpdate = (props) => {
   const { handleClose, open, academicSessionId } = props;
 
   //   context inclusiion
-  const { editAcademicSessionById, academicSession } = useContext(
-    AcademicSessionContext
-  );
+  const { editAcademicSessionById, academicSession, error, isLoading } =
+    useContext(AcademicSessionContext);
 
   const academicSessions = academicSession.filter((academicSession) => {
     return academicSession._id === academicSessionId;
@@ -22,15 +21,20 @@ const AcademicSessionUpdate = (props) => {
 
   // Change handler funtions
   const handleAcademicYearChange = (e) => {
-    console.log(e.target.value);
     setAcademicYear(e.target.value);
   };
 
   // submit functions
-  const handleSubmit = () => {
-    editAcademicSessionById(academicSessionId, academicYear);
-
-    setAcademicYear("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await editAcademicSessionById(
+      academicSessionId,
+      academicYear
+    );
+    if (success) {
+      setAcademicYear("");
+      handleClose();
+    }
   };
 
   return (
@@ -40,6 +44,8 @@ const AcademicSessionUpdate = (props) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form>
         <TextField

@@ -6,17 +6,23 @@ import CurriculumUpdate from "./CurriculumUpdate";
 
 // Curriculum Basic information datatable Column
 const tableColumns = [
-  { field: "curriculumTitle", headerName: "Title", width: 150 },
-  { field: "curriculumYear", headerName: "Curriculum Year", width: 150 },
-  { field: "stage", headerName: "Curriculum Stage", width: 150 },
+  { field: "curriculumTitle", headerName: "Title", flex: 1, minWidth: 150 },
+  {
+    field: "curriculumYear",
+    headerName: "Curriculum Year",
+    flex: 1,
+    minWidth: 150,
+  },
+  { field: "stage", headerName: "Curriculum Stage", flex: 1, minWidth: 150 },
   {
     field: "classification",
     headerName: "Classification",
-    width: 150,
+    flex: 1,
+    minWidth: 150,
   },
-  { field: "totalMaximumLoad", headerName: "Max Load", width: 100 },
-  { field: "subjectCount", headerName: "Subjects", width: 120 },
-  { field: "curriculum_state", headerName: "Status", width: 120 },
+  { field: "totalMaximumLoad", headerName: "Max Load", flex: 1, minWidth: 150 },
+  { field: "subjectCount", headerName: "Subjects", flex: 1, minWidth: 150 },
+  { field: "curriculum_state", headerName: "Status", flex: 1, minWidth: 150 },
 ];
 
 const CurriculumTable = () => {
@@ -24,6 +30,7 @@ const CurriculumTable = () => {
   const [deleteOpen, setdDeleteOpen] = useState(false);
   const [editOpen, setdEditOpen] = useState(false);
   const [curriculumId, setCurriculumId] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // component context
   const { curriculum, fetchCurriculums } = useContext(CurriculumContext);
@@ -101,6 +108,7 @@ const CurriculumTable = () => {
         tableColumns={tableColumns}
         key={curriculum._id}
         tableRows={tableRows}
+        setSelectedRows={setSelectedRows}
         getRowId={(row) => row._id || curriculum.indexOf(row)}
       />
       {content}

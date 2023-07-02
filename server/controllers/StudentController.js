@@ -3,6 +3,10 @@ const Grade = require("../models/GradeModel");
 const User = require("../models/UserModel");
 const mongoose = require("mongoose");
 const { createUser, deleteUserById, updateUser } = require("./UserController");
+const Mark = require("../models/MarkModel");
+const AcademicCurriculum = require("../models/AcademicCurriculumModel");
+const Curriculum = require("../models/CurriculumModel");
+const Module = require("../models/ModuleModel");
 
 // get all Students
 const getStudents = async (req, res) => {
@@ -11,14 +15,13 @@ const getStudents = async (req, res) => {
     students.map(async (stud) => {
       const user = await User.findById(stud._id.toString());
       return {
-        _id: stud._id,
+        ...stud._doc,
         firstName: user ? user.firstName : null,
         middleName: user ? user.middleName : null,
         lastName: user ? user.lastName : null,
         gender: user ? user.gender : null,
         email: user ? user.email : null,
         role: user ? user.role : null,
-        birthDate: stud.birthDate,
       };
     })
   );
@@ -38,14 +41,13 @@ const getStudent = async (req, res) => {
     students.map(async (stud) => {
       const user = await User.findById(stud._id.toString());
       return {
-        _id: stud._id,
+        ...stud._doc,
         firstName: user ? user.firstName : null,
         middleName: user ? user.middleName : null,
         lastName: user ? user.lastName : null,
         gender: user ? user.gender : null,
         email: user ? user.email : null,
         role: user ? user.role : null,
-        birthDate: stud.birthDate,
       };
     })
   );
@@ -115,7 +117,6 @@ const createStudent = async (req, res) => {
 const deleteStudent = async (req, res) => {
   const { id } = req.params;
 
-  console.log(id);
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such Student" });
   }
@@ -168,6 +169,68 @@ const updateStudent = async (req, res) => {
   res.status(200).json(student);
 };
 
+const enrollStudents = async (req, res) => {
+  const { elligibleStudent, gradeId, sectionId, acCurriculumId } = req.body;
+
+  const newEnrollment = {
+    _academicCurriculum: acCurriculumId,
+    _grade: gradeId,
+    _section: sectionId,
+  };
+
+  try {
+    // Find the academic curriculum
+    const academicCurriculum = await AcademicCurriculum.findById(
+      acCurriculumId
+    );
+
+    // curriculum
+    const curriculum = await Curriculum.findById(academicCurriculum.curriculum);
+
+    // Find the grade in the curriculum by gradeId
+    const grade = curriculum.grades.find(
+      (grade) => grade._id.toString() === gradeId
+    );
+
+    // // Find the subject in the grade by subjectId
+    const subjects = grade.subjects;
+
+    await Promise.all(
+      elligibleStudent.map(async (student) => {
+        if (!mongoose.Types.ObjectId.isValid(student._id)) {
+          return res.status(400).json({ error: "No such Student" });
+        }
+        await Student.findOneAndUpdate(
+          { _id: student._id },
+          {
+            $set: {
+              status: "REG",
+              studentType: "NOR",
+              currentEnrollement: newEnrollment, // Corrected key name
+            },
+            $push: { enrollment_history: newEnrollment },
+          },
+          { new: true }
+        );
+
+        subjects.map(async (subject) => {
+          await Mark.create({
+            academicCurriculum: acCurriculumId,
+            grade: gradeId,
+            section: sectionId,
+            student: student._id,
+            subject: subject._id,
+          });
+        });
+      })
+    );
+
+    res.status(200).json({ message: "Students enrolled successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "An error occurred during enrollment" });
+  }
+};
+
 const getElligibleStudent = async (req, res) => {
   const { gradeId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(gradeId)) {
@@ -175,9 +238,29 @@ const getElligibleStudent = async (req, res) => {
   }
   const grade = await Grade.findById({ _id: gradeId });
   const prevGrade = previousGrade(grade);
-  if ((prevGrade[0] = "null")) {
-    const students = await Student.find({}).sort({ createdAt: -1 });
-    res.status(200).json(students);
+  if (prevGrade[0] === "null") {
+    // students with no enrollment
+    const students = await Student.find({
+      enrollment_history: { $size: 0 },
+    }).sort({ createdAt: -1 });
+
+    // integrating students and user collecton
+    const student = await Promise.all(
+      students.map(async (stud) => {
+        const user = await User.findById(stud._id.toString());
+        return {
+          _id: stud._id,
+          firstName: user ? user.firstName : null,
+          middleName: user ? user.middleName : null,
+          lastName: user ? user.lastName : null,
+          gender: user ? user.gender : null,
+          email: user ? user.email : null,
+          role: user ? user.role : null,
+          birthDate: stud.birthDate,
+        };
+      })
+    );
+    res.status(200).json(student);
   }
 };
 
@@ -208,4 +291,5 @@ module.exports = {
   deleteStudent,
   updateStudent,
   getElligibleStudent,
+  enrollStudents,
 };

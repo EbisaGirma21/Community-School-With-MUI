@@ -18,26 +18,33 @@ const ErrorLabel = styled(Box)(() => ({
 }));
 
 const Modal = (props) => {
-  const { title, children, onSubmit, handleClose, open } = props;
+  const { title, children, onSubmit, handleClose, open, error, isLoading } =
+    props;
   const handleSave = (e) => {
     onSubmit(e);
   };
   return (
-    <Box sx={{ margin: "10px" }}>
-      <Dialog open={open} onClose={handleClose}>
+    <Box className="">
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        sx={{ margin: "auto", p: 2 }}
+        maxWidth="md"
+      >
         {/* Modal Title */}
         <DialogTitle
           sx={{
             backgroundColor: "#5e35b1",
             color: "white",
-            mb: 2,
           }}
           variant="contained"
         >
           {title}
         </DialogTitle>
         {/* Modal Content */}
-        <DialogContent sx={{ padding: 5 }}>{children}</DialogContent>
+        <DialogContent className="w-full" dividers sx={{ p: 5 }}>
+          {children} {error && <ErrorLabel>{error}</ErrorLabel>}
+        </DialogContent>
         <DialogActions>
           <Button
             onClick={handleClose}
@@ -50,8 +57,8 @@ const Modal = (props) => {
           <Button
             onClick={(e) => {
               handleSave(e);
-              handleClose();
             }}
+            disabled={isLoading}
             variant="contained"
             sx={{ background: "#5e35b1" }}
           >

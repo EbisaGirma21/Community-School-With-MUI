@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { AppBar, Box, Toolbar } from "@mui/material";
+import { AppBar, Box, Toolbar, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export const StyledLink = styled(Link)(() => ({
@@ -40,8 +40,10 @@ const Header = ({ isLogin }) => {
               alt={"W"}
               loading="W"
               style={styledImage}
-            />{" "}
-            WKU-CSMS
+            />
+            <Typography sx={{ fontFamily: "Fruktur", fontSize: "38" }}>
+              WKU-CSMS
+            </Typography>
           </Box>
         </StyledLink>
         <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

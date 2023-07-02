@@ -5,11 +5,19 @@ const SectionContext = createContext();
 
 function SectionProvider({ children }) {
   const [section, setSection] = useState([]);
+  const [sectionSubject, setSectionSubject] = useState([]);
 
   //  function  used to fetch data from database
   const fetchSections = async () => {
     const response = await axios.get("/section");
     setSection(response.data);
+  };
+
+  const fetchSectionSubject = async (acCurriculumId, gradeId, sectionId) => {
+    const response = await axios.get(
+      `/section/${acCurriculumId}/${gradeId}/${sectionId}`
+    );
+    setSectionSubject(response.data);
   };
 
   // function used to create section
@@ -58,9 +66,37 @@ function SectionProvider({ children }) {
     setSection(updatedSections);
   };
 
+  const assignTeacher = async (
+    sectionId,
+    subjectId,
+    teacherId,
+    acCurriculumId,
+    gradeId
+  ) => {
+    const response = await axios.post(`/section/${sectionId}`, {
+      subjectId,
+      teacherId,
+    });
+    fetchSectionSubject(acCurriculumId, gradeId, sectionId);
+  };
+  const assignHomeRoomTeacher = async (
+    sectionId,
+    teacherId,
+    acCurriculumId,
+    gradeId
+  ) => {
+    console.log(sectionId, teacherId, acCurriculumId, gradeId);
+    const response = await axios.post(`/section/${sectionId}/${teacherId}`);
+    fetchSectionSubject(acCurriculumId, gradeId, sectionId);
+  };
+
   // shared operation between components
   const sectionOperation = {
     section,
+    sectionSubject,
+    assignHomeRoomTeacher,
+    assignTeacher,
+    fetchSectionSubject,
     fetchSections,
     createSection,
     deleteSectionById,

@@ -4,12 +4,12 @@ import axios from "axios";
 const TeacherContext = createContext();
 
 function TeacherProvider({ children }) {
-  const [teacher, setTeacher] = useState([]);
+  const [teachers, setTeachers] = useState([]);
 
   //  function  used to fetch data from database
   const fetchTeachers = async () => {
     const response = await axios.get("/teacher");
-    setTeacher(response.data);
+    setTeachers(response.data);
   };
 
   // function used to create teacher
@@ -36,11 +36,11 @@ function TeacherProvider({ children }) {
   const deleteTeacherById = async (id) => {
     await axios.delete(`/teacher/${id}`);
 
-    const updatedTeacher = teacher.filter((teacher) => {
+    const updatedTeacher = teachers.filter((teacher) => {
       return teacher._id !== id;
     });
 
-    setTeacher(updatedTeacher);
+    setTeachers(updatedTeacher);
   };
 
   // function used to delete teacher
@@ -60,7 +60,7 @@ function TeacherProvider({ children }) {
       gender: newGender,
       email: newEmail,
     });
-    const updatedTeachers = teacher.map((teacher) => {
+    const updatedTeachers = teachers.map((teacher) => {
       if (teacher._id === id) {
         return { ...teacher, ...response.data };
       }
@@ -68,12 +68,12 @@ function TeacherProvider({ children }) {
       return teacher;
     });
     fetchTeachers();
-    setTeacher(updatedTeachers);
+    setTeachers(updatedTeachers);
   };
 
   // shared operation between components
   const teacherOperation = {
-    teacher,
+    teachers,
     fetchTeachers,
     createTeacher,
     deleteTeacherById,

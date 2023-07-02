@@ -6,11 +6,11 @@ import TeacherContext from "../../../context/TeacherContext";
 
 // Teacher Basic information datatable Column
 const tableColumns = [
-  { field: "firstName", headerName: "First Name", width: 150 },
-  { field: "middleName", headerName: "Middle Name", width: 150 },
-  { field: "lastName", headerName: "Last Name", width: 150 },
-  { field: "gender", headerName: "Gender", width: 150 },
-  { field: "email", headerName: "Email", width: 190 },
+  { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150  },
+  { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150  },
+  { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150  },
+  { field: "gender", headerName: "Gender", flex: 1, minWidth: 150  },
+  { field: "email", headerName: "Email", flex: 1, minWidth: 150  },
 ];
 
 const TeacherTable = () => {
@@ -18,9 +18,11 @@ const TeacherTable = () => {
   const [deleteOpen, setdDeleteOpen] = useState(false);
   const [editOpen, setdEditOpen] = useState(false);
   const [teacherId, setTeacherId] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
+
 
   // component context
-  const { teacher, fetchTeachers } = useContext(TeacherContext);
+  const { teachers, fetchTeachers } = useContext(TeacherContext);
 
   // update local teacher state when context teacher changes
   useEffect(() => {
@@ -64,7 +66,7 @@ const TeacherTable = () => {
   };
 
   // convert teacher object to array if necessary
-  const tableRows = Array.isArray(teacher) ? teacher : [teacher];
+  const tableRows = Array.isArray(teachers) ? teachers : [teachers];
 
   // toggle delete modal
   let content = "";
@@ -93,9 +95,11 @@ const TeacherTable = () => {
         onDelete={handleDelete}
         onEdit={handleEdit}
         tableColumns={tableColumns}
-        key={teacher._id}
+        key={teachers._id}
         tableRows={tableRows}
-        getRowId={(row) => row._id || teacher.indexOf(row)}
+        setSelectedRows={setSelectedRows}
+
+        getRowId={(row) => row._id || teachers.indexOf(row)}
       />
       {content}
     </div>

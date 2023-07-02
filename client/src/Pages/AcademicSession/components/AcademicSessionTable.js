@@ -6,7 +6,7 @@ import AcademicSessionContext from "../../../context/AcademicSessionContext";
 
 // AcademicSession Basic information datatable Column
 const tableColumns = [
-  { field: "academicYear", headerName: "Academic Year", width: 150 },
+  { field: "academicYear", headerName: "Academic Year", flex: 1, minWidth: 150  },
 ];
 
 const AcademicSessionTable = () => {
@@ -14,6 +14,7 @@ const AcademicSessionTable = () => {
   const [deleteOpen, setdDeleteOpen] = useState(false);
   const [editOpen, setdEditOpen] = useState(false);
   const [academicSessionId, setAcademicSessionId] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // component context
   const { academicSession, fetchAcademicSessions } = useContext(
@@ -60,7 +61,7 @@ const AcademicSessionTable = () => {
     handleEditOpen();
     setAcademicSessionId(id);
   };
-
+ 
   // convert academicSession object to array if necessary
   const tableRows = Array.isArray(academicSession)
     ? academicSession
@@ -95,6 +96,7 @@ const AcademicSessionTable = () => {
         tableColumns={tableColumns}
         key={academicSession._id}
         tableRows={tableRows}
+        setSelectedRows={setSelectedRows}
         getRowId={(row) => row._id || academicSession.indexOf(row)}
       />
       {content}

@@ -1,9 +1,12 @@
 import { createContext, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AcademicSessionContext = createContext();
 
 function AcademicSessionProvider({ children }) {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
   const [academicSession, setAcademicSession] = useState([]);
 
   //  function  used to fetch data from database
@@ -14,47 +17,94 @@ function AcademicSessionProvider({ children }) {
 
   // function used to create academicSession
   const createAcademicSession = async (academicYear) => {
-    const response = await axios.post("/academicSession", {
-      academicYear,
-    });
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await axios.post("/academicSession", {
+        academicYear,
+      });
 
-    const updateAcademicSession = [...academicSession, response.data];
-    setAcademicSession(updateAcademicSession);
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchAcademicSessions();
+        toast.success("Academic session created successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to create academic session");
+        return false;
+      }
+    }
   };
 
   // function used to delete academicSession
   const deleteAcademicSessionById = async (id) => {
-    await axios.delete(`/academicSession/${id}`);
-
-    const updatedAcademicSession = academicSession.filter((academicSession) => {
-      return academicSession._id !== id;
-    });
-
-    setAcademicSession(updatedAcademicSession);
+    try {
+      const response = await axios.delete(`/academicSession/${id}`);
+      if (response.status !== 200) {
+        toast.error(response.data.error);
+      } else {
+        const updatedAcademicSession = academicSession.filter(
+          (academicSession) => academicSession._id !== id
+        );
+        setAcademicSession(updatedAcademicSession);
+        toast.warning("Academic session deleted successfully");
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("Failed to delete academic session");
+      }
+    }
   };
 
   // function used to delete academicSession
   const editAcademicSessionById = async (id, newAcademicYear) => {
-    const response = await axios.patch(
-      `/academicSession/${id}`,
-      {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axios.patch(`/academicSession/${id}`, {
         academicYear: newAcademicYear,
-      }
-    );
+      });
 
-    const updatedAcademicSessions = academicSession.map((academicSession) => {
-      if (academicSession._id === id) {
-        return { ...academicSession, ...response.data };
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchAcademicSessions();
+        toast.info("Academic session updated successfully");
+        return true;
       }
-
-      return academicSession;
-    });
-    fetchAcademicSessions();
-    setAcademicSession(updatedAcademicSessions);
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to update academic session");
+      }
+    }
   };
 
   // shared operation between components
   const academicSessionOperation = {
+    error,
+    isLoading,
     academicSession,
     fetchAcademicSessions,
     createAcademicSession,

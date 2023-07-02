@@ -13,7 +13,7 @@ const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
   const [maxSemester, setMaxSemester] = useState("");
 
   // context creation
-  const { createAcademicCurriculum } = useContext(
+  const { createAcademicCurriculum, error, isLoading } = useContext(
     AcademicCurriculumContext
   );
   const { curriculum, fetchCurriculums } = useContext(CurriculumContext);
@@ -45,6 +45,7 @@ const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
     if (success) {
       setCurriculumId("");
       setMaxSemester("");
+      handleClose();
     }
   };
 
@@ -55,7 +56,8 @@ const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
-     
+      isLoading={isLoading}
+      error={error}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <Dropdown

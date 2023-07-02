@@ -5,13 +5,32 @@ import DoneIcon from "@mui/icons-material/Done";
 import AddIcon from "@mui/icons-material/Add";
 import SectionContext from "../../context/SectionContext";
 import Dropdown from "../../components/UI/Dropdown";
+import EnrollDialog from "./components/EnrollDialog";
+import EnrollmentContext from "../../context/EnrollmentContext";
 
 const Enrollement = ({ acCurriculumId, gradeId }) => {
   const [sectionId, setSectionId] = useState("");
   const [displayed, setDisplayed] = useState(false);
+  const [enrollOpen, setdEnrollOpen] = useState(false);
 
   // context
   const { section, fetchSections } = useContext(SectionContext);
+  const { elligibleStudent, enrollStudents } = useContext(EnrollmentContext);
+
+  // funtions open enroll modal
+  const handleEnrollOpen = () => {
+    setdEnrollOpen(true);
+  };
+
+  // funtion close Enroll modal
+  const handleEnrollClose = () => {
+    setdEnrollOpen(false);
+  };
+
+  // Enroll handler
+  const handleEnroll = (id) => {
+    handleEnrollOpen();
+  };
 
   // update local Section state when context Section changes
   useEffect(() => {
@@ -31,8 +50,24 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
         value: sec._id,
       }));
 
+  const handleEnrollStudent = () => {
+    enrollStudents(elligibleStudent, gradeId, sectionId, acCurriculumId);
+    // console.log(elligibleStudent, gradeId, sectionId, acCurriculumId)
+  };
+  let content = "";
+  if (enrollOpen) {
+    content = (
+      <EnrollDialog
+        open={enrollOpen}
+        handleClose={handleEnrollClose}
+        handleEnrollStudent={handleEnrollStudent}
+      />
+    );
+  }
+
   return (
     <Box>
+      {content}
       <Box
         sx={{
           display: "flex",
@@ -62,7 +97,13 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
             }}
             width={"80px"}
           />
-          <Button variant="contained" disabled={sectionId ? false : true}>
+          <Button
+            variant="contained"
+            disabled={sectionId ? false : true}
+            onClick={() => {
+              handleEnrollOpen();
+            }}
+          >
             <AddIcon />
             Enrol Elligible Students
           </Button>

@@ -74,7 +74,7 @@ const getAcademicCurriculumByYear = async (req, res) => {
     academicSession: acYear,
   });
 
-  if (!academicCurriculums || academicCurriculums.length === 0) {
+  if (!academicCurriculums) {
     return res.status(404).json([]);
   }
 

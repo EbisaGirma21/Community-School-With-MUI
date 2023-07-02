@@ -8,7 +8,9 @@ const AcademicSessionCreate = ({ handleClose, open }) => {
   const [academicYear, setAcademicYear] = useState("");
 
   // context creation
-  const { createAcademicSession } = useContext(AcademicSessionContext);
+  const { createAcademicSession, error, isLoading } = useContext(
+    AcademicSessionContext
+  );
 
   // Change handler funtions
   const handleAcademicYearChange = (e) => {
@@ -16,9 +18,13 @@ const AcademicSessionCreate = ({ handleClose, open }) => {
   };
 
   // submit functions
-  const handleSubmit = () => {
-    createAcademicSession(academicYear);
-    setAcademicYear("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await createAcademicSession(academicYear);
+    if (success) {
+      setAcademicYear("");
+      handleClose();
+    }
   };
 
   return (
@@ -27,7 +33,8 @@ const AcademicSessionCreate = ({ handleClose, open }) => {
       btnText="New"
       onSubmit={handleSubmit}
       open={open}
-      handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form>
         <TextField

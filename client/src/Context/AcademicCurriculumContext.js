@@ -1,25 +1,24 @@
 import { createContext, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AcademicCurriculumContext = createContext();
 
 function AcademicCurriculumProvider({ children }) {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
   const [academicCurriculum, setAcademicCurriculum] = useState([]);
 
   //  function  used to fetch data from database
   const fetchAcademicCurriculums = async () => {
-    const response = await axios.get(
-      "/academicCurriculum"
-    );
+    const response = await axios.get("/academicCurriculum");
     setAcademicCurriculum(response.data);
   };
 
   //  function  used to fetch data from database
   const fetchAcademicCurriculumByYear = async (acYear) => {
     setAcademicCurriculum([]);
-    const response = await axios.get(
-      `/academicCurriculum/year/${acYear}`
-    );
+    const response = await axios.get(`/academicCurriculum/year/${acYear}`);
     setAcademicCurriculum(response.data);
   };
 
@@ -29,20 +28,36 @@ function AcademicCurriculumProvider({ children }) {
     curriculum,
     maxSemester
   ) => {
+    setIsLoading(true);
+    setError(null);
+
     try {
-      const response = await axios.post(
-        "/academicCurriculum",
-        {
-          academicSession,
-          curriculum,
-          maxSemester,
-        }
-      );
-      fetchAcademicCurriculumByYear(academicSession);
-      const updateAcademicCurriculum = [...academicCurriculum, response.data];
-      setAcademicCurriculum(updateAcademicCurriculum);
+      const response = await axios.post("/academicCurriculum", {
+        academicSession,
+        curriculum,
+        maxSemester,
+      });
+
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchAcademicCurriculumByYear(academicSession);
+        toast.success("Academic Curriculum created successfully");
+        return true;
+      }
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to create academic curriculum");
+        return false;
+      }
     }
   };
 
@@ -66,13 +81,10 @@ function AcademicCurriculumProvider({ children }) {
     newCurriculum,
     newMaxSemester
   ) => {
-    const response = await axios.patch(
-      `/academicCurriculum/${id}`,
-      {
-        curriculum: newCurriculum,
-        maxSemester: newMaxSemester,
-      }
-    );
+    const response = await axios.patch(`/academicCurriculum/${id}`, {
+      curriculum: newCurriculum,
+      maxSemester: newMaxSemester,
+    });
 
     const updatedAcademicCurriculums = academicCurriculum.map(
       (academicCurriculum) => {
@@ -89,6 +101,8 @@ function AcademicCurriculumProvider({ children }) {
 
   // shared operation between components
   const academicCurriculumOperation = {
+    error,
+    isLoading,
     academicCurriculum,
     fetchAcademicCurriculumByYear,
     fetchAcademicCurriculums,

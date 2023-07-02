@@ -1,5 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useState } from "react";
 import {
   DataGrid,
   GridActionsCellItem,
@@ -21,6 +22,7 @@ export default function Datatable({
   tableRows,
   onDelete,
   onEdit,
+  setSelectedRows,
 }) {
   const handleEdit = (id) => {
     // Handle edit logic here
@@ -30,6 +32,10 @@ export default function Datatable({
   const handleDelete = (id) => {
     // Handle delete logic here
     onDelete(id);
+  };
+
+  const handleRowSelection = (param) => {
+    setSelectedRows(param);
   };
 
   const columnsWithActions = [
@@ -59,12 +65,7 @@ export default function Datatable({
   ];
 
   return (
-    <Box
-      style={{
-        height: 500,
-        m: 1,
-      }}
-    >
+    <Box style={{ height: 500, m: 1 }}>
       <DataGrid
         rows={tableRows}
         columns={columnsWithActions}
@@ -73,6 +74,7 @@ export default function Datatable({
         checkboxSelection
         className="datatable"
         getRowId={(row) => row._id}
+        onRowSelectionModelChange={(param) => handleRowSelection(param)}
         slots={{
           toolbar: CustomToolbar,
         }}
