@@ -14,21 +14,55 @@ const MarkSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Section",
     },
-    subject: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Curriculum.subjects",
-      required: true,
-    },
+    result: [
+      {
+        subject: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Curriculum.subjects",
+          required: true,
+        },
+        assessment: {
+          quiz: {
+            type: Number,
+            status: {
+              type: String,
+              default: "notAssigned",
+            },
+          },
+          test: {
+            type: Number,
+            status: {
+              type: String,
+              default: "notAssigned",
+            },
+          },
+          assignment: {
+            type: Number,
+            status: {
+              type: String,
+              default: "notAssigned",
+            },
+          },
+          midExam: {
+            type: Number,
+            status: {
+              type: String,
+              default: "notAssigned",
+            },
+          },
+          finalExam: {
+            type: Number,
+            status: {
+              type: String,
+              default: "notAssigned",
+            },
+          },
+        },
+      },
+    ],
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
-    },
-    assessment: {
-      quiz: Number,
-      test: Number,
-      assignment: Number,
-      midExam: Number,
-      finalExam: Number,
     },
   },
   { timestamps: true },

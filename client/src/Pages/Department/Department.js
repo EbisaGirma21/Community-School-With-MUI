@@ -5,6 +5,9 @@ import DepartmentTable from "./components/DepartmentTable";
 import DepartmentCreate from "./components/DepartmentCreate";
 
 function Department() {
+  {localStorage.setItem("path", JSON.stringify("department"))}
+
+
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {

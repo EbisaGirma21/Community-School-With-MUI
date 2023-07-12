@@ -5,6 +5,11 @@ import AcademicSessionTable from "./components/AcademicSessionTable";
 import AcademicSessionCreate from "./components/AcademicSessionCreate";
 
 function AcademicSession() {
+  // first process
+  {
+    localStorage.setItem("path", JSON.stringify("academicSession"));
+  }
+
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {

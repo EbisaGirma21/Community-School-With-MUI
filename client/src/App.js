@@ -29,6 +29,7 @@ import Result from "./pages/Result/Result";
 import AuthContext from "./context/AuthContext";
 import { useContext } from "react";
 import { SectionProvider } from "./context/SectionContext";
+import { MarkProvider } from "./context/MarkContext";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
   const { user } = useContext(AuthContext);
@@ -154,7 +155,24 @@ function App() {
               />
             </Route>
             <Route path="result">
-              <Route index element={<Result />} />
+              <Route
+                index
+                element={
+                  <AcademicCurriculumProvider>
+                    <CurriculumProvider>
+                      <GradeProvider>
+                        <SectionProvider>
+                          <MarkProvider>
+                            <SubjectProvider>
+                              <Result />
+                            </SubjectProvider>
+                          </MarkProvider>
+                        </SectionProvider>
+                      </GradeProvider>
+                    </CurriculumProvider>
+                  </AcademicCurriculumProvider>
+                }
+              />
             </Route>
           </Route>
         </Routes>

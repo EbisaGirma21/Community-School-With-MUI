@@ -7,6 +7,9 @@ import CurriculumContext from "../../context/CurriculumContext";
 import GradeContext from "../../context/GradeContext";
 
 function Registration() {
+  {localStorage.setItem("path", JSON.stringify("registration"))}
+
+
   const [acCurriculumId, setAcCurriculumId] = useState("");
   const [gradeId, setGradeId] = useState("");
 

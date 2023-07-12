@@ -11,6 +11,9 @@ import Featured from "../../components/UI/Featured/Featured";
 // card const
 
 function Dashboard() {
+
+  {localStorage.setItem("path", JSON.stringify("dashboard"))}
+
   return (
     <>
       <Box>Dashboard</Box>

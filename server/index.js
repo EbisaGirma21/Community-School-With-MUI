@@ -14,6 +14,7 @@ const GradeRoutes = require("./routes/GradeRoutes");
 const SubjectRoutes = require("./routes/SubjectRoutes");
 const SectionRoutes = require("./routes/SectionRoutes");
 const UserRoutes = require("./routes/UserRoutes");
+const MarkRoutes =require('./routes/MarkRoutes')
 
 // express app
 const app = express();
@@ -39,6 +40,7 @@ app.use("/api/academicCurriculum", AcademicCurriculumRoutes);
 app.use("/api/subject", SubjectRoutes);
 app.use("/api/section", SectionRoutes);
 app.use("/api/user", UserRoutes);
+app.use("/api/mark", MarkRoutes);
 
 // MONGOOSE CONFIGURATION
 mongoose

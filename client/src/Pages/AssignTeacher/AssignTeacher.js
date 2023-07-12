@@ -7,6 +7,9 @@ import CurriculumContext from "../../context/CurriculumContext";
 import GradeContext from "../../context/GradeContext";
 
 function AssignTeacher() {
+  {localStorage.setItem("path", JSON.stringify("assignTeacher"))}
+
+
   const [acCurriculumId, setAcCurriculumId] = useState("");
   const [gradeId, setGradeId] = useState("");
 

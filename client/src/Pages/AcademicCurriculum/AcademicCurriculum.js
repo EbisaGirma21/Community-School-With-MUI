@@ -4,6 +4,7 @@ function AcademicCurriculum() {
   return (
     <Box>
       <Box>Academic Curriculum</Box>
+      {localStorage.setItem("path", JSON.stringify("academicCurriculum"))}
       <Box>
         <Box>
           <AcademicCurriculumTable />

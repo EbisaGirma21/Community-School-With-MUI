@@ -5,6 +5,10 @@ import TeacherTable from "./components/TeacherTable";
 import TeacherCreate from "./components/TeacherCreate";
 
 function Teacher() {
+  {
+    localStorage.setItem("path", JSON.stringify("teacher"));
+  }
+
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -17,14 +21,10 @@ function Teacher() {
 
   return (
     <Box>
-      <Box >Teacher</Box>
+      <Box>Teacher</Box>
       <Box>
         <Box>
-          <Button
-            onClick={handleOpen}
-            variant="contained"
-           sx={{m:1}}
-          >
+          <Button onClick={handleOpen} variant="contained" sx={{ m: 1 }}>
             <AddIcon />
             New
           </Button>
