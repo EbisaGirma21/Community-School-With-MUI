@@ -1,12 +1,12 @@
-import Tab from "../../components/UI/Tab";
+import Tab from "../../../components/UI/Tab";
 import { Box } from "@mui/material";
-import CurriculumTable from "./components/CurriculumTable";
-import CurriculumCreate from "./components/CurriculumCreate";
+import CurriculumTable from "./CurriculumTable";
+import CurriculumCreate from "./CurriculumCreate";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
-
-import SubjectTable from "../Subject/components/SubjectTable";
+import Subject from "../../Subject/Subject";
+import AssessmentWeight from "../../AssessmentWeight/AssesmentWeight";
 
 const CurriculumTab = () => {
   const [open, setOpen] = useState(false);
@@ -50,7 +50,17 @@ const CurriculumTab = () => {
       value: "2",
       content: (
         <>
-          <SubjectTable />
+          <Subject />
+        </>
+      ),
+    },
+    {
+      id: "3",
+      label: "Assessment Weight",
+      value: "3",
+      content: (
+        <>
+          <AssessmentWeight />
         </>
       ),
     },

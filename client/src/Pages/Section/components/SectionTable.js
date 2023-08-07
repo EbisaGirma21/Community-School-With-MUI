@@ -7,7 +7,12 @@ import SectionContext from "../../../context/SectionContext";
 // Section Basic information datatable Column
 const tableColumns = [
   { field: "sectionLabel", headerName: "Section", flex: 1, minWidth: 150 },
-  { field: "homeRoomTeacher", headerName: "HR Teacher", flex: 1, minWidth: 150 },
+  {
+    field: "home_room_teacher",
+    headerName: "Home Room Teacher",
+    flex: 1,
+    minWidth: 150,
+  },
   { field: "noStudent", headerName: "No. Student", flex: 1, minWidth: 150 },
 ];
 
@@ -17,7 +22,6 @@ const SectionTable = ({ acCurriculumId, gradeId }) => {
   const [editOpen, setdEditOpen] = useState(false);
   const [sectionId, setSectionId] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
-
 
   // component context
   const { section, fetchSections } = useContext(SectionContext);

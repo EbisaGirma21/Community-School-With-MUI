@@ -85,7 +85,6 @@ function SectionProvider({ children }) {
     acCurriculumId,
     gradeId
   ) => {
-    console.log(sectionId, teacherId, acCurriculumId, gradeId);
     const response = await axios.post(`/section/${sectionId}/${teacherId}`);
     fetchSectionSubject(acCurriculumId, gradeId, sectionId);
   };

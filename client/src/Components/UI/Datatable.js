@@ -12,7 +12,7 @@ import { Box } from "@mui/material";
 function CustomToolbar() {
   return (
     <GridToolbarContainer>
-      <GridToolbarExport />
+      <GridToolbarExport sx={{ color: "#5E35B1" }} />
     </GridToolbarContainer>
   );
 }

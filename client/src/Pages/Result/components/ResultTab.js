@@ -1,6 +1,7 @@
 import Tab from "../../../components/UI/Tab";
 import { Box } from "@mui/material";
-import MarkTable from "./MarkTable";
+import RosterTable from "./RosterTable";
+import MarkListTable from "./MarkListTable";
 
 export default function ResultTab({
   acCurriculumId,
@@ -11,11 +12,11 @@ export default function ResultTab({
   const resultTab = [
     {
       id: "1",
-      label: "Roster",
+      label: "Mark List",
       value: "1",
       content: (
         <Box>
-          <MarkTable
+          <MarkListTable
             acCurriculumId={acCurriculumId}
             curriculumId={curriculumId}
             gradeId={gradeId}
@@ -27,12 +28,17 @@ export default function ResultTab({
 
     {
       id: "2",
-      label: "Mark List",
+      label: "Roster",
       value: "2",
       content: (
-        <>
-          <Box>On progress</Box>
-        </>
+        <Box>
+          <RosterTable
+            acCurriculumId={acCurriculumId}
+            curriculumId={curriculumId}
+            gradeId={gradeId}
+            sectionId={sectionId}
+          />
+        </Box>
       ),
     },
   ];

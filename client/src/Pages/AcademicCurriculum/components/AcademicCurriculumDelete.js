@@ -1,4 +1,4 @@
-import Button from "@mui/material/Button";
+import { CustomButton as Button } from "../../../components/UI/StyledCompoments";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -27,7 +27,11 @@ export default function AcademicCurriculumDelete(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle variant="contained" id="alert-dialog-title">
+        <DialogTitle
+          variant="contained"
+          id="alert-dialog-title"
+          sx={{ background: "#5E35B1", color: "white", marginBottom: "10px" }}
+        >
           {"Delete AcademicCurriculum"}
         </DialogTitle>
         <DialogContent>

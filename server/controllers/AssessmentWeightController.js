@@ -1,8 +1,8 @@
 const Curriculum = require("../models/CurriculumModel");
 const Module = require("../models/ModuleModel");
 
-// All subject in specific grade
-const getSubjects = async (req, res) => {
+// All assessmentWeight in specific grade
+const getAssessmentWeights = async (req, res) => {
   try {
     const curriculumId = req.params.curriculumId;
     const gradeId = req.params.gradeId;
@@ -31,23 +31,21 @@ const getSubjects = async (req, res) => {
     const subjects = await Promise.all(
       grade.subjects.map(async (subject) => {
         const module = await Module.findById(subject.module.toString());
-
         return {
           _id: subject._id,
           moduleId: subject.module,
           moduleTitle: module ? module.moduleTitle : null,
           subjectLoad: subject.subject_load,
-          assessments: subject.assessment,
+          quiz: subject.assessment.quiz,
+          test: subject.assessment.test,
+          assignment: subject.assessment.assignment,
+          midExam: subject.assessment.midExam,
+          finalExam: subject.assessment.finalExam,
         };
       })
     );
 
-    res.status(200).json({
-      status: "Success",
-      data: {
-        subjects,
-      },
-    });
+    res.status(200).json(subjects);
   } catch (error) {
     res.status(500).json({
       status: "Failed",
@@ -57,12 +55,12 @@ const getSubjects = async (req, res) => {
   }
 };
 
-// to get the single subject
-const getSubject = async (req, res) => {
+// to get the single assessmentWeight
+const getAssessmentWeight = async (req, res) => {
   try {
     const curriculumId = req.params.curriculumId;
     const gradeId = req.params.gradeId;
-    const subjectId = req.params.subjectId;
+    const assessmentWeightId = req.params.assessmentWeightId;
 
     // Find the curriculum by curriculumId
     const curriculum = await Curriculum.findById(curriculumId);
@@ -84,40 +82,38 @@ const getSubject = async (req, res) => {
       });
     }
 
-    // Find the subject in the grade by subjectId
-    const subject = grade.subjects.find(
-      (subject) => subject._id.toString() === subjectId
+    // Find the assessmentWeight in the grade by assessmentWeightId
+    const assessmentWeight = grade.assessmentWeights.find(
+      (assessmentWeight) =>
+        assessmentWeight._id.toString() === assessmentWeightId
     );
-    if (!subject) {
+    if (!assessmentWeight) {
       return res.status(404).json({
         status: "Failed",
-        message: "Subject not found",
+        message: "AssessmentWeight not found",
       });
     }
 
     res.status(200).json({
       status: "Success",
       data: {
-        subject,
+        assessmentWeight,
       },
     });
   } catch (error) {
     res.status(500).json({
       status: "Failed",
-      message: "Error retrieving subject",
+      message: "Error retrieving assessmentWeight",
       error: error.message,
     });
   }
 };
 
-// efficient subject adding code
+// efficient assessmentWeight adding code
 
-const createSubject = async (req, res) => {
+const createAssessmentWeight = async (req, res) => {
   try {
-    const curriculumId = req.body.curriculumId;
-    const gradeId = req.body.gradeId;
-    const subjects = req.body.subjects;
-    const subjectLoad = req.body.subjectLoad;
+    const { curriculumId, gradeId, subjects, weights } = req.body;
 
     const curriculum = await Curriculum.findById(curriculumId);
     if (!curriculum) {
@@ -137,37 +133,38 @@ const createSubject = async (req, res) => {
       });
     }
 
-    for (let i = 0; i < subjects.modules.length; i++) {
-      const newSubject = {
-        module: subjects.modules[i],
-        subject_load: subjectLoad,
-      };
-
-      grade.subjects.push(newSubject);
-    }
+    subjects.forEach((subjectId) => {
+      const subject = grade.subjects.find(
+        (subject) => subject._id.toString() === subjectId
+      );
+      if (subject) {
+        subject.assessment = weights;
+      }
+    });
 
     await curriculum.save();
 
-    res.status(201).json({
+    res.status(200).json({
       status: "Success",
-      message: "Subjects created successfully for the grade",
+      message: "Assessment weights updated successfully",
+      curriculum: curriculum,
     });
   } catch (error) {
     res.status(500).json({
       status: "Failed",
-      message: "Error creating subjects for the grade",
+      message: "Error updating assessment weights",
       error: error.message,
     });
   }
 };
 
-// update subject by id
-const updateSubject = async (req, res) => {
+// update assessmentWeight by id
+const updateAssessmentWeight = async (req, res) => {
   try {
     const curriculumId = req.params.curriculumId;
     const gradeId = req.params.gradeId;
-    const subjectId = req.params.subjectId;
-    const subjectLoad = req.body.subjectLoad;
+    const assessmentWeightId = req.params.assessmentWeightId;
+    const assessmentWeightLoad = req.body.assessmentWeightLoad;
 
     // Find the curriculum by curriculumId
     const curriculum = await Curriculum.findById(curriculumId);
@@ -189,41 +186,42 @@ const updateSubject = async (req, res) => {
       });
     }
 
-    // Find the subject in the grade by subjectId
-    const subject = grade.subjects.find(
-      (subject) => subject._id.toString() === subjectId
+    // Find the assessmentWeight in the grade by assessmentWeightId
+    const assessmentWeight = grade.assessmentWeights.find(
+      (assessmentWeight) =>
+        assessmentWeight._id.toString() === assessmentWeightId
     );
-    if (!subject) {
+    if (!assessmentWeight) {
       return res.status(404).json({
         status: "Failed",
-        message: "Subject not found",
+        message: "AssessmentWeight not found",
       });
     }
 
-    // Update the subjectLoad with the provided value
-    subject.subject_load = subjectLoad;
+    // Update the assessmentWeightLoad with the provided value
+    assessmentWeight.assessmentWeight_load = assessmentWeightLoad;
     // Save the updated curriculum
     await curriculum.save();
 
     res.status(200).json({
       status: "Success",
-      updatedSubject: subject,
+      updatedAssessmentWeight: assessmentWeight,
     });
   } catch (error) {
     res.status(500).json({
       status: "Failed",
-      message: "Error updating subject",
+      message: "Error updating assessmentWeight",
       error: error.message,
     });
   }
 };
 
-// delete subject with id
-const deleteSubject = async (req, res) => {
+// delete assessmentWeight with id
+const deleteAssessmentWeight = async (req, res) => {
   try {
     const curriculumId = req.params.curriculumId;
     const gradeId = req.params.gradeId;
-    const subjectId = req.params.subjectId;
+    const assessmentWeightId = req.params.assessmentWeightId;
 
     // Find the curriculum by curriculumId
     const curriculum = await Curriculum.findById(curriculumId);
@@ -245,40 +243,44 @@ const deleteSubject = async (req, res) => {
       });
     }
 
-    // Find the subject index in the grade by subjectId
-    const subjectIndex = grade.subjects.findIndex(
-      (subject) => subject._id.toString() === subjectId
+    // Find the assessmentWeight index in the grade by assessmentWeightId
+    const assessmentWeightIndex = grade.assessmentWeights.findIndex(
+      (assessmentWeight) =>
+        assessmentWeight._id.toString() === assessmentWeightId
     );
-    if (subjectIndex === -1) {
+    if (assessmentWeightIndex === -1) {
       return res.status(404).json({
         status: "Failed",
-        message: "Subject not found",
+        message: "AssessmentWeight not found",
       });
     }
 
-    // Remove the subject from the grade
-    const removedSubject = grade.subjects.splice(subjectIndex, 1)[0];
+    // Remove the assessmentWeight from the grade
+    const removedAssessmentWeight = grade.assessmentWeights.splice(
+      assessmentWeightIndex,
+      1
+    )[0];
 
     // Save the updated curriculum
     await curriculum.save();
 
     res.status(200).json({
       status: "Success",
-      deletedSubject: removedSubject,
+      deletedAssessmentWeight: removedAssessmentWeight,
     });
   } catch (error) {
     res.status(500).json({
       status: "Failed",
-      message: "Error deleting subject",
+      message: "Error deleting assessmentWeight",
       error: error.message,
     });
   }
 };
 
 module.exports = {
-  getSubjects,
-  getSubject,
-  createSubject,
-  deleteSubject,
-  updateSubject,
+  getAssessmentWeights,
+  getAssessmentWeight,
+  createAssessmentWeight,
+  deleteAssessmentWeight,
+  updateAssessmentWeight,
 };

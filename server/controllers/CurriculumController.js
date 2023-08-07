@@ -1,6 +1,7 @@
 const CurriculumModel = require("../models/CurriculumModel");
 const mongoose = require("mongoose");
 const GradeModel = require("../models/GradeModel");
+const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 
 // get all Curriculums
 const getCurriculums = async (req, res) => {
@@ -77,18 +78,27 @@ const createCurriculum = async (req, res) => {
 
 // delete a Curriculum
 const deleteCurriculum = async (req, res) => {
-  try {
-    await CurriculumModel.findByIdAndDelete(req.params.id);
-    res.status(204).json({
-      status: "Success",
-      data: {},
-    });
-  } catch (err) {
-    res.status(500).json({
-      status: "Failed to Delete Curriculum",
-      message: err,
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "No such AcademicSession" });
+  }
+  const exist = await AcademicCurriculum.findOne({ curriculum: id });
+  if (exist) {
+    return res.status(405).json({
+      error:
+        "Deletion is not allowed once Academic Curriculum registered on it!",
     });
   }
+
+  const curriculum = await CurriculumModel.findOneAndDelete({
+    _id: id,
+  });
+  if (!curriculum) {
+    return res.status(400).json({ error: "No such Curriculum" });
+  }
+
+  res.status(200).json(curriculum);
 };
 
 // update a Curriculum

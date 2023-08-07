@@ -3,20 +3,17 @@ import Datatable from "../../../components/UI/Datatable";
 import SubjectDelete from "./SubjectDelete";
 import SubjectUpdate from "./SubjectUpdate";
 import SubjectContext from "../../../context/SubjectContext";
-import CurriculumContext from "../../../context/CurriculumContext";
-import GradeContext from "../../../context/GradeContext";
 import { Box, Button } from "@mui/material";
-import Dropdown from "../../../components/UI/Dropdown";
 import AddIcon from "@mui/icons-material/Add";
 import SubjectCreate from "./SubjectCreate";
 
 // Subject Basic information datatable Column
 const tableColumns = [
-  { field: "moduleTitle", headerName: "Subject",flex: 1, minWidth: 150  },
-  { field: "subjectLoad", headerName: "Subject Load",flex: 1, minWidth: 150  },
+  { field: "moduleTitle", headerName: "Subject", flex: 1, minWidth: 150 },
+  { field: "subjectLoad", headerName: "Subject Load", flex: 1, minWidth: 150 },
 ];
 
-const SubjectTable = () => {
+const SubjectTable = ({ curriculumId, gradeId }) => {
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -28,51 +25,14 @@ const SubjectTable = () => {
   };
 
   // Subject Information input form
-  const [curriculumId, setCurriculumId] = useState("");
-  const [gradeId, setGradeId] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
 
-
-  const { curriculum, fetchCurriculums } = useContext(CurriculumContext);
-  const { grade, fetchGradeByStage } = useContext(GradeContext);
   const { subject, fetchSubjects } = useContext(SubjectContext);
-
-  //   fetch curriculum useEffect
-  useEffect(() => {
-    fetchCurriculums();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  //   Curruculum to dropdown
-  const curriculumOption = curriculum.map((curr) => ({
-    label: `${curr.curriculumTitle} ${curr.curriculumYear} (${curr.stage} - ${curr.classification})`,
-    value: curr._id,
-  }));
-
-  const selectedCurriculum = !curriculumId
-    ? []
-    : curriculum.filter((SelCurr) => {
-        return SelCurr._id === curriculumId;
-      });
-
-  //   fetch curriculum useEffect
-  useEffect(() => {
-    curriculumId && fetchGradeByStage(selectedCurriculum[0].stage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [curriculumId]);
-  curriculumId && console.log();
-  const gradeOption = !curriculumId
-    ? [{ label: "Not found", value: 1 }]
-    : grade.map((gr) => ({
-        label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
-        value: gr._id,
-      }));
 
   // component states
   const [deleteOpen, setdDeleteOpen] = useState(false);
   const [editOpen, setdEditOpen] = useState(false);
   const [subjectId, setSubjectId] = useState("");
-
 
   // update local subject state when context subject changes
   useEffect(() => {
@@ -116,7 +76,11 @@ const SubjectTable = () => {
   };
 
   // convert subject object to array if necessary
-  const tableRows = Array.isArray(subject) ? subject : [subject];
+  const tableRows = gradeId
+    ? Array.isArray(subject)
+      ? subject
+      : [subject]
+    : [];
 
   // toggle delete modal
   let content = "";
@@ -151,27 +115,6 @@ const SubjectTable = () => {
           width: "100%",
         }}
       >
-        <Box sx={{ display: "flex" }}>
-          <Dropdown
-            label="Curriculum"
-            options={curriculumOption}
-            value={curriculumId}
-            onChange={(e) => {
-              setGradeId("");
-              setCurriculumId(e.target.value);
-            }}
-            width={"250px"}
-          />
-          <Dropdown
-            label="Grade"
-            options={gradeOption}
-            value={gradeId}
-            onChange={(e) => {
-              setGradeId(e.target.value);
-            }}
-            width={"80px"}
-          />
-        </Box>
         <Button
           disabled={gradeId ? false : true}
           onClick={handleOpen}

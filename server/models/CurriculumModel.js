@@ -54,6 +54,13 @@ const CurriculumSchema = new mongoose.Schema(
               min: 1,
               max: 7,
             },
+            assessment: {
+              quiz: Number,
+              test: Number,
+              assignment: Number,
+              midExam: Number,
+              finalExam: Number,
+            },
           },
         ],
       },

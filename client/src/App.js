@@ -30,6 +30,7 @@ import AuthContext from "./context/AuthContext";
 import { useContext } from "react";
 import { SectionProvider } from "./context/SectionContext";
 import { MarkProvider } from "./context/MarkContext";
+import { AssessmentWeightProvider } from "./context/AssessmentWeightContext";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
   const { user } = useContext(AuthContext);
@@ -63,7 +64,9 @@ function App() {
                     <GradeProvider>
                       <SubjectProvider>
                         <ModuleProvider>
-                          <Curriculum />
+                          <AssessmentWeightProvider>
+                            <Curriculum />
+                          </AssessmentWeightProvider>
                         </ModuleProvider>
                       </SubjectProvider>
                     </GradeProvider>

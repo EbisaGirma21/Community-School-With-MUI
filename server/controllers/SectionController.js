@@ -1,14 +1,19 @@
 const Section = require("../models/SectionModel");
 const User = require("../models/UserModel");
+const Student = require("../models/StudentModel");
 const mongoose = require("mongoose");
 
 // get all Sections
 const getSections = async (req, res) => {
-  const sections = await Section.find({}).sort({ createdAt: -1 });
+  const sections = await Section.find({}).sort({ sectionLabel: 1 });
 
   const sectionData = await Promise.all(
     sections.map(async (section) => {
       const user = await User.findById(section.homeRoomTeacher);
+      const students = await Student.find({
+        "currentEnrollement._section": section._id,
+      });
+
       return {
         ...section._doc,
         home_room_teacher: user
@@ -16,6 +21,7 @@ const getSections = async (req, res) => {
             ? `Mr ${user.firstName} ${user.middleName}`
             : `Mrs ${user.firstName} ${user.middleName}`
           : "TBA",
+        noStudent: students.length,
       };
     })
   );

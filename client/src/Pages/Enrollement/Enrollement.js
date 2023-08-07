@@ -12,6 +12,7 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
   const [sectionId, setSectionId] = useState("");
   const [displayed, setDisplayed] = useState(false);
   const [enrollOpen, setdEnrollOpen] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // context
   const { section, fetchSections } = useContext(SectionContext);
@@ -51,8 +52,16 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
       }));
 
   const handleEnrollStudent = () => {
-    enrollStudents(elligibleStudent, gradeId, sectionId, acCurriculumId);
-    // console.log(elligibleStudent, gradeId, sectionId, acCurriculumId)
+    const filteredElligibleStudent = elligibleStudent.filter((student) => {
+      return selectedRows.includes(student._id);
+    });
+
+    enrollStudents(
+      filteredElligibleStudent,
+      gradeId,
+      sectionId,
+      acCurriculumId
+    );
   };
   let content = "";
   if (enrollOpen) {
@@ -109,7 +118,11 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
           </Button>
         </Box>
       </Box>
-      <EnrollmentTable displayed={displayed} gradeId={gradeId} />
+      <EnrollmentTable
+        displayed={displayed}
+        gradeId={gradeId}
+        setSelectedRows={setSelectedRows}
+      />
     </Box>
   );
 };

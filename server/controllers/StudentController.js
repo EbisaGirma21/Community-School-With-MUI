@@ -180,13 +180,17 @@ const enrollStudents = async (req, res) => {
 
   try {
     // Find the academic curriculum
-    const academicCurriculum = await AcademicCurriculum.findById(acCurriculumId);
+    const academicCurriculum = await AcademicCurriculum.findById(
+      acCurriculumId
+    );
 
     // curriculum
     const curriculum = await Curriculum.findById(academicCurriculum.curriculum);
 
     // Find the grade in the curriculum by gradeId
-    const grade = curriculum.grades.find((grade) => grade._id.toString() === gradeId);
+    const grade = curriculum.grades.find(
+      (grade) => grade._id.toString() === gradeId
+    );
 
     // Find the subjects in the grade by subjectIds
     const subjects = grade.subjects;
@@ -198,24 +202,33 @@ const enrollStudents = async (req, res) => {
         }
 
         // creating result
-        const resultArray = subjects.map((subject) => ({
-          subject: subject._id,
-          assessment: {
-            quiz: 0,
-            test: 0,
-            assignment: 0,
-            midExam: 0,
-            finalExam: 0,
-          },
-        }));
+        // Creating result array with assigned assessments
+        const resultArray = subjects.map((subject) => {
+          const assessment = {};
 
+          // Check if assessment type exists in the subject's assessment object
+          Object.keys(subject.assessment).forEach((type) => {
+            const value = subject.assessment[type];
+            if (value > 0) {
+              assessment[type] = {
+                value: 0,
+                status: "assigned",
+              };
+            }
+          });
+
+          return {
+            subject: subject._id,
+            assessment: assessment,
+          };
+        });
         await Student.findOneAndUpdate(
           { _id: student._id },
           {
             $set: {
               status: "REG",
               studentType: "NOR",
-              currentEnrollment: newEnrollment,
+              currentEnrollement: newEnrollment,
             },
             $push: { enrollment_history: newEnrollment },
           },
@@ -237,7 +250,6 @@ const enrollStudents = async (req, res) => {
     res.status(500).json({ error: "An error occurred during enrollment" });
   }
 };
-
 
 const getElligibleStudent = async (req, res) => {
   const { gradeId } = req.params;

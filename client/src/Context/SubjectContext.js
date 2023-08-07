@@ -27,7 +27,6 @@ function SubjectProvider({ children }) {
     modules,
     subjectLoad
   ) => {
-    console.log(subject);
     const response = await axios.post("/subject", {
       curriculumId,
       gradeId,

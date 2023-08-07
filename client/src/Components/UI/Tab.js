@@ -13,7 +13,7 @@ export default function Tabs(props) {
 
   return (
     <Box sx={{ width: "100%", typography: "body1" }}>
-      <TabContext value={value}>
+      <TabContext value={value} sx={{ color: "#5E35B1" }}>
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             {props.tab_contents.map((tab_content) => (

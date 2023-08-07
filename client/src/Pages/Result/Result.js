@@ -1,9 +1,8 @@
 import Dropdown from "../../components/UI/Dropdown";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import AcademicCurriculumContext from "../../context/AcademicCurriculumContext";
 import SectionContext from "../../context/SectionContext";
-import MarkTable from "./components/MarkTable";
 import GradeContext from "../../context/GradeContext";
 import CurriculumContext from "../../context/CurriculumContext";
 import ResultTab from "./components/ResultTab";
@@ -120,43 +119,43 @@ function Result() {
   return (
     <Box>
       <Typography sx={{ m: 1 }}>Student Result</Typography>
-      <Grid
-        container
-        spacing={1}
-        sx={{ p: 1, border: "1px solid #dbdde0", borderRadius: "10px" }}
-      >
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Dropdown
-            label="Academic Curriculum"
-            options={acCurriculumOption}
-            value={acCurriculumId}
-            onChange={handleAcCurriculumChange}
-            width={"150px"}
-          />
+      <Box className="flex justify-between p-2 border-2 border-gray-200 rounded-md">
+        <Grid container spacing={1}>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Dropdown
+              label="Academic Curriculum"
+              options={acCurriculumOption}
+              value={acCurriculumId}
+              onChange={handleAcCurriculumChange}
+              width={"150px"}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Dropdown
+              label="Grade"
+              options={gradeOption}
+              value={gradeId}
+              onChange={(e) => {
+                setGradeId(e.target.value);
+              }}
+              width={"40px"}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Box>
+              <Dropdown
+                label="Section"
+                options={sectionOption}
+                value={sectionId}
+                onChange={(e) => {
+                  setSectionId(e.target.value);
+                }}
+                width={"40px"}
+              />
+            </Box>
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Dropdown
-            label="Grade"
-            options={gradeOption}
-            value={gradeId}
-            onChange={(e) => {
-              setGradeId(e.target.value);
-            }}
-            width={"40px"}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Dropdown
-            label="Section"
-            options={sectionOption}
-            value={sectionId}
-            onChange={(e) => {
-              setSectionId(e.target.value);
-            }}
-            width={"40px"}
-          />
-        </Grid>
-      </Grid>
+      </Box>
       <ResultTab
         acCurriculumId={acCurriculumId}
         curriculumId={curriculumId}

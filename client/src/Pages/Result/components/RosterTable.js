@@ -2,8 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import Datatable from "../../../components/UI/Datatable";
 import MarkContext from "../../../context/MarkContext";
 import SubjectContext from "../../../context/SubjectContext";
+import { Box } from "@mui/material";
 
-const MarkTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
+const RosterTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
   // Component contexts
   const { mark, fetchMarks } = useContext(MarkContext);
   const { subject, fetchSubjects } = useContext(SubjectContext);
@@ -54,7 +55,7 @@ const MarkTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
   const tableRows = Array.isArray(mark) ? mark : [mark];
 
   return (
-    <div>
+    <Box>
       <Datatable
         tableColumns={tableColumns}
         key={mark._id}
@@ -63,8 +64,8 @@ const MarkTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
         getRowId={(row) => row._id || mark.indexOf(row)}
       />
       {/* {content} */}
-    </div>
+    </Box>
   );
 };
 
-export default MarkTable;
+export default RosterTable;

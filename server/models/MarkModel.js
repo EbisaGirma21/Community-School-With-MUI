@@ -23,35 +23,35 @@ const MarkSchema = new mongoose.Schema(
         },
         assessment: {
           quiz: {
-            type: Number,
+            value: Number,
             status: {
               type: String,
               default: "notAssigned",
             },
           },
           test: {
-            type: Number,
+            value: Number,
             status: {
               type: String,
               default: "notAssigned",
             },
           },
           assignment: {
-            type: Number,
+            value: Number,
             status: {
               type: String,
               default: "notAssigned",
             },
           },
           midExam: {
-            type: Number,
+            value: Number,
             status: {
               type: String,
               default: "notAssigned",
             },
           },
           finalExam: {
-            type: Number,
+            value: Number,
             status: {
               type: String,
               default: "notAssigned",

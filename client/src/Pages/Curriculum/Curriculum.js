@@ -1,4 +1,4 @@
-import CurriculumTab from "./CurriculumTab";
+import CurriculumTab from "./components/CurriculumTab";
 import { Box } from "@mui/material";
 
 function Curriculum() {

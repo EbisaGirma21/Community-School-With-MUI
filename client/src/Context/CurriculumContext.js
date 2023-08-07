@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const CurriculumContext = createContext();
 
@@ -40,12 +41,24 @@ function CurriculumProvider({ children }) {
 
   // function used to delete curriculum
   const deleteCurriculumById = async (id) => {
-    await axios.delete(`/curriculum/${id}`);
-
-    const updatedCurriculum = curriculum.filter((curriculum) => {
-      return curriculum._id !== id;
-    });
-    setCurriculum(updatedCurriculum);
+    try {
+      const response = await axios.delete(`/curriculum/${id}`);
+      if (response.status !== 200) {
+        toast.error(response.data.error);
+      } else {
+        const updatedCurriculum = curriculum.filter((curriculum) => {
+          return curriculum._id !== id;
+        });
+        setCurriculum(updatedCurriculum);
+        toast.warning("Curriculum deleted successfully");
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("Failed to delete curriculum");
+      }
+    }
   };
 
   // function used to delete curriculum
@@ -57,16 +70,13 @@ function CurriculumProvider({ children }) {
     newClassification,
     newTotalMaximumLoad
   ) => {
-    const response = await axios.patch(
-      `/curriculum/${id}`,
-      {
-        curriculumTitle: newCurriculumTitle,
-        curriculumYear: newCurriculumYear,
-        stage: newStage,
-        classification: newClassification,
-        totalMaximumLoad: newTotalMaximumLoad,
-      }
-    );
+    const response = await axios.patch(`/curriculum/${id}`, {
+      curriculumTitle: newCurriculumTitle,
+      curriculumYear: newCurriculumYear,
+      stage: newStage,
+      classification: newClassification,
+      totalMaximumLoad: newTotalMaximumLoad,
+    });
 
     const updatedCurriculums = curriculum.map((curriculum) => {
       if (curriculum._id === id) {

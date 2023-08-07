@@ -4,16 +4,14 @@ import EnrollmentContext from "../../../context/EnrollmentContext";
 
 // NewStudent Basic information datatable Column
 const tableColumns = [
-  { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150  },
-  { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150  },
-  { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150  },
-  { field: "gender", headerName: "Gender", flex: 1, minWidth: 150  },
+  { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150 },
+  { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150 },
+  { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150 },
+  { field: "gender", headerName: "Gender", flex: 1, minWidth: 150 },
 ];
 
-const EnrollmentTable = ({ displayed, gradeId }) => {
+const EnrollmentTable = ({ displayed, gradeId, setSelectedRows }) => {
   // component states
-  const [selectedRows, setSelectedRows] = useState([]);
-
 
   const { elligibleStudent, fetchElligibleStudents } =
     useContext(EnrollmentContext);
