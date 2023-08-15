@@ -1,11 +1,13 @@
 import { Box, Button } from "@mui/material";
-import React, { useState } from "react";
+import { useContext, useState } from "react";
 import NewStudentTable from "./components/NewStudentTable";
 import NewStudentCreate from "./components/NewStudentCreate";
 import AddIcon from "@mui/icons-material/Add";
+import NewStudentContext from "../../context/NewStudentContext";
 
 const NewStudent = () => {
   const [open, setOpen] = useState(false);
+  const { setError, setIsLoading } = useContext(NewStudentContext);
 
   const handleOpen = () => {
     setOpen(true);
@@ -13,6 +15,8 @@ const NewStudent = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setIsLoading(null);
+    setError(null);
   };
   return (
     <Box>

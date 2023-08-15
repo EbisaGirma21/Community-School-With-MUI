@@ -110,7 +110,6 @@ const MarkListTable = ({
     setEditedStatus(editedStatus + 1);
     setRows([]);
   };
-  console.log(mark);
   return (
     <Box>
       <Box className="border-2 border-gray-200 p-2 rounded-md m-1 flex justify-between">

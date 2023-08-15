@@ -9,6 +9,7 @@ const RosterTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
   const { mark, fetchMarks } = useContext(MarkContext);
   const { subject, fetchSubjects } = useContext(SubjectContext);
   const [subjectColumns, setSubjectColumns] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   // Update local mark state when context mark changes
   useEffect(() => {
@@ -23,7 +24,7 @@ const RosterTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
           field: sub._id,
           headerName: sub.moduleTitle,
           flex: 1,
-          minWidth: 150,
+          minWidth: 100,
         }));
         setSubjectColumns(columns);
       }
@@ -47,8 +48,12 @@ const RosterTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
     { field: "rollNumber", headerName: "Roll Number", flex: 1, minWidth: 150 },
     { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150 },
     { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150 },
-    { field: "gender", headerName: "Gender", flex: 1, minWidth: 150 },
+    { field: "gender", headerName: "Gender", flex: 1, minWidth: 100 },
     ...subjectColumns,
+    { field: "totalMark", headerName: "Total", flex: 1, minWidth: 100 },
+    { field: "average", headerName: "Average", flex: 1, minWidth: 100 },
+    { field: "rank", headerName: "Rank", flex: 1, minWidth: 100 },
+    { field: "status", headerName: "Status", flex: 1, minWidth: 100 },
   ];
 
   // Convert mark object to array if necessary
@@ -60,7 +65,7 @@ const RosterTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
         tableColumns={tableColumns}
         key={mark._id}
         tableRows={tableRows}
-        // setSelectedRows={setSelectedRows}
+        setSelectedRows={setSelectedRows}
         getRowId={(row) => row._id || mark.indexOf(row)}
       />
       {/* {content} */}

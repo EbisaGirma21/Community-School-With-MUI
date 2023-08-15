@@ -6,6 +6,7 @@ import SectionContext from "../../context/SectionContext";
 import GradeContext from "../../context/GradeContext";
 import CurriculumContext from "../../context/CurriculumContext";
 import ResultTab from "./components/ResultTab";
+import AcademicSessionContext from "../../context/AcademicSessionContext";
 
 function Result() {
   {
@@ -13,6 +14,7 @@ function Result() {
   }
 
   // state
+  const [acSession, setAcSession] = useState("");
   const [acCurriculumId, setAcCurriculumId] = useState("");
   const [gradeId, setGradeId] = useState("");
   const [sectionId, setSectionId] = useState("");
@@ -23,9 +25,17 @@ function Result() {
     AcademicCurriculumContext
   );
   const { curriculum, fetchCurriculumById } = useContext(CurriculumContext);
-
+  const { academicSession, fetchAcademicSessions } = useContext(
+    AcademicSessionContext
+  );
   const { grade, fetchGradeByStage } = useContext(GradeContext);
   const { section, fetchSections } = useContext(SectionContext);
+
+  //   fetch curriculum useEffect
+  useEffect(() => {
+    fetchAcademicSessions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // academic curriculum
   useEffect(() => {
@@ -33,11 +43,22 @@ function Result() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //   Curruculum to dropdown
-  const acCurriculumOption = academicCurriculum.map((acCurriculum) => ({
-    label: `${acCurriculum.curriculumTitle} - ${acCurriculum.academicYear}`,
-    value: acCurriculum._id,
+  const academicSessionOption = academicSession.map((ac_Session) => ({
+    label: ac_Session.academicYear,
+    value: ac_Session.academicYear,
   }));
+
+  const filteredAcCurriculum = academicCurriculum.filter((acCurriculum) => {
+    return acCurriculum.academicYear === acSession;
+  });
+  //   Curruculum to dropdown
+  const acCurriculumOption = !acSession
+    ? [{ label: "Not found", value: 1 }]
+    : filteredAcCurriculum.map((acCurriculum) => ({
+        label: `${acCurriculum.curriculumTitle}`,
+        value: acCurriculum._id,
+      }));
+
   // academic curriculum end
 
   // fetch curriculum By Id
@@ -121,6 +142,17 @@ function Result() {
       <Typography sx={{ m: 1 }}>Student Result</Typography>
       <Box className="flex justify-between p-2 border-2 border-gray-200 rounded-md">
         <Grid container spacing={1}>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Dropdown
+              label="Academic Year"
+              options={academicSessionOption}
+              value={acSession}
+              onChange={(e) => {
+                setAcSession(e.target.value);
+              }}
+              width={"140px"}
+            />
+          </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
             <Dropdown
               label="Academic Curriculum"

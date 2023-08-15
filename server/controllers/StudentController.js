@@ -7,6 +7,7 @@ const Mark = require("../models/MarkModel");
 const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 const Curriculum = require("../models/CurriculumModel");
 const Module = require("../models/ModuleModel");
+const TransferStudent = require("../models/TranferstudentModel");
 
 // get all Students
 const getStudents = async (req, res) => {
@@ -61,8 +62,23 @@ const getStudent = async (req, res) => {
 
 // create a new Student
 const createStudent = async (req, res) => {
-  const { firstName, middleName, lastName, gender, email, role, birthDate } =
-    req.body;
+  const {
+    firstName,
+    middleName,
+    lastName,
+    gender,
+    email,
+    role,
+    birthDate,
+    registrationType,
+    familyFirstName,
+    familyMiddleName,
+    familyLastName,
+    familyGender,
+    familyEmail,
+    familyPhoneNumber,
+    familyKebele,
+  } = req.body;
 
   let emptyFields = [];
 
@@ -87,6 +103,9 @@ const createStudent = async (req, res) => {
   if (!birthDate) {
     emptyFields.push("birthDate");
   }
+  if (!registrationType) {
+    emptyFields.push("registrationType");
+  }
 
   if (emptyFields.length > 0) {
     return res
@@ -94,19 +113,173 @@ const createStudent = async (req, res) => {
       .json({ error: "Please fill in all the fields", emptyFields });
   }
   try {
+    // create student
     const user = await createUser(
       firstName,
       middleName,
       lastName,
       gender,
       email,
-      role
+      role,
+      familyPhoneNumber,
+      familyKebele
     );
     const student = new Student({
       _id: user.user._id,
       birthDate,
+      registrationType,
     });
     await student.save();
+    // create student family
+    const family = await createUser(
+      familyFirstName,
+      familyMiddleName,
+      familyLastName,
+      familyGender,
+      familyEmail,
+      "family",
+      familyPhoneNumber,
+      familyKebele
+    );
+
+    res.status(200).json(student);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+// create a transfer Student
+const createTransferStudent = async (req, res) => {
+  const {
+    firstName,
+    middleName,
+    lastName,
+    gender,
+    email,
+    role,
+    birthDate,
+    registrationType,
+    familyFirstName,
+    familyMiddleName,
+    familyLastName,
+    familyGender,
+    familyEmail,
+    familyPhoneNumber,
+    familyKebele,
+    previousYear,
+    previousStage,
+    previousGrade,
+    previousClassification,
+    previousTotalMark,
+    previousAverage,
+    previousAcademicStatus,
+  } = req.body;
+
+  let emptyFields = [];
+
+  if (!firstName) {
+    emptyFields.push("firstName");
+  }
+  if (!middleName) {
+    emptyFields.push("middleName");
+  }
+  if (!lastName) {
+    emptyFields.push("lastName");
+  }
+  if (!gender) {
+    emptyFields.push("gender");
+  }
+  if (!email) {
+    emptyFields.push("email");
+  }
+  if (!role) {
+    emptyFields.push("role");
+  }
+  if (!birthDate) {
+    emptyFields.push("birthDate");
+  }
+  if (!registrationType) {
+    emptyFields.push("registrationType");
+  }
+  if (
+    !familyFirstName ||
+    !familyMiddleName ||
+    !familyLastName ||
+    !familyGender ||
+    !familyEmail ||
+    !familyPhoneNumber ||
+    !familyKebele ||
+    !previousYear ||
+    !previousStage ||
+    !previousGrade ||
+    !previousClassification ||
+    !previousTotalMark ||
+    !previousAverage ||
+    !previousAcademicStatus
+  ) {
+    emptyFields.push("familyInfo");
+  }
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in all the fields", emptyFields });
+  }
+  try {
+    const transferEnrollment = {
+      _grade: previousGrade,
+      _status: previousAcademicStatus,
+    };
+
+    // create student
+    const user = await createUser(
+      firstName,
+      middleName,
+      lastName,
+      gender,
+      email,
+      role,
+      familyPhoneNumber,
+      familyKebele
+    );
+
+    // add student information
+    if (!user) {
+      res.status(500).json({ error: "Failed to add user" });
+    }
+    const student = new Student({
+      _id: user.user._id,
+      birthDate,
+      registrationType,
+      currentEnrollement: transferEnrollment,
+      enrollment_history: [transferEnrollment],
+    });
+    await student.save();
+
+    // add transfer information
+
+    const transferStudent = new TransferStudent({
+      _id: user.user._id,
+      transferYear: previousYear,
+      transferStage: previousStage,
+      transferGrade: previousGrade,
+      transferClassification: previousClassification,
+      transferTotalMark: previousTotalMark,
+      transferAverage: previousAverage,
+      transferAcademicStatus: previousAcademicStatus,
+    });
+    await transferStudent.save();
+
+    // create student family
+    const family = await createUser(
+      familyFirstName,
+      familyMiddleName,
+      familyLastName,
+      familyGender,
+      familyEmail,
+      "family",
+      familyPhoneNumber,
+      familyKebele
+    );
+
     res.status(200).json(student);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -176,6 +349,7 @@ const enrollStudents = async (req, res) => {
     _academicCurriculum: acCurriculumId,
     _grade: gradeId,
     _section: sectionId,
+    status: "ONP",
   };
 
   try {
@@ -201,7 +375,6 @@ const enrollStudents = async (req, res) => {
           return res.status(400).json({ error: "No such Student" });
         }
 
-        // creating result
         // Creating result array with assigned assessments
         const resultArray = subjects.map((subject) => {
           const assessment = {};
@@ -226,8 +399,6 @@ const enrollStudents = async (req, res) => {
           { _id: student._id },
           {
             $set: {
-              status: "REG",
-              studentType: "NOR",
               currentEnrollement: newEnrollment,
             },
             $push: { enrollment_history: newEnrollment },
@@ -281,6 +452,35 @@ const getElligibleStudent = async (req, res) => {
       })
     );
     res.status(200).json(student);
+  } else {
+    const grade = await Grade.find({
+      stage: prevGrade[0],
+      level: prevGrade[1],
+    });
+
+    // students with no enrollment
+    const students = await Student.find({
+      "currentEnrollement._grade": grade[0]._id,
+      "currentEnrollement._status": "PAS",
+    }).sort({ createdAt: -1 });
+
+    // integrating students and user collecton
+    const student = await Promise.all(
+      students.map(async (stud) => {
+        const user = await User.findById(stud._id.toString());
+        return {
+          _id: stud._id,
+          firstName: user ? user.firstName : null,
+          middleName: user ? user.middleName : null,
+          lastName: user ? user.lastName : null,
+          gender: user ? user.gender : null,
+          email: user ? user.email : null,
+          role: user ? user.role : null,
+          birthDate: stud.birthDate,
+        };
+      })
+    );
+    res.status(200).json(student);
   }
 };
 
@@ -289,7 +489,7 @@ function previousGrade(grade) {
     if (grade.level === 1) {
       return ["null", "null"];
     } else {
-      return ["KG", grade.level];
+      return ["KG", grade.level - 1];
     }
   } else if (grade.stage === "PRM-I" && grade.level === 1) {
     return ["KG", 3];
@@ -300,7 +500,7 @@ function previousGrade(grade) {
   } else if (grade.stage === "PREP" && grade.level === 11) {
     return ["SEC", 10];
   } else {
-    return [grade.stage, grade.label - 1];
+    return [grade.stage, grade.level - 1];
   }
 }
 
@@ -308,6 +508,7 @@ module.exports = {
   getStudents,
   getStudent,
   createStudent,
+  createTransferStudent,
   deleteStudent,
   updateStudent,
   getElligibleStudent,

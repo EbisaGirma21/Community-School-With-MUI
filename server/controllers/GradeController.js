@@ -36,6 +36,7 @@ const getGrade = async (req, res) => {
 // grt grade by stage
 const getGradesByStage = async (req, res) => {
   const { stage } = req.params;
+
   const grade = await Grade.find({
     stage,
   });
@@ -162,7 +163,6 @@ async function IsPreviousGradeExist(grade) {
     });
   }
 }
-
 
 module.exports = {
   getGrades,

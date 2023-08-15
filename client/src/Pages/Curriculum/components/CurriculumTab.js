@@ -2,13 +2,15 @@ import Tab from "../../../components/UI/Tab";
 import { Box } from "@mui/material";
 import CurriculumTable from "./CurriculumTable";
 import CurriculumCreate from "./CurriculumCreate";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
 import Subject from "../../Subject/Subject";
 import AssessmentWeight from "../../AssessmentWeight/AssesmentWeight";
+import CurriculumContext from "../../../context/CurriculumContext";
 
 const CurriculumTab = () => {
+  const { setError, setIsLoading } = useContext(CurriculumContext);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -17,6 +19,8 @@ const CurriculumTab = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setIsLoading(null);
+    setError(null);
   };
 
   // The information passed to tab of curriculum

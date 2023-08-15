@@ -29,12 +29,17 @@ const getMarks = async (req, res) => {
         }
       });
 
+      const totalMark = totalMarkResult(totalMarksBySubject);
+      const average = averageResult(totalMarksBySubject);
+
       return {
         ...mark._doc,
         firstName: user ? user.firstName : null,
         middleName: user ? user.middleName : null,
         lastName: user ? user.lastName : null,
         gender: user ? user.gender : null,
+        totalMark,
+        average,
         ...totalMarksBySubject,
       };
     })
@@ -135,6 +140,24 @@ const addSubjectMarks = async (req, res) => {
   } catch (error) {
     throw new Error("Error updating marks: " + error.message);
   }
+};
+
+const totalMarkResult = (mark) => {
+  let totalResult = 0;
+  for (key in mark) {
+    totalResult += mark[key];
+  }
+  return totalResult;
+};
+
+const averageResult = (mark) => {
+  let totalResult = 0;
+  let subjectNumber = 0;
+  for (key in mark) {
+    totalResult += mark[key];
+    subjectNumber += 1;
+  }
+  return totalResult / subjectNumber;
 };
 
 module.exports = {

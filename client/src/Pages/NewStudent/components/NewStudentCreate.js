@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from "../../../components/UI/Modal";
 import {
   RadioGroup,
@@ -12,10 +12,29 @@ import {
 import { TextField } from "@mui/material";
 import NewStudentContext from "../../../context/NewStudentContext";
 import Dropdown from "../../../components/UI/Dropdown";
+import GradeContext from "../../../context/GradeContext";
 
 const registrationTypeOption = [
   { label: "New", value: "NOR" },
   { label: "Transfer", value: "TRN" },
+];
+const statusOption = [
+  { label: "Pass", value: "PAS" },
+  { label: "Fail", value: "FAL" },
+];
+
+const classificationOption = [
+  { label: "Regular", value: "R" },
+  { label: "Night", value: "N" },
+  { label: "Distance", value: "D" },
+];
+
+const stageOption = [
+  { label: "Kindergarten", value: "KG" },
+  { label: "First Cycle Primary", value: "PRM-I" },
+  { label: "Second Cycle Primary", value: "PRM-II" },
+  { label: "Secondary", value: "SEC" },
+  { label: "Preparatory", value: "PREP" },
 ];
 
 const NewStudentCreate = ({ handleClose, open }) => {
@@ -26,12 +45,39 @@ const NewStudentCreate = ({ handleClose, open }) => {
   const [gender, setGender] = useState("");
   const [email, setEmail] = useState("");
   const [birthDate, setBirthDate] = useState("");
-  const [familyName, setFamilyName] = useState("");
+  const [familyFirstName, setFamilyFirstName] = useState("");
+  const [familyMiddleName, setFamilyMiddleName] = useState("");
+  const [familyLastName, setFamilyLastName] = useState("");
   const [familyGender, setFamilyGender] = useState("");
   const [familyEmail, setfamilyEmail] = useState("");
+  const [familyPhoneNumber, setFamilyPhoneNumber] = useState("");
+  const [familyKebele, setFamilyKebele] = useState("");
   const [registrationType, setRegistrationType] = useState("");
+  const [previousYear, setPreviousYear] = useState("");
+  const [previousGrade, setPreviousGrade] = useState("");
+  const [previousStage, setPreviousStage] = useState("");
+  const [previousClassification, setPreviousClassification] = useState("");
+  const [previousAcademicStatus, setPreviousAcademicStatus] = useState("");
+  const [previousTotalMark, setPreviousTotalMark] = useState("");
+  const [previousAverage, setPreviousAverage] = useState("");
+  const [isMainRegistration, setIsMainRegistration] = useState(true);
+
   // context creation
-  const { createNewStudent } = useContext(NewStudentContext);
+  const { createNewStudent, createTransferStudent, error, isLoading } =
+    useContext(NewStudentContext);
+  const { fetchGradeByStage, grade } = useContext(GradeContext);
+
+  useEffect(() => {
+    previousStage && fetchGradeByStage(previousStage);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [previousStage]);
+
+  const gradeOption = !previousStage
+    ? [{ label: "Not found", value: 1 }]
+    : grade.map((gr) => ({
+        label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
+        value: gr._id,
+      }));
 
   // Change handler funtions
   const handleFirstNameChange = (e) => {
@@ -57,8 +103,14 @@ const NewStudentCreate = ({ handleClose, open }) => {
   };
 
   // family information
-  const handleFamilyNameChange = (e) => {
-    setFamilyName(e.target.value);
+  const handleFamilyFirstNameChange = (e) => {
+    setFamilyFirstName(e.target.value);
+  };
+  const handleFamilyMiddleNameChange = (e) => {
+    setFamilyMiddleName(e.target.value);
+  };
+  const handleFamilyLastNameChange = (e) => {
+    setFamilyLastName(e.target.value);
   };
   const handleFamilyGenderChange = (e) => {
     setFamilyGender(e.target.value);
@@ -66,16 +118,82 @@ const NewStudentCreate = ({ handleClose, open }) => {
   const handleFamilyEmailChange = (e) => {
     setfamilyEmail(e.target.value);
   };
+  const handleFamilyPhoneNumberChange = (e) => {
+    setFamilyPhoneNumber(e.target.value);
+  };
+  const handleFamilyKebeleChange = (e) => {
+    setFamilyKebele(e.target.value);
+  };
+  const handlePreviousYearChange = (e) => {
+    setPreviousYear(e.target.value);
+  };
+  const handlePreviousTotalMarkChange = (e) => {
+    setPreviousTotalMark(e.target.value);
+  };
+  const handlePreviousAverageChange = (e) => {
+    setPreviousAverage(e.target.value);
+  };
+
+  const handleNextClick = () => {
+    setIsMainRegistration(false);
+  };
+  const handlePreviousClick = () => {
+    setIsMainRegistration(true);
+  };
 
   // submit functions
-  const handleSubmit = () => {
-    createNewStudent(firstName, middleName, lastName, gender, email, birthDate);
-    setFirstName("");
-    setMiddleName("");
-    setLastName("");
-    setGender("");
-    setEmail("");
-    setBirthDate("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success =
+      registrationType === "NOR"
+        ? await createNewStudent(
+            firstName,
+            middleName,
+            lastName,
+            gender,
+            email,
+            birthDate,
+            registrationType,
+            familyFirstName,
+            familyMiddleName,
+            familyLastName,
+            familyGender,
+            familyEmail,
+            familyPhoneNumber,
+            familyKebele
+          )
+        : await createTransferStudent(
+            firstName,
+            middleName,
+            lastName,
+            gender,
+            email,
+            birthDate,
+            registrationType,
+            familyFirstName,
+            familyMiddleName,
+            familyLastName,
+            familyGender,
+            familyEmail,
+            familyPhoneNumber,
+            familyKebele,
+            previousYear,
+            previousStage,
+            previousGrade,
+            previousClassification,
+            previousTotalMark,
+            previousAverage,
+            previousAcademicStatus
+          );
+    if (success) {
+      setFirstName("");
+      setMiddleName("");
+      setLastName("");
+      setGender("");
+      setEmail("");
+      setBirthDate("");
+      handleClose();
+    }
   };
 
   return (
@@ -85,11 +203,17 @@ const NewStudentCreate = ({ handleClose, open }) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form className="p-2">
-        <Box className="flex justify-between gap-8 p-2">
+        {/* Main student registration */}
+        <Box
+          className="flex justify-between gap-8 p-2"
+          sx={{ display: isMainRegistration ? "flex" : "none" }}
+        >
           <Box className="flex flex-col  items-center">
-            <Typography>Student Form</Typography>
+            <Typography>Student Information</Typography>
             <TextField
               margin="dense"
               label="First Name"
@@ -152,7 +276,7 @@ const NewStudentCreate = ({ handleClose, open }) => {
               focused
             />
             <Dropdown
-              label="Stage"
+              label="Registration Type"
               options={registrationTypeOption}
               value={registrationType}
               onChange={(e) => {
@@ -162,25 +286,35 @@ const NewStudentCreate = ({ handleClose, open }) => {
             />
           </Box>
           <Box className="flex flex-col items-center ">
-            <Typography>Family Form</Typography>
+            <Typography>Family Information</Typography>
             <TextField
               margin="dense"
-              label="Family Full Name"
+              label="First Name"
               type="text"
               sx={{ minWidth: 300 }}
               variant="standard"
-              value={familyName}
-              onChange={handleFamilyNameChange}
+              value={familyFirstName}
+              onChange={handleFamilyFirstNameChange}
             />
             <TextField
               margin="dense"
-              label="Email"
-              type="email"
+              label="Middle Name"
+              type="text"
               sx={{ minWidth: 300 }}
               variant="standard"
-              value={familyEmail}
-              onChange={handleFamilyEmailChange}
+              value={familyMiddleName}
+              onChange={handleFamilyMiddleNameChange}
             />
+            <TextField
+              margin="dense"
+              label="Last Name"
+              type="text"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+              value={familyLastName}
+              onChange={handleFamilyLastNameChange}
+            />
+
             <RadioGroup
               aria-label="gender"
               name="gender"
@@ -196,12 +330,141 @@ const NewStudentCreate = ({ handleClose, open }) => {
                 label="Female"
               />
             </RadioGroup>
+            <TextField
+              margin="dense"
+              label="Email"
+              type="email"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+              value={familyEmail}
+              onChange={handleFamilyEmailChange}
+            />
+            <TextField
+              margin="dense"
+              label="Phone Number"
+              type="email"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+              value={familyPhoneNumber}
+              onChange={handleFamilyPhoneNumberChange}
+            />
+            <TextField
+              margin="dense"
+              label="Kebele"
+              type="email"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+              value={familyKebele}
+              onChange={handleFamilyKebeleChange}
+            />
           </Box>
         </Box>
-        <Box className="flex justify-end">
+
+        {/* additional transfer student registration */}
+
+        <Box
+          className="flex justify-between gap-8 p-2"
+          sx={{
+            display: isMainRegistration ? "none" : "flex",
+          }}
+        >
+          <Box className="flex flex-col  items-center">
+            <Typography>Additional Information</Typography>
+            <TextField
+              margin="dense"
+              label="Completed Year"
+              type="number"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+              value={previousYear}
+              onChange={handlePreviousYearChange}
+            />
+            <Dropdown
+              label="Stage"
+              options={stageOption}
+              value={previousStage}
+              onChange={(e) => {
+                setPreviousStage(e.target.value);
+              }}
+              width={"100%"}
+            />
+            <Dropdown
+              label="Completed Grade"
+              options={gradeOption}
+              value={previousGrade}
+              onChange={(e) => {
+                setPreviousGrade(e.target.value);
+              }}
+              width={"100%"}
+            />
+
+            <Dropdown
+              label="Classification"
+              options={classificationOption}
+              value={previousClassification}
+              onChange={(e) => {
+                setPreviousClassification(e.target.value);
+              }}
+              width={"100%"}
+            />
+
+            <TextField
+              margin="dense"
+              label="Total Mark of Completed Grade"
+              type="number"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+              value={previousTotalMark}
+              onChange={handlePreviousTotalMarkChange}
+            />
+            <TextField
+              margin="dense"
+              label="Average of Completed Grade"
+              type="number"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+              value={previousAverage}
+              onChange={handlePreviousAverageChange}
+            />
+            <Dropdown
+              label="Previous Academic Status"
+              options={statusOption}
+              value={previousAcademicStatus}
+              onChange={(e) => {
+                setPreviousAcademicStatus(e.target.value);
+              }}
+              width={"100%"}
+            />
+          </Box>
+          <Box className="flex flex-col  items-center">
+            <Typography>Previos Subject(Optional)</Typography>
+            <TextField
+              margin="dense"
+              label="Average of Completed Grade"
+              type="number"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+              // value={previousYear}
+              // onChange={handlePreviousYearChange}
+            />
+          </Box>
+        </Box>
+        <Box className="flex justify-between">
           <Button
             variant="contained"
-            disabled={registrationType === "TRN" ? false : true}
+            disabled={
+              registrationType === "TRN" && !isMainRegistration ? false : true
+            }
+            onClick={handlePreviousClick}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="contained"
+            disabled={
+              registrationType === "TRN" && isMainRegistration ? false : true
+            }
+            onClick={handleNextClick}
           >
             Next
           </Button>

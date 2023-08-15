@@ -44,35 +44,50 @@ const getCurriculum = async (req, res) => {
   if (!curriculum) {
     return res.status(404).json({ error: "No such curriculum" });
   }
-  res.status(200).json({
-    status: "Success",
-    data: {
-      curriculum: curriculum,
-    },
-  });
+  res.status(200).json(curriculum);
 };
 
 // create a new Curriculum
 const createCurriculum = async (req, res) => {
+  const {
+    curriculumTitle,
+    curriculumYear,
+    stage,
+    classification,
+    totalMaximumLoad,
+  } = req.body;
+
+  let emptyFields = [];
+
+  if (!curriculumTitle) {
+    emptyFields.push("curriculumTitle");
+  }
+  if (!curriculumYear) {
+    emptyFields.push("curriculumYear");
+  }
+  if (!stage) {
+    emptyFields.push("stage");
+  }
+  if (!classification) {
+    emptyFields.push("classification");
+  }
+  if (!totalMaximumLoad) {
+    emptyFields.push("totalMaximumLoad");
+  }
+
+  if (emptyFields.length > 0) {
+    return res.status(400).json({ error: "Please fill in all the fields" });
+  }
+
   try {
     const curriculum = new CurriculumModel(req.body);
     if (isValid(curriculum) === true) {
       await PrepareGrades(curriculum);
       await curriculum.save();
-
-      res.status(201).json({
-        status: "Success",
-        data: {
-          curriculum,
-        },
-      });
+      res.status(200).json(curriculum);
     }
   } catch (err) {
-    res.status(500).json({
-      status: "Failed to create academic Session",
-      message: err,
-    });
-    console.log(err);
+    res.status(400).json({ error: err.message });
   }
 };
 
@@ -103,6 +118,36 @@ const deleteCurriculum = async (req, res) => {
 
 // update a Curriculum
 const updateCurriculum = async (req, res) => {
+  const {
+    curriculumTitle,
+    curriculumYear,
+    stage,
+    classification,
+    totalMaximumLoad,
+  } = req.body;
+
+  let emptyFields = [];
+
+  if (!curriculumTitle) {
+    emptyFields.push("curriculumTitle");
+  }
+  if (!curriculumYear) {
+    emptyFields.push("curriculumYear");
+  }
+  if (!stage) {
+    emptyFields.push("stage");
+  }
+  if (!classification) {
+    emptyFields.push("classification");
+  }
+  if (!totalMaximumLoad) {
+    emptyFields.push("totalMaximumLoad");
+  }
+
+  if (emptyFields.length > 0) {
+    return res.status(400).json({ error: "Please fill in all the fields" });
+  }
+
   try {
     const curriculum = new CurriculumModel(req.body);
     const old_curriculum = await CurriculumModel.findById(req.params.id);
@@ -118,18 +163,10 @@ const updateCurriculum = async (req, res) => {
           runValidators: true,
         }
       );
-      res.status(200).json({
-        status: "Success",
-        data: {
-          updatedCurriculum,
-        },
-      });
+      res.status(200).json(updatedCurriculum);
     }
   } catch (err) {
-    res.status(500).json({
-      status: "Failed to Update Curriculum",
-      message: err,
-    });
+    res.status(400).json({ error: err.message });
   }
 };
 

@@ -7,6 +7,8 @@ import DepartmentContext from "../../../context/DepartmentContext";
 // Department Basic information datatable Column
 const tableColumns = [
   { field: "departmentName", headerName: "Name", flex: 1, minWidth: 150 },
+  { field: "leader", headerName: "Department Leader", flex: 1, minWidth: 150 },
+  { field: "members", headerName: "Members", flex: 1, minWidth: 150 },
 ];
 
 const DepartmentTable = () => {

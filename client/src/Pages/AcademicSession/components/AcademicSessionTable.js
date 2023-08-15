@@ -6,7 +6,31 @@ import AcademicSessionContext from "../../../context/AcademicSessionContext";
 
 // AcademicSession Basic information datatable Column
 const tableColumns = [
-  { field: "academicYear", headerName: "Academic Year", flex: 1, minWidth: 150  },
+  {
+    field: "academicYear",
+    headerName: "Academic Year",
+    flex: 1,
+    minWidth: 150,
+  },
+  {
+    field: "registrationOpen",
+    headerName: "Registration Open",
+    flex: 1,
+    minWidth: 150,
+  },
+  {
+    field: "registrationDeadLine",
+    headerName: "Registation Dead Line",
+    flex: 1,
+    minWidth: 150,
+  },
+  {
+    field: "startOfClass",
+    headerName: "Class Start Date",
+    flex: 1,
+    minWidth: 150,
+  },
+  { field: "endOfClass", headerName: "Class End Date", flex: 1, minWidth: 150 },
 ];
 
 const AcademicSessionTable = () => {
@@ -61,7 +85,7 @@ const AcademicSessionTable = () => {
     handleEditOpen();
     setAcademicSessionId(id);
   };
- 
+
   // convert academicSession object to array if necessary
   const tableRows = Array.isArray(academicSession)
     ? academicSession

@@ -24,7 +24,8 @@ const CurriculumUpdate = (props) => {
   const { handleClose, open, curriculumId } = props;
 
   //   context inclusiion
-  const { editCurriculumById, curriculum } = useContext(CurriculumContext);
+  const { editCurriculumById, curriculum, error, isLoading } =
+    useContext(CurriculumContext);
 
   const curriculums = curriculum.filter((curriculum) => {
     return curriculum._id === curriculumId;
@@ -58,8 +59,9 @@ const CurriculumUpdate = (props) => {
   };
 
   // submit functions
-  const handleSubmit = () => {
-    editCurriculumById(
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await editCurriculumById(
       curriculumId,
       curriculumTitle,
       curriculumYear,
@@ -67,12 +69,14 @@ const CurriculumUpdate = (props) => {
       classification,
       totalMaximumLoad
     );
-
-    setCurriculumTitle("");
-    setCurriculumYear("");
-    setClassification("");
-    setStage("");
-    setTotalMaximumLoad("");
+    if (success) {
+      setCurriculumTitle("");
+      setCurriculumYear("");
+      setClassification("");
+      setStage("");
+      setTotalMaximumLoad("");
+      handleClose();
+    }
   };
 
   return (
@@ -82,6 +86,8 @@ const CurriculumUpdate = (props) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <TextField
@@ -109,7 +115,7 @@ const CurriculumUpdate = (props) => {
           onChange={(e) => {
             setStage(e.target.value);
           }}
-          width={'100%'}
+          width={"100%"}
         />
         <Dropdown
           label="Classification"
@@ -118,7 +124,7 @@ const CurriculumUpdate = (props) => {
           onChange={(e) => {
             setClassification(e.target.value);
           }}
-          width={'100%'}
+          width={"100%"}
         />
 
         <TextField

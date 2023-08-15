@@ -29,7 +29,7 @@ const CurriculumCreate = ({ handleClose, open }) => {
   const [classification, setClassification] = useState("");
 
   // context creation
-  const { createCurriculum } = useContext(CurriculumContext);
+  const { createCurriculum, error, isLoading } = useContext(CurriculumContext);
 
   // Change handler funtions
   const handleCurriculumTitleChange = (e) => {
@@ -43,19 +43,23 @@ const CurriculumCreate = ({ handleClose, open }) => {
   };
 
   // submit functions
-  const handleSubmit = () => {
-    createCurriculum(
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await createCurriculum(
       curriculumTitle,
       curriculumYear,
       stage,
       classification,
       totalMaximumLoad
     );
-    setCurriculumTitle("");
-    setCurriculumYear("");
-    setClassification("");
-    setStage("");
-    setTotalMaximumLoad("");
+    if (success) {
+      setCurriculumTitle("");
+      setCurriculumYear("");
+      setClassification("");
+      setStage("");
+      setTotalMaximumLoad("");
+      handleClose();
+    }
   };
 
   return (
@@ -65,6 +69,8 @@ const CurriculumCreate = ({ handleClose, open }) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <TextField

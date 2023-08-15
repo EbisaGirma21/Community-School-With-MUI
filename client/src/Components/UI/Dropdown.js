@@ -2,12 +2,11 @@ import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 const Dropdown = ({ options, label, value, onChange, width }) => {
   return (
-    <Box className="dropdown-menu mr-4" sx={{ minWidth: width }}>
+    <Box className="dropdown-menu mt-2" sx={{ minWidth: width }}>
       <FormControl variant="standard" fullWidth>
         <InputLabel
           id="demo-simple-select-helper-label"
           className="input-field"
-          sx={{ color: "#5E35B1" }}
         >
           {label}
         </InputLabel>

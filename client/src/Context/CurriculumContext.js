@@ -6,6 +6,8 @@ const CurriculumContext = createContext();
 
 function CurriculumProvider({ children }) {
   const [curriculum, setCurriculum] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
 
   const fetchCurriculumById = async (id) => {
     const response = await axios.get(`/curriculum/${id}`);
@@ -26,17 +28,39 @@ function CurriculumProvider({ children }) {
     classification,
     totalMaximumLoad
   ) => {
-    const response = await axios.post("/curriculum", {
-      curriculumTitle,
-      curriculumYear,
-      stage,
-      classification,
-      totalMaximumLoad,
-    });
+    setIsLoading(true);
+    setError(null);
 
-    const updateCurriculum = [...curriculum, response.data.data.curriculum];
-    fetchCurriculums();
-    setCurriculum(updateCurriculum);
+    try {
+      const response = await axios.post("/curriculum", {
+        curriculumTitle,
+        curriculumYear,
+        stage,
+        classification,
+        totalMaximumLoad,
+      });
+
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchCurriculums();
+        toast.success("Curriculum created successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to create  curriculum");
+        return false;
+      }
+    }
   };
 
   // function used to delete curriculum
@@ -70,28 +94,46 @@ function CurriculumProvider({ children }) {
     newClassification,
     newTotalMaximumLoad
   ) => {
-    const response = await axios.patch(`/curriculum/${id}`, {
-      curriculumTitle: newCurriculumTitle,
-      curriculumYear: newCurriculumYear,
-      stage: newStage,
-      classification: newClassification,
-      totalMaximumLoad: newTotalMaximumLoad,
-    });
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axios.patch(`/curriculum/${id}`, {
+        curriculumTitle: newCurriculumTitle,
+        curriculumYear: newCurriculumYear,
+        stage: newStage,
+        classification: newClassification,
+        totalMaximumLoad: newTotalMaximumLoad,
+      });
 
-    const updatedCurriculums = curriculum.map((curriculum) => {
-      if (curriculum._id === id) {
-        return { ...curriculum, ...response.data.data.curriculum };
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchCurriculums();
+        toast.info("Curriculum updated successfully");
+        return true;
       }
-
-      return curriculum;
-    });
-    fetchCurriculums();
-    setCurriculum(updatedCurriculums);
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to update curriculum");
+      }
+    }
   };
 
   // shared operation between components
   const curriculumOperation = {
+    error,
+    isLoading,
     curriculum,
+    setError,
+    setIsLoading,
     fetchCurriculumById,
     fetchCurriculums,
     createCurriculum,

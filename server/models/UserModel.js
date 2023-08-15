@@ -26,6 +26,12 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },
+  phoneNumber: {
+    type: String,
+  },
+  kebele: {
+    type: String,
+  },
   role: {
     type: String,
     required: true,
@@ -44,6 +50,8 @@ userSchema.statics.createUser = async function (
   gender,
   email,
   role,
+  phoneNumber,
+  kebele,
   password
 ) {
   if (
@@ -79,6 +87,8 @@ userSchema.statics.createUser = async function (
     gender,
     email,
     role,
+    phoneNumber,
+    kebele,
     password: hash,
   });
   return user;

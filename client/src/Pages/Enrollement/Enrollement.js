@@ -36,6 +36,7 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
   // update local Section state when context Section changes
   useEffect(() => {
     gradeId && fetchSections();
+    setDisplayed(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gradeId]);
 
@@ -89,7 +90,7 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
         <Button
           variant="contained"
           onClick={() => {
-            setDisplayed(!displayed);
+            setDisplayed(true);
           }}
           disabled={gradeId ? false : true}
         >

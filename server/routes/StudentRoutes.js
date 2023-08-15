@@ -1,6 +1,7 @@
 const express = require("express");
 const {
   createStudent,
+  createTransferStudent,
   getStudents,
   getStudent,
   updateStudent,
@@ -19,6 +20,9 @@ router.get("/:id", getStudent);
 
 // POST a new Student
 router.post("/", createStudent);
+
+// POST a transfer Student
+router.post("/transfer", createTransferStudent);
 
 // DELETE a Student
 router.delete("/:id", deleteStudent);

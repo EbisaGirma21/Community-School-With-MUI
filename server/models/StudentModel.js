@@ -10,13 +10,7 @@ const StudentSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    status: {
-      type: String,
-      required: true,
-      default: "REG",
-      enum: ["REG", "ONP", "PAS", "FAL"],
-    },
-    studentType: {
+    registrationType: {
       type: String,
       enum: ["NOR", "TRN"],
     },
@@ -33,6 +27,12 @@ const StudentSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Section",
       },
+      _status: {
+        type: String,
+        required: true,
+        default: "REG",
+        enum: ["REG", "ONP", "PAS", "FAL"],
+      },
     },
     enrollment_history: [
       {
@@ -47,6 +47,12 @@ const StudentSchema = new mongoose.Schema(
         _section: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Section",
+        },
+        _status: {
+          type: String,
+          required: true,
+          default: "REG",
+          enum: ["REG", "ONP", "PAS", "FAL"],
         },
       },
     ],

@@ -5,19 +5,33 @@ import { useContext, useEffect, useState } from "react";
 import AcademicCurriculumContext from "../../context/AcademicCurriculumContext";
 import CurriculumContext from "../../context/CurriculumContext";
 import GradeContext from "../../context/GradeContext";
+import AcademicSessionContext from "../../context/AcademicSessionContext";
 
 function Registration() {
-  {localStorage.setItem("path", JSON.stringify("registration"))}
+  {
+    localStorage.setItem("path", JSON.stringify("registration"));
+  }
 
-
+  const [acSession, setAcSession] = useState("");
   const [acCurriculumId, setAcCurriculumId] = useState("");
   const [gradeId, setGradeId] = useState("");
 
   const { academicCurriculum, fetchAcademicCurriculums } = useContext(
     AcademicCurriculumContext
   );
+
+  const { academicSession, fetchAcademicSessions } = useContext(
+    AcademicSessionContext
+  );
+
   const { curriculum, fetchCurriculumById } = useContext(CurriculumContext);
   const { grade, fetchGradeByStage } = useContext(GradeContext);
+
+  //   fetch curriculum useEffect
+  useEffect(() => {
+    fetchAcademicSessions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   //   fetch curriculum useEffect
   useEffect(() => {
@@ -25,11 +39,21 @@ function Registration() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  //   Curruculum to dropdown
-  const acCurriculumOption = academicCurriculum.map((acCurriculum) => ({
-    label: `${acCurriculum.curriculumTitle} - ${acCurriculum.academicYear}`,
-    value: acCurriculum._id,
+  const academicSessionOption = academicSession.map((ac_Session) => ({
+    label: ac_Session.academicYear,
+    value: ac_Session.academicYear,
   }));
+
+  const filteredAcCurriculum = academicCurriculum.filter((acCurriculum) => {
+    return acCurriculum.academicYear === acSession;
+  });
+  //   Curruculum to dropdown
+  const acCurriculumOption = !acSession
+    ? [{ label: "Not found", value: 1 }]
+    : filteredAcCurriculum.map((acCurriculum) => ({
+        label: `${acCurriculum.curriculumTitle}`,
+        value: acCurriculum._id,
+      }));
 
   const selectedAcCurriculum = !acCurriculumId
     ? []
@@ -83,6 +107,17 @@ function Registration() {
         spacing={1}
         sx={{ p: 1, border: "1px solid #dbdde0", borderRadius: "10px" }}
       >
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <Dropdown
+            label="Academic Year"
+            options={academicSessionOption}
+            value={acSession}
+            onChange={(e) => {
+              setAcSession(e.target.value);
+            }}
+            width={"140px"}
+          />
+        </Grid>
         <Grid item xs={12} sm={6} md={4} lg={3}>
           <Dropdown
             label="Academic Curriculum"

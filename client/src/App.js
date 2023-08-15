@@ -89,7 +89,22 @@ function App() {
               />
             </Route>
             <Route path="students">
-              <Route index element={<Student />} />
+              <Route
+                index
+                element={
+                  <AcademicSessionProvider>
+                    <AcademicCurriculumProvider>
+                      <CurriculumProvider>
+                        <GradeProvider>
+                          <SectionProvider>
+                            <Student />
+                          </SectionProvider>
+                        </GradeProvider>
+                      </CurriculumProvider>
+                    </AcademicCurriculumProvider>
+                  </AcademicSessionProvider>
+                }
+              />
             </Route>
             <Route path="teachers">
               <Route
@@ -125,17 +140,19 @@ function App() {
               <Route
                 index
                 element={
-                  <AcademicCurriculumProvider>
-                    <CurriculumProvider>
-                      <GradeProvider>
-                        <SectionProvider>
-                          <TeacherProvider>
-                            <AssignTeacher />
-                          </TeacherProvider>
-                        </SectionProvider>
-                      </GradeProvider>
-                    </CurriculumProvider>
-                  </AcademicCurriculumProvider>
+                  <AcademicSessionProvider>
+                    <AcademicCurriculumProvider>
+                      <CurriculumProvider>
+                        <GradeProvider>
+                          <SectionProvider>
+                            <TeacherProvider>
+                              <AssignTeacher />
+                            </TeacherProvider>
+                          </SectionProvider>
+                        </GradeProvider>
+                      </CurriculumProvider>
+                    </AcademicCurriculumProvider>
+                  </AcademicSessionProvider>
                 }
               />
             </Route>
@@ -143,17 +160,19 @@ function App() {
               <Route
                 index
                 element={
-                  <AcademicCurriculumProvider>
-                    <CurriculumProvider>
-                      <GradeProvider>
-                        <SubjectProvider>
-                          <NewStudentProvider>
-                            <Registration />
-                          </NewStudentProvider>
-                        </SubjectProvider>
-                      </GradeProvider>
-                    </CurriculumProvider>
-                  </AcademicCurriculumProvider>
+                  <AcademicSessionProvider>
+                    <AcademicCurriculumProvider>
+                      <CurriculumProvider>
+                        <GradeProvider>
+                          <SubjectProvider>
+                            <NewStudentProvider>
+                              <Registration />
+                            </NewStudentProvider>
+                          </SubjectProvider>
+                        </GradeProvider>
+                      </CurriculumProvider>
+                    </AcademicCurriculumProvider>
+                  </AcademicSessionProvider>
                 }
               />
             </Route>
@@ -161,19 +180,21 @@ function App() {
               <Route
                 index
                 element={
-                  <AcademicCurriculumProvider>
-                    <CurriculumProvider>
-                      <GradeProvider>
-                        <SectionProvider>
-                          <MarkProvider>
-                            <SubjectProvider>
-                              <Result />
-                            </SubjectProvider>
-                          </MarkProvider>
-                        </SectionProvider>
-                      </GradeProvider>
-                    </CurriculumProvider>
-                  </AcademicCurriculumProvider>
+                  <AcademicSessionProvider>
+                    <AcademicCurriculumProvider>
+                      <CurriculumProvider>
+                        <GradeProvider>
+                          <SectionProvider>
+                            <MarkProvider>
+                              <SubjectProvider>
+                                <Result />
+                              </SubjectProvider>
+                            </MarkProvider>
+                          </SectionProvider>
+                        </GradeProvider>
+                      </CurriculumProvider>
+                    </AcademicCurriculumProvider>
+                  </AcademicSessionProvider>
                 }
               />
             </Route>
