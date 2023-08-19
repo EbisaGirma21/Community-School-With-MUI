@@ -8,8 +8,8 @@ const {
 const router = express.Router();
 
 // GET all Marks
-router.get("/", getMarks);
-router.get("/markList/:subjectId", getMarkLists);
+router.get("/:semesterId", getMarks);
+router.get("/markList/:subjectId/:semesterId", getMarkLists);
 router.post("/addmark", addSubjectMarks);
 
 module.exports = router;

@@ -11,7 +11,7 @@ function CurriculumProvider({ children }) {
 
   const fetchCurriculumById = async (id) => {
     const response = await axios.get(`/curriculum/${id}`);
-    setCurriculum(response.data.data.curriculum);
+    setCurriculum(response.data);
   };
 
   //  function  used to fetch data from database

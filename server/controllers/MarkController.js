@@ -4,6 +4,7 @@ const User = require("../models/UserModel");
 
 // get all Marks
 const getMarks = async (req, res) => {
+  const { semesterId } = req.params;
   const marks = await MarkModel.find({}).sort({
     createdAt: -1,
   });
@@ -12,9 +13,13 @@ const getMarks = async (req, res) => {
     marks.map(async (mark) => {
       const user = await User.findById(mark.student);
       const totalMarksBySubject = {};
+      const results = mark.results.filter((result) => {
+        return result._semesters.toString() == semesterId;
+      });
 
+      console.log(semesterId);
       // function to assign total mark by subject Id
-      mark.result.forEach((resultItem) => {
+      results[0].result.forEach((resultItem) => {
         const subjectId = resultItem.subject.toString();
         const assessment = resultItem.assessment;
         const totalMarks = Object.values(assessment).reduce(
@@ -48,7 +53,7 @@ const getMarks = async (req, res) => {
   res.status(200).json(marksData);
 };
 const getMarkLists = async (req, res) => {
-  const { subjectId } = req.params;
+  const { subjectId, semesterId } = req.params;
 
   const marks = await MarkModel.find({}).sort({
     createdAt: -1,
@@ -57,9 +62,14 @@ const getMarkLists = async (req, res) => {
     marks.map(async (mark) => {
       const user = await User.findById(mark.student);
 
-      const filteredResult = mark.result.filter((item) => {
+      const filteredSemester = mark.results.filter((item) => {
+        return item._semesters.toString() === semesterId;
+      });
+
+      const filteredResult = filteredSemester[0].result.filter((item) => {
         return item.subject.toString() === subjectId;
       });
+      console.log(filteredSemester[0]._semesters.toString());
       // Calculate the total mark by summing all assessment values
       const totalMark = Object.values(filteredResult[0].assessment)
         .filter((assessment) => assessment.status === "assigned")
@@ -73,6 +83,7 @@ const getMarkLists = async (req, res) => {
         lastName: user ? user.lastName : null,
         gender: user ? user.gender : null,
         subject: filteredResult[0].subject,
+        _semesters: filteredSemester[0]._semesters.toString(),
         quiz:
           filteredResult[0].assessment.quiz.status === "assigned"
             ? filteredResult[0].assessment.quiz.value
@@ -110,6 +121,7 @@ const addSubjectMarks = async (req, res) => {
           _id,
           student,
           subject,
+          _semesters,
           middleName,
           firstName,
           lastName,
@@ -118,6 +130,18 @@ const addSubjectMarks = async (req, res) => {
           ...assessment
         } = data;
 
+        // Find the curriculum by curriculumId
+        const studentMark = await Mark.findById(_id);
+
+        // Find the grade in the curriculum by gradeId
+        const resultSemester = studentMark.results.find(
+          (result) => result._semesters.toString() === _semesters
+        );
+
+        // Find the subject in the grade by subjectId
+        const subjectResult = resultSemester.result.find(
+          (result) => result.subject.toString() === subject
+        );
         // Update the result array for the specific subject and student
 
         const updatedResult = Object.keys(assessment).reduce((acc, key) => {
@@ -128,15 +152,13 @@ const addSubjectMarks = async (req, res) => {
           return acc;
         }, {});
 
-        // Find the matching Mark document by its _id and update the result array
-        await Mark.findOneAndUpdate(
-          { _id, student, "result.subject": subject },
-          { $set: { "result.$.assessment": updatedResult } }
-        );
+        // updating subject
+        subjectResult.assessment = updatedResult;
+        await studentMark.save();
+
+        res.status(200).json(subjectResult);
       })
     );
-
-    return "Marks updated successfully";
   } catch (error) {
     throw new Error("Error updating marks: " + error.message);
   }

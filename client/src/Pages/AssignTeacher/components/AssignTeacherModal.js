@@ -44,9 +44,18 @@ export default function AssignTeacherModal(props) {
     setSelectedTeacherName(newValue ? newValue.label : "");
   };
 
-  const handleSave = () => {
-    assignTeacher(sectionId, subjectId, teacher, acCurriculumId, gradeId);
+  const handleSave = async (e) => {
+    const success = await assignTeacher(
+      sectionId,
+      subjectId,
+      teacher,
+      acCurriculumId,
+      gradeId
+    );
     handleClose();
+    if (success) {
+      handleClose();
+    }
   };
 
   return (

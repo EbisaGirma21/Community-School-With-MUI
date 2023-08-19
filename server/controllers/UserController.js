@@ -31,7 +31,7 @@ const createUser = async (
   email,
   role,
   phoneNumber,
-  kebele
+  address
 ) => {
   const password = "ABCabc123@#";
 
@@ -44,7 +44,7 @@ const createUser = async (
       email,
       role,
       phoneNumber,
-      kebele,
+      address,
       password
     );
     // Create the user
@@ -56,7 +56,7 @@ const createUser = async (
       email,
       role,
       phoneNumber,
-      kebele,
+      address,
       password
     );
 

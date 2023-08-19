@@ -1,10 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import Datatable from "../../../components/UI/Datatable";
+import Table from "../../../components/UI/Table";
 import MarkContext from "../../../context/MarkContext";
 import SubjectContext from "../../../context/SubjectContext";
 import { Box } from "@mui/material";
 
-const RosterTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
+const RosterTable = ({
+  acCurriculumId,
+  semesterId,
+  curriculumId,
+  gradeId,
+  sectionId,
+}) => {
   // Component contexts
   const { mark, fetchMarks } = useContext(MarkContext);
   const { subject, fetchSubjects } = useContext(SubjectContext);
@@ -13,9 +19,9 @@ const RosterTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
 
   // Update local mark state when context mark changes
   useEffect(() => {
-    sectionId && fetchMarks();
+    sectionId && fetchMarks(semesterId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sectionId]);
+  }, [sectionId, semesterId]);
 
   useEffect(() => {
     const fetchSubjectColumns = async () => {
@@ -61,7 +67,7 @@ const RosterTable = ({ acCurriculumId, curriculumId, gradeId, sectionId }) => {
 
   return (
     <Box>
-      <Datatable
+      <Table
         tableColumns={tableColumns}
         key={mark._id}
         tableRows={tableRows}

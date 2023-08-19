@@ -91,6 +91,7 @@ function AssignTeacher() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acCurriculumId, curriculum]);
 
+
   // gradeOption
   const gradeOption = !acCurriculumId
     ? [{ label: "Not found", value: 1 }]

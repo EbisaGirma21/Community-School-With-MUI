@@ -5,6 +5,14 @@ const ModuleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  department: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Deparment",
+  },
+  coordinator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Teahcer",
+  },
 });
 
 const Module = mongoose.model("Module", ModuleSchema);

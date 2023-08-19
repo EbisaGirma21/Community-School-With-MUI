@@ -2,6 +2,7 @@ const AcademicCurriculumModel = require("../models/AcademicCurriculumModel");
 const mongoose = require("mongoose");
 const Curriculum = require("../models/CurriculumModel");
 const AcademicSession = require("../models/AcademicSessionModel");
+const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 
 // get all AcademicCurriculums
 const getAcademicCurriculums = async (req, res) => {
@@ -23,9 +24,14 @@ const getAcademicCurriculums = async (req, res) => {
           _id: academicCurriculum._id,
           academicSession: academicCurriculum.academicSession,
           curriculumId: curriculum ? curriculum._id : null,
-          curriculumTitle: curriculum ? curriculum.curriculumTitle : null,
+          curriculumTitle: curriculum
+            ? `${classic(curriculum.classification)} ${
+                curriculum.curriculumYear
+              } (${curriculum.stage})`
+            : null,
           maxSemester: academicCurriculum.maxSemester,
           academicYear: academicSession.academicYear,
+          semesters: academicCurriculum.semesters,
         };
       })
     );
@@ -57,8 +63,13 @@ const getAcademicCurriculum = async (req, res) => {
     _id: academicCurriculum._id,
     academicSession: academicCurriculum.academicSession,
     curriculumId: curriculum ? curriculum._id : null,
-    curriculumTitle: curriculum ? curriculum.curriculumTitle : null,
+    curriculumTitle: curriculum
+      ? `${classic(curriculum.classification)} ${curriculum.curriculumYear} (${
+          curriculum.stage
+        })`
+      : null,
     maxSemester: academicCurriculum.maxSemester,
+    semesters: academicCurriculum.semesters,
   };
 
   res.status(200).json(acCurriculum);
@@ -89,9 +100,12 @@ const getAcademicCurriculumByYear = async (req, res) => {
         academicSession: academicCurriculum.academicSession,
         curriculumId: curriculum ? curriculum._id : null,
         curriculumTitle: curriculum
-          ? `${curriculum.curriculumTitle} ${curriculum.curriculumYear} (${curriculum.stage})`
+          ? `${classic(curriculum.classification)} ${
+              curriculum.curriculumYear
+            } (${curriculum.stage})`
           : null,
         maxSemester: academicCurriculum.maxSemester,
+        semesters: academicCurriculum.semesters,
       };
     })
   );
@@ -102,6 +116,7 @@ const getAcademicCurriculumByYear = async (req, res) => {
 // create a new AcademicCurriculum
 const createAcademicCurriculum = async (req, res) => {
   const { academicSession, curriculum, maxSemester } = req.body;
+  console.log(academicSession, curriculum, maxSemester);
 
   if (!academicSession || !curriculum || !maxSemester) {
     return res
@@ -110,17 +125,27 @@ const createAcademicCurriculum = async (req, res) => {
   }
 
   try {
-    const academicCurriculum = await AcademicCurriculumModel.create({
+    const semesters = [];
+    semestersOption = ["I", "II", "III", "IV", "V"];
+    for (let i = 1; i <= maxSemester; i++) {
+      semesters.push({
+        _semesterLabel: semestersOption[i - 1],
+        _status: "REG",
+      });
+    }
+
+    const academicCurriculum = await AcademicCurriculum.create({
       academicSession,
       curriculum,
       maxSemester,
+      semesters,
     });
+
     res.status(200).json(academicCurriculum);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: "Internal server error" });
   }
 };
-
 // delete a AcademicCurriculum
 const deleteAcademicCurriculum = async (req, res) => {
   const { id } = req.params;
@@ -156,6 +181,22 @@ const updateAcademicCurriculum = async (req, res) => {
     return res.status(400).json({ error: "No such AcademicCurriculum" });
   }
   res.status(200).json(academicCurriculum);
+};
+
+// assigning classification
+const classic = (key) => {
+  const classific = [
+    { key: "R", value: "Regular" },
+    { key: "N", value: "Night" },
+    { key: "D", value: "Distance" },
+  ];
+  const classificationObject = classific.find((item) => item.key === key);
+
+  if (classificationObject) {
+    return classificationObject.value;
+  } else {
+    return "Invalid key";
+  }
 };
 
 module.exports = {

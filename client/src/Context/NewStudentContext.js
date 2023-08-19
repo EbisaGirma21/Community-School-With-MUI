@@ -103,7 +103,7 @@ function NewStudentProvider({ children }) {
     setError(null);
 
     try {
-      const response = await axios.post("/student/transfer", {
+      const response = await axios.post("/student/senior", {
         firstName,
         middleName,
         lastName,

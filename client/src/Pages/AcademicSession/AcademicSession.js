@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
 import AcademicSessionTable from "./components/AcademicSessionTable";
 import AcademicSessionCreate from "./components/AcademicSessionCreate";
+import AcademicSessionContext from "../../context/AcademicSessionContext";
 
 function AcademicSession() {
+
+  const { setError, setIsLoading } = useContext(AcademicSessionContext);
+
   // first process
   {
     localStorage.setItem("path", JSON.stringify("academicSession"));
@@ -18,6 +22,8 @@ function AcademicSession() {
 
   const handleClose = () => {
     setOpen(false);
+    setIsLoading(null);
+    setError(null);
   };
 
   return (

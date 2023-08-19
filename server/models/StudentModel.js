@@ -15,6 +15,10 @@ const StudentSchema = new mongoose.Schema(
       enum: ["NOR", "TRN"],
     },
     currentEnrollement: {
+      _academicYear: {
+        type: Number,
+        required: true,
+      },
       _academicCurriculum: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "AcademicCurriculum",
@@ -23,9 +27,24 @@ const StudentSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: "Grade",
       },
+      _stage: {
+        type: String,
+        required: true,
+      },
+      _classification: {
+        type: String,
+      },
       _section: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Section",
+      },
+      _totalMark: {
+        type: Number,
+        required: true,
+      },
+      _average: {
+        type: Number,
+        required: true,
       },
       _status: {
         type: String,
@@ -36,6 +55,10 @@ const StudentSchema = new mongoose.Schema(
     },
     enrollment_history: [
       {
+        _academicYear: {
+          type: Number,
+          required: true,
+        },
         _academicCurriculum: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "AcademicCurriculum",
@@ -44,9 +67,24 @@ const StudentSchema = new mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: "Grade",
         },
+        _stage: {
+          type: String,
+          required: true,
+        },
+        _classification: {
+          type: String,
+        },
         _section: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "Section",
+        },
+        _totalMark: {
+          type: Number,
+          required: true,
+        },
+        _average: {
+          type: Number,
+          required: true,
         },
         _status: {
           type: String,

@@ -1,4 +1,4 @@
-import { CustomButton as Button } from "../../../components/UI/StyledCompoments";
+import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -32,7 +32,7 @@ export default function AcademicCurriculumDelete(props) {
           id="alert-dialog-title"
           sx={{ background: "#5E35B1", color: "white", marginBottom: "10px" }}
         >
-          {"Delete AcademicCurriculum"}
+          {"Delete Academic Curriculum"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

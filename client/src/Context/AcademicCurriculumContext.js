@@ -63,15 +63,27 @@ function AcademicCurriculumProvider({ children }) {
 
   // function used to delete academicCurriculum
   const deleteAcademicCurriculumById = async (id) => {
-    await axios.delete(`/academicCurriculum/${id}`);
+    try {
+      const response = await axios.delete(`/academicCurriculum/${id}`);
+      if (response.status !== 200) {
+        toast.error(response.data.error);
+      } else {
+        const updatedAcademicCurriculum = academicCurriculum.filter(
+          (academicCurriculum) => {
+            return academicCurriculum._id !== id;
+          }
+        );
 
-    const updatedAcademicCurriculum = academicCurriculum.filter(
-      (academicCurriculum) => {
-        return academicCurriculum._id !== id;
+        setAcademicCurriculum(updatedAcademicCurriculum);
+        toast.warning("Academic curriculum deleted successfully");
       }
-    );
-
-    setAcademicCurriculum(updatedAcademicCurriculum);
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("Failed to delete academic curriculum");
+      }
+    }
   };
 
   // function used to delete academicCurriculum

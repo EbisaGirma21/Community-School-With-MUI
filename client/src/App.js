@@ -120,9 +120,13 @@ function App() {
               <Route
                 index
                 element={
-                  <ModuleProvider>
-                    <Module />
-                  </ModuleProvider>
+                  <DepartmentProvider>
+                    <TeacherProvider>
+                      <ModuleProvider>
+                        <Module />
+                      </ModuleProvider>
+                    </TeacherProvider>
+                  </DepartmentProvider>
                 }
               />
             </Route>

@@ -1,11 +1,14 @@
 import { createContext, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const SectionContext = createContext();
 
 function SectionProvider({ children }) {
   const [section, setSection] = useState([]);
   const [sectionSubject, setSectionSubject] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
 
   //  function  used to fetch data from database
   const fetchSections = async () => {
@@ -73,26 +76,75 @@ function SectionProvider({ children }) {
     acCurriculumId,
     gradeId
   ) => {
-    const response = await axios.post(`/section/${sectionId}`, {
-      subjectId,
-      teacherId,
-    });
-    fetchSectionSubject(acCurriculumId, gradeId, sectionId);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(`/section/${sectionId}`, {
+        subjectId,
+        teacherId,
+      });
+
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchSectionSubject(acCurriculumId, gradeId, sectionId);
+        toast.success("Teacher assigned successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to assign teacher");
+        return false;
+      }
+    }
   };
-  const assignHomeRoomTeacher = async (
-    sectionId,
-    teacherId,
-    acCurriculumId,
-    gradeId
-  ) => {
-    const response = await axios.post(`/section/${sectionId}/${teacherId}`);
-    fetchSectionSubject(acCurriculumId, gradeId, sectionId);
+  const assignHomeRoomTeacher = async (sectionId, teacherId) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post(`/section/${sectionId}/${teacherId}`);
+
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchSections();
+        toast.success("Teacher assigned successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to assign teacher");
+        return false;
+      }
+    }
   };
 
   // shared operation between components
   const sectionOperation = {
+    error,
+    isLoading,
     section,
     sectionSubject,
+    setError,
+    setIsLoading,
     assignHomeRoomTeacher,
     assignTeacher,
     fetchSectionSubject,

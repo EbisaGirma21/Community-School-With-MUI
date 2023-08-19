@@ -6,11 +6,13 @@ import TeacherContext from "../../../context/TeacherContext";
 
 // Teacher Basic information datatable Column
 const tableColumns = [
-  { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150  },
-  { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150  },
-  { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150  },
-  { field: "gender", headerName: "Gender", flex: 1, minWidth: 150  },
-  { field: "email", headerName: "Email", flex: 1, minWidth: 150  },
+  { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150 },
+  { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150 },
+  { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150 },
+  { field: "gender", headerName: "Gender", flex: 1, minWidth: 150 },
+  { field: "email", headerName: "Email", flex: 1, minWidth: 150 },
+  { field: "phoneNumber", headerName: "Phone Number", flex: 1, minWidth: 150 },
+  { field: "address", headerName: "Address", flex: 1, minWidth: 150 },
 ];
 
 const TeacherTable = () => {
@@ -19,7 +21,6 @@ const TeacherTable = () => {
   const [editOpen, setdEditOpen] = useState(false);
   const [teacherId, setTeacherId] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
-
 
   // component context
   const { teachers, fetchTeachers } = useContext(TeacherContext);
@@ -98,7 +99,6 @@ const TeacherTable = () => {
         key={teachers._id}
         tableRows={tableRows}
         setSelectedRows={setSelectedRows}
-
         getRowId={(row) => row._id || teachers.indexOf(row)}
       />
       {content}

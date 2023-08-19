@@ -7,7 +7,8 @@ const SubjectUpdate = (props) => {
   const { handleClose, open, subjectId, curriculumId, gradeId } = props;
 
   //   context inclusiion
-  const { editSubjectById, subject } = useContext(SubjectContext);
+  const { editSubjectById, subject, error, isLoading } =
+    useContext(SubjectContext);
 
   const subjects = subject.filter((subject) => {
     return subject._id === subjectId;
@@ -22,9 +23,18 @@ const SubjectUpdate = (props) => {
   };
 
   // submit functions
-  const handleSubmit = () => {
-    editSubjectById(curriculumId, gradeId, subjectId, subjectLoad);
-    setSubjectLoad("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await editSubjectById(
+      curriculumId,
+      gradeId,
+      subjectId,
+      subjectLoad
+    );
+    if (success) {
+      setSubjectLoad("");
+      handleClose();
+    }
   };
 
   return (
@@ -34,6 +44,8 @@ const SubjectUpdate = (props) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      error={error}
+      isLoading={isLoading}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <TextField

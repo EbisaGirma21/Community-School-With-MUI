@@ -2,8 +2,9 @@ import { Box, Button, IconButton } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import SectionContext from "../../../context/SectionContext";
 import Dropdown from "../../../components/UI/Dropdown";
-import Datatable from "../../../components/UI/Datatable";
 import AssignTeacherModal from "./AssignTeacherModal";
+import { toast } from "react-toastify";
+import Table from "../../../components/UI/Table";
 
 const tableColumns = [
   { field: "moduleTitle", headerName: "Subject", flex: 1, minWidth: 150 },
@@ -41,7 +42,11 @@ function SubjectTeacher({ gradeId, acCurriculumId }) {
     setAssignOpen(false);
   };
   const handleAssignOpen = () => {
-    setAssignOpen(true);
+    if (selectedRows.length === 0) {
+      toast.warning("No selected subject!");
+    } else {
+      setAssignOpen(true);
+    }
   };
 
   const sectionOption = !gradeId
@@ -85,18 +90,13 @@ function SubjectTeacher({ gradeId, acCurriculumId }) {
           }}
           width={"100px"}
         />
-        <Button
-          variant="contained"
-          disabled={sectionId ? false : true}
-          onClick={handleAssignOpen}
-        >
+        <Button variant="contained" onClick={handleAssignOpen}>
           Assign Teacher
         </Button>
       </Box>
 
-      <Datatable
-        // onDelete={handleDelete}
-        // onEdit={handleEdit}
+      <Table
+       
         tableColumns={tableColumns}
         key={sectionSubject._id}
         tableRows={tableRows}

@@ -6,8 +6,7 @@ const { createUser, deleteUserById, updateUser } = require("./UserController");
 const Mark = require("../models/MarkModel");
 const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 const Curriculum = require("../models/CurriculumModel");
-const Module = require("../models/ModuleModel");
-const TransferStudent = require("../models/TranferstudentModel");
+const { format } = require("date-fns");
 
 // get all Students
 const getStudents = async (req, res) => {
@@ -17,6 +16,7 @@ const getStudents = async (req, res) => {
       const user = await User.findById(stud._id.toString());
       return {
         ...stud._doc,
+        studentBirthDate: dateFormating(stud.birthDate),
         firstName: user ? user.firstName : null,
         middleName: user ? user.middleName : null,
         lastName: user ? user.lastName : null,
@@ -77,7 +77,7 @@ const createStudent = async (req, res) => {
     familyGender,
     familyEmail,
     familyPhoneNumber,
-    familyKebele,
+    familyAddress,
   } = req.body;
 
   let emptyFields = [];
@@ -122,7 +122,7 @@ const createStudent = async (req, res) => {
       email,
       role,
       familyPhoneNumber,
-      familyKebele
+      familyAddress
     );
     const student = new Student({
       _id: user.user._id,
@@ -139,7 +139,7 @@ const createStudent = async (req, res) => {
       familyEmail,
       "family",
       familyPhoneNumber,
-      familyKebele
+      familyAddress
     );
 
     res.status(200).json(student);
@@ -148,7 +148,7 @@ const createStudent = async (req, res) => {
   }
 };
 // create a transfer Student
-const createTransferStudent = async (req, res) => {
+const createSeniorStudent = async (req, res) => {
   const {
     firstName,
     middleName,
@@ -164,7 +164,7 @@ const createTransferStudent = async (req, res) => {
     familyGender,
     familyEmail,
     familyPhoneNumber,
-    familyKebele,
+    familyAddress,
     previousYear,
     previousStage,
     previousGrade,
@@ -207,7 +207,7 @@ const createTransferStudent = async (req, res) => {
     !familyGender ||
     !familyEmail ||
     !familyPhoneNumber ||
-    !familyKebele ||
+    !familyAddress ||
     !previousYear ||
     !previousStage ||
     !previousGrade ||
@@ -224,7 +224,13 @@ const createTransferStudent = async (req, res) => {
       .json({ error: "Please fill in all the fields", emptyFields });
   }
   try {
-    const transferEnrollment = {
+    const seniorEnrollment = {
+      _academicYear: previousYear,
+      _grade: previousGrade,
+      _stage: previousStage,
+      _classification: previousClassification,
+      _totalMark: previousTotalMark,
+      _average: previousAverage,
       _grade: previousGrade,
       _status: previousAcademicStatus,
     };
@@ -238,7 +244,7 @@ const createTransferStudent = async (req, res) => {
       email,
       role,
       familyPhoneNumber,
-      familyKebele
+      familyAddress
     );
 
     // add student information
@@ -249,24 +255,12 @@ const createTransferStudent = async (req, res) => {
       _id: user.user._id,
       birthDate,
       registrationType,
-      currentEnrollement: transferEnrollment,
-      enrollment_history: [transferEnrollment],
+      currentEnrollement: seniorEnrollment,
+      enrollment_history: [seniorEnrollment],
     });
     await student.save();
 
-    // add transfer information
-
-    const transferStudent = new TransferStudent({
-      _id: user.user._id,
-      transferYear: previousYear,
-      transferStage: previousStage,
-      transferGrade: previousGrade,
-      transferClassification: previousClassification,
-      transferTotalMark: previousTotalMark,
-      transferAverage: previousAverage,
-      transferAcademicStatus: previousAcademicStatus,
-    });
-    await transferStudent.save();
+    // add senior information
 
     // create student family
     const family = await createUser(
@@ -277,7 +271,7 @@ const createTransferStudent = async (req, res) => {
       familyEmail,
       "family",
       familyPhoneNumber,
-      familyKebele
+      familyAddress
     );
 
     res.status(200).json(student);
@@ -395,6 +389,15 @@ const enrollStudents = async (req, res) => {
             assessment: assessment,
           };
         });
+
+        // array of semester
+        const resultsArray = academicCurriculum.semesters.map((semester) => {
+          return {
+            _semesters: semester._id,
+            result: resultArray,
+          };
+        });
+
         await Student.findOneAndUpdate(
           { _id: student._id },
           {
@@ -411,7 +414,7 @@ const enrollStudents = async (req, res) => {
           grade: gradeId,
           section: sectionId,
           student: student._id,
-          result: resultArray,
+          results: resultsArray,
         });
       })
     );
@@ -484,6 +487,7 @@ const getElligibleStudent = async (req, res) => {
   }
 };
 
+// funtion check previos enrollement of student when enrolled
 function previousGrade(grade) {
   if (grade.stage === "KG") {
     if (grade.level === 1) {
@@ -504,11 +508,18 @@ function previousGrade(grade) {
   }
 }
 
+// function formating date
+const dateFormating = (date) => {
+  const dates = new Date(date);
+  const formattedDate = format(dates, "MMMM d, yyyy");
+  return formattedDate;
+};
+
 module.exports = {
   getStudents,
   getStudent,
   createStudent,
-  createTransferStudent,
+  createSeniorStudent,
   deleteStudent,
   updateStudent,
   getElligibleStudent,

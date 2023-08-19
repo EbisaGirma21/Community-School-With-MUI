@@ -6,6 +6,7 @@ import SubjectContext from "../../../context/SubjectContext";
 import { Box, Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import SubjectCreate from "./SubjectCreate";
+import { toast } from "react-toastify";
 
 // Subject Basic information datatable Column
 const tableColumns = [
@@ -16,18 +17,25 @@ const tableColumns = [
 const SubjectTable = ({ curriculumId, gradeId }) => {
   const [open, setOpen] = useState(false);
 
+  const { subject, fetchSubjects, setError, setIsLoading } =
+    useContext(SubjectContext);
+
   const handleOpen = () => {
-    setOpen(true);
+    if (gradeId) {
+      setOpen(true);
+    } else {
+      toast.warning("Grade not selected");
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
+    setIsLoading(null);
+    setError(null);
   };
 
   // Subject Information input form
   const [selectedRows, setSelectedRows] = useState([]);
-
-  const { subject, fetchSubjects } = useContext(SubjectContext);
 
   // component states
   const [deleteOpen, setdDeleteOpen] = useState(false);
@@ -116,7 +124,6 @@ const SubjectTable = ({ curriculumId, gradeId }) => {
         }}
       >
         <Button
-          disabled={gradeId ? false : true}
           onClick={handleOpen}
           variant="contained"
           sx={{ m: 1, background: "#1E88E5" }}

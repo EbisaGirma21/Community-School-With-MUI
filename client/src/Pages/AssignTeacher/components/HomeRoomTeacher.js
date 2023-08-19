@@ -1,8 +1,9 @@
 import { Box, Button } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import SectionContext from "../../../context/SectionContext";
-import Datatable from "../../../components/UI/Datatable";
 import AssignHRTeacherModal from "./AssignHRTeacherModal";
+import { toast } from "react-toastify";
+import Table from "../../../components/UI/Table";
 
 const tableColumns = [
   { field: "sectionLabel", headerName: "Section", flex: 1, minWidth: 150 },
@@ -35,7 +36,11 @@ function HomeRoomTeacher({ gradeId, acCurriculumId }) {
     setAssignOpen(false);
   };
   const handleAssignOpen = () => {
-    setAssignOpen(true);
+    if (selectedRows.length === 0) {
+      toast.warning("No selected section!");
+    } else {
+      setAssignOpen(true);
+    }
   };
   // convert Section object to array if necessary
   const tableRows = Array.isArray(sections) ? sections : [sections];
@@ -62,9 +67,8 @@ function HomeRoomTeacher({ gradeId, acCurriculumId }) {
           Assign Teacher
         </Button>
       </Box>
-      <Datatable
-        // onDelete={handleDelete}
-        // onEdit={handleEdit}
+      <Table
+        
         tableColumns={tableColumns}
         key={sections._id}
         tableRows={tableRows}

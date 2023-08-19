@@ -7,22 +7,22 @@ function MarkProvider({ children }) {
   const [mark, setMark] = useState([]);
 
   //  function  used to fetch data from database
-  const fetchMarks = async () => {
-    const response = await axios.get("/mark");
+  const fetchMarks = async (semesterId) => {
+    const response = await axios.get(`/mark/${semesterId}`);
     setMark(response.data);
   };
-  const fetchMarkLists = async (subjectId) => {
-    console.log(subjectId);
-    const response = await axios.get(`/mark/markList/${subjectId}`);
+  const fetchMarkLists = async (subjectId, semesterId) => {
+    const response = await axios.get(
+      `/mark/markList/${subjectId}/${semesterId}`
+    );
     setMark(response.data);
   };
 
-  const addSubjectMarks = async (rows) => {
+  const addSubjectMarks = async (rows, subjectId, semesterId) => {
     const response = await axios.post("/mark/addMark", {
       updatedMark: rows,
     });
     setMark(response.data);
-    fetchMarkLists();
   };
 
   // shared operation between components

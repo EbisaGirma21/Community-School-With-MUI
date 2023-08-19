@@ -18,10 +18,34 @@ const AcademicSessionUpdate = (props) => {
   const [academicYear, setAcademicYear] = useState(
     academicSessions[0].academicYear
   );
+  const [registrationDate, setRegistrationDate] = useState(
+    academicSessions[0].registrationDate
+  );
+  const [registrationDeadLine, setRegistrationDeadLine] = useState(
+    academicSessions[0].registrationDeadLine
+  );
+  const [classStartDate, setClassStartDate] = useState(
+    academicSessions[0].classStartDate
+  );
+  const [classEndDate, setClassEndDate] = useState(
+    academicSessions[0].classEndDate
+  );
 
   // Change handler funtions
   const handleAcademicYearChange = (e) => {
     setAcademicYear(e.target.value);
+  };
+  const handleRegistrationDateChange = (e) => {
+    setRegistrationDate(e.target.value);
+  };
+  const handleRegistrationDeadLineChange = (e) => {
+    setRegistrationDeadLine(e.target.value);
+  };
+  const handleClassStartDateChange = (e) => {
+    setClassStartDate(e.target.value);
+  };
+  const handleClassEndDateChange = (e) => {
+    setClassEndDate(e.target.value);
   };
 
   // submit functions
@@ -29,7 +53,11 @@ const AcademicSessionUpdate = (props) => {
     e.preventDefault();
     const success = await editAcademicSessionById(
       academicSessionId,
-      academicYear
+      academicYear,
+      registrationDate,
+      registrationDeadLine,
+      classStartDate,
+      classEndDate
     );
     if (success) {
       setAcademicYear("");
@@ -47,7 +75,7 @@ const AcademicSessionUpdate = (props) => {
       isLoading={isLoading}
       error={error}
     >
-      <form>
+      <form className="flex flex-col">
         <TextField
           margin="dense"
           label="Title"
@@ -56,6 +84,46 @@ const AcademicSessionUpdate = (props) => {
           variant="standard"
           value={academicYear}
           onChange={handleAcademicYearChange}
+        />
+        <TextField
+          margin="dense"
+          label="Registration Date"
+          type="date"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={registrationDate}
+          focused
+          onChange={handleRegistrationDateChange}
+        />
+        <TextField
+          margin="dense"
+          label="Registration Dead Line"
+          type="date"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={registrationDeadLine}
+          focused
+          onChange={handleRegistrationDeadLineChange}
+        />
+        <TextField
+          margin="dense"
+          label="Class Start Date"
+          type="date"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={classStartDate}
+          focused
+          onChange={handleClassStartDateChange}
+        />
+        <TextField
+          margin="dense"
+          label="Class End Date Year"
+          type="date"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={classEndDate}
+          focused
+          onChange={handleClassEndDateChange}
         />
       </form>
     </Modal>

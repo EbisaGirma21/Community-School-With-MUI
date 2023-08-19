@@ -11,7 +11,7 @@ const tableColumns = [
   { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150 },
   { field: "gender", headerName: "Gender", flex: 1, minWidth: 150 },
   { field: "email", headerName: "Email", flex: 1, minWidth: 150 },
-  { field: "birthDate", headerName: "Birth Date", flex: 1, minWidth: 150 },
+  { field: "studentBirthDate", headerName: "Birth Date", flex: 1, minWidth: 150 },
 ];
 
 const NewStudentTable = () => {

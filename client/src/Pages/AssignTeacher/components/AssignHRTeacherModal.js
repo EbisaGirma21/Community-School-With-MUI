@@ -17,7 +17,8 @@ export default function AssignHRTeacherModal(props) {
 
   // component context
   const { teachers, fetchTeachers } = useContext(TeacherContext);
-  const { assignHomeRoomTeacher } = useContext(SectionContext);
+  const { assignHomeRoomTeacher, error, isLoading } =
+    useContext(SectionContext);
 
   // update local teacher state when context teacher changes
   useEffect(() => {
@@ -44,9 +45,16 @@ export default function AssignHRTeacherModal(props) {
     setSelectedTeacherName(newValue ? newValue.label : "");
   };
 
-  const handleSave = () => {
-    assignHomeRoomTeacher(sectionId, teacher, acCurriculumId, gradeId);
-    handleClose();
+  const handleSave = async (e) => {
+    const success = await assignHomeRoomTeacher(
+      sectionId,
+      teacher,
+      acCurriculumId,
+      gradeId
+    );
+    if (success) {
+      handleClose();
+    }
   };
 
   return (

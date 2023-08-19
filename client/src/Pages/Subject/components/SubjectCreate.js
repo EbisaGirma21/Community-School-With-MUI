@@ -13,7 +13,7 @@ const SubjectCreate = ({ handleClose, open, curriculumId, gradeId }) => {
   const [subjectLoad, setSubjectLoad] = useState("");
 
   // context creation
-  const { createSubjects } = useContext(SubjectContext);
+  const { createSubjects, error, isLoading } = useContext(SubjectContext);
   const { fetchModules, module } = useContext(ModuleContext);
   //   fetch curriculum useEffect
   useEffect(() => {
@@ -32,10 +32,19 @@ const SubjectCreate = ({ handleClose, open, curriculumId, gradeId }) => {
   };
 
   // submit functions
-  const handleSubmit = () => {
-    createSubjects(curriculumId, gradeId, { modules }, subjectLoad);
-    setModules([]);
-    setSubjectLoad("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await createSubjects(
+      curriculumId,
+      gradeId,
+      { modules },
+      subjectLoad
+    );
+    if (success) {
+      setModules([]);
+      setSubjectLoad("");
+      handleClose();
+    }
   };
 
   return (
@@ -45,6 +54,8 @@ const SubjectCreate = ({ handleClose, open, curriculumId, gradeId }) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <Dropdown

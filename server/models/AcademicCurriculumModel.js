@@ -11,11 +11,24 @@ const AcademicCurriculumSchema = new mongoose.Schema({
     ref: "Curriculum",
     required: true,
   },
-
   maxSemester: {
     type: Number,
     required: true,
   },
+  semesters: [
+    {
+      _semesterLabel: {
+        type: String,
+        required: true,
+      },
+      _status: {
+        type: String,
+        required: true,
+        default: "REG",
+        enum: ["REG", "ONP", "CMP"],
+      },
+    },
+  ],
 });
 
 AcademicCurriculumSchema.index(

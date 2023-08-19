@@ -51,7 +51,7 @@ const NewStudentCreate = ({ handleClose, open }) => {
   const [familyGender, setFamilyGender] = useState("");
   const [familyEmail, setfamilyEmail] = useState("");
   const [familyPhoneNumber, setFamilyPhoneNumber] = useState("");
-  const [familyKebele, setFamilyKebele] = useState("");
+  const [familyAddress, setFamilyAddress] = useState("");
   const [registrationType, setRegistrationType] = useState("");
   const [previousYear, setPreviousYear] = useState("");
   const [previousGrade, setPreviousGrade] = useState("");
@@ -121,8 +121,8 @@ const NewStudentCreate = ({ handleClose, open }) => {
   const handleFamilyPhoneNumberChange = (e) => {
     setFamilyPhoneNumber(e.target.value);
   };
-  const handleFamilyKebeleChange = (e) => {
-    setFamilyKebele(e.target.value);
+  const handleFamilyAddressChange = (e) => {
+    setFamilyAddress(e.target.value);
   };
   const handlePreviousYearChange = (e) => {
     setPreviousYear(e.target.value);
@@ -160,7 +160,7 @@ const NewStudentCreate = ({ handleClose, open }) => {
             familyGender,
             familyEmail,
             familyPhoneNumber,
-            familyKebele
+            familyAddress
           )
         : await createTransferStudent(
             firstName,
@@ -176,7 +176,7 @@ const NewStudentCreate = ({ handleClose, open }) => {
             familyGender,
             familyEmail,
             familyPhoneNumber,
-            familyKebele,
+            familyAddress,
             previousYear,
             previousStage,
             previousGrade,
@@ -350,12 +350,12 @@ const NewStudentCreate = ({ handleClose, open }) => {
             />
             <TextField
               margin="dense"
-              label="Kebele"
+              label="Address"
               type="email"
               sx={{ minWidth: 300 }}
               variant="standard"
-              value={familyKebele}
-              onChange={handleFamilyKebeleChange}
+              value={familyAddress}
+              onChange={handleFamilyAddressChange}
             />
           </Box>
         </Box>

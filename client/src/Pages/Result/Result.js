@@ -19,6 +19,7 @@ function Result() {
   const [gradeId, setGradeId] = useState("");
   const [sectionId, setSectionId] = useState("");
   const [curriculumId, setCurriculumId] = useState("");
+  const [semesterId, setSemesterId] = useState("");
 
   // context
   const { academicCurriculum, fetchAcademicCurriculums } = useContext(
@@ -124,6 +125,19 @@ function Result() {
         value: sec._id,
       }));
 
+  const filteredAcademicCurriculum = academicCurriculum.filter(
+    (acCurriculum) => {
+      return acCurriculum._id === acCurriculumId;
+    }
+  );
+
+  const semesterOption = !acCurriculumId
+    ? [{ label: "Not found", value: 1 }]
+    : filteredAcademicCurriculum[0].semesters.map((semester) => ({
+        label: semester._semesterLabel,
+        value: semester._id,
+      }));
+
   // Event handler for dropdown value change
   const handleAcCurriculumChange = (e) => {
     setAcCurriculumId(e.target.value);
@@ -186,10 +200,22 @@ function Result() {
               />
             </Box>
           </Grid>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <Box>
+              <Dropdown
+                label="Semesters"
+                options={semesterOption}
+                value={semesterId}
+                onChange={(e) => setSemesterId(e.target.value)}
+                width={"50%"}
+              />
+            </Box>
+          </Grid>
         </Grid>
       </Box>
       <ResultTab
         acCurriculumId={acCurriculumId}
+        semesterId={semesterId}
         curriculumId={curriculumId}
         gradeId={gradeId}
         sectionId={sectionId}

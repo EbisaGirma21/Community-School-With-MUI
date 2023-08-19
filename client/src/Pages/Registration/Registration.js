@@ -65,7 +65,6 @@ function Registration() {
   useEffect(() => {
     if (acCurriculumId && selectedAcCurriculum.length > 0) {
       const curriculumId = selectedAcCurriculum[0].curriculumId;
-
       fetchCurriculumById(curriculumId)
         .then((curriculum) => {
           fetchGradeByStage(curriculum.stage);

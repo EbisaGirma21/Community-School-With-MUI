@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
 import ModuleTable from "./components/ModuleTable";
 import ModuleCreate from "./components/ModuleCreate";
+import ModuleContext from "../../context/ModuleContext";
 
 function Module() {
+  const { setError, setIsLoading } = useContext(ModuleContext);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {
@@ -12,19 +14,17 @@ function Module() {
   };
 
   const handleClose = () => {
+    setError(null);
+    setIsLoading(null);
     setOpen(false);
   };
 
   return (
     <Box>
-      <Box >Module</Box>
+      <Box>Module</Box>
       <Box>
         <Box>
-          <Button
-            onClick={handleOpen}
-            variant="contained"
-           sx={{m:1}}
-          >
+          <Button onClick={handleOpen} variant="contained" sx={{ m: 1 }}>
             <AddIcon />
             New
           </Button>

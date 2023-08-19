@@ -14,52 +14,62 @@ const MarkSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Section",
     },
-    result: [
+    results: [
       {
-        subject: {
+        _semesters: {
           type: mongoose.Schema.Types.ObjectId,
-          ref: "Curriculum.subjects",
+          ref: "AcademicCurriculum.semesters",
           required: true,
         },
-        assessment: {
-          quiz: {
-            value: Number,
-            status: {
-              type: String,
-              default: "notAssigned",
+        result: [
+          {
+            subject: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "Curriculum.subjects",
+              required: true,
+            },
+            assessment: {
+              quiz: {
+                value: Number,
+                status: {
+                  type: String,
+                  default: "notAssigned",
+                },
+              },
+              test: {
+                value: Number,
+                status: {
+                  type: String,
+                  default: "notAssigned",
+                },
+              },
+              assignment: {
+                value: Number,
+                status: {
+                  type: String,
+                  default: "notAssigned",
+                },
+              },
+              midExam: {
+                value: Number,
+                status: {
+                  type: String,
+                  default: "notAssigned",
+                },
+              },
+              finalExam: {
+                value: Number,
+                status: {
+                  type: String,
+                  default: "notAssigned",
+                },
+              },
             },
           },
-          test: {
-            value: Number,
-            status: {
-              type: String,
-              default: "notAssigned",
-            },
-          },
-          assignment: {
-            value: Number,
-            status: {
-              type: String,
-              default: "notAssigned",
-            },
-          },
-          midExam: {
-            value: Number,
-            status: {
-              type: String,
-              default: "notAssigned",
-            },
-          },
-          finalExam: {
-            value: Number,
-            status: {
-              type: String,
-              default: "notAssigned",
-            },
-          },
-        },
+        ],
       },
     ],
+
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",

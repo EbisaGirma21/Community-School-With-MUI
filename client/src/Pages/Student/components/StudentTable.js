@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import Datatable from "../../../components/UI/Datatable";
+import Table from "../../../components/UI/Table";
 
 // Student Basic information datatable Column
 const tableColumns = [
@@ -28,7 +28,7 @@ const StudentTable = ({ acCurriculumId, gradeId, sectionId }) => {
 
   return (
     <div>
-      <Datatable
+      <Table
         tableColumns={tableColumns}
         key={student._id}
         tableRows={tableRows}

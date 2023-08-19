@@ -25,8 +25,12 @@ export default function AcademicSessionDelete(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle variant="contained" id="alert-dialog-title">
-          {"Delete AcademicSession"}
+        <DialogTitle
+          variant="contained"
+          id="alert-dialog-title"
+          sx={{ background: "#5E35B1", color: "white", marginBottom: "10px" }}
+        >
+          {"Delete Academic Session"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">

@@ -16,13 +16,23 @@ function AcademicSessionProvider({ children }) {
   };
 
   // function used to create academicSession
-  const createAcademicSession = async (academicYear) => {
+  const createAcademicSession = async (
+    academicYear,
+    registrationDate,
+    registrationDeadLine,
+    classStartDate,
+    classEndDate
+  ) => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const response = await axios.post("/academicSession", {
         academicYear,
+        registrationDate,
+        registrationDeadLine,
+        classStartDate,
+        classEndDate,
       });
 
       if (response.status !== 200) {
@@ -71,12 +81,23 @@ function AcademicSessionProvider({ children }) {
   };
 
   // function used to delete academicSession
-  const editAcademicSessionById = async (id, newAcademicYear) => {
+  const editAcademicSessionById = async (
+    id,
+    newAcademicYear,
+    newRegistrationDate,
+    newRegistrationDeadLine,
+    newClassStartDate,
+    newClassEndDate
+  ) => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await axios.patch(`/academicSession/${id}`, {
         academicYear: newAcademicYear,
+        registrationDate: newRegistrationDate,
+        registrationDeadLine: newRegistrationDeadLine,
+        classStartDate: newClassStartDate,
+        classEndDate: newClassEndDate,
       });
 
       if (response.status !== 200) {
@@ -106,6 +127,8 @@ function AcademicSessionProvider({ children }) {
     error,
     isLoading,
     academicSession,
+    setError,
+    setIsLoading,
     fetchAcademicSessions,
     createAcademicSession,
     deleteAcademicSessionById,

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import Datatable from "../../../components/UI/Datatable";
+import Table from "../../../components/UI/Table";
 import EnrollmentContext from "../../../context/EnrollmentContext";
 
 // NewStudent Basic information datatable Column
@@ -8,6 +8,7 @@ const tableColumns = [
   { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150 },
   { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150 },
   { field: "gender", headerName: "Gender", flex: 1, minWidth: 150 },
+  { field: "email", headerName: "Email", flex: 1, minWidth: 150 },
 ];
 
 const EnrollmentTable = ({ displayed, gradeId, setSelectedRows }) => {
@@ -30,7 +31,7 @@ const EnrollmentTable = ({ displayed, gradeId, setSelectedRows }) => {
 
   return (
     <div>
-      <Datatable
+      <Table
         tableColumns={tableColumns}
         tableRows={tableRows}
         key={elligibleStudent._id}

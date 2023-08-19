@@ -6,12 +6,7 @@ import { Box, Button } from "@mui/material";
 import Dropdown from "../../../components/UI/Dropdown";
 import { DataGrid } from "@mui/x-data-grid";
 
-const MarkListTable = ({
-  acCurriculumId,
-  curriculumId,
-  gradeId,
-  sectionId,
-}) => {
+const MarkListTable = ({ curriculumId, gradeId, sectionId, semesterId }) => {
   // useStattes
   const [subjectId, setSubjectId] = useState("");
   const [subjectColumns, setSubjectColumns] = useState([]);
@@ -24,9 +19,9 @@ const MarkListTable = ({
 
   // Update local mark state when context mark changes
   useEffect(() => {
-    subjectId && fetchMarkLists(subjectId);
+    subjectId && semesterId && fetchMarkLists(subjectId, semesterId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subjectId, editedStatus]);
+  }, [subjectId, editedStatus, semesterId]);
 
   // section option
   const subjectOption = !sectionId
@@ -106,7 +101,7 @@ const MarkListTable = ({
 
   // Function to handle Save Changes button click
   const handleSaveChanges = () => {
-    addSubjectMarks(rows);
+    addSubjectMarks(rows, subjectId, semesterId);
     setEditedStatus(editedStatus + 1);
     setRows([]);
   };

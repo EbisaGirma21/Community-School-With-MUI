@@ -7,8 +7,8 @@ import ModuleContext from "../../../context/ModuleContext";
 // Module Basic information datatable Column
 const tableColumns = [
   { field: "moduleTitle", headerName: "Title", flex: 1, minWidth: 150 },
-  { field: "department", headerName: "Category Under", flex: 1, minWidth: 150 },
-  { field: "cordinator", headerName: "Cordinator", flex: 1, minWidth: 150 },
+  { field: "category", headerName: "Category Under", flex: 1, minWidth: 150 },
+  { field: "coordinatorTeacher", headerName: "Cordinator", flex: 1, minWidth: 150 },
 ];
 
 const ModuleTable = () => {

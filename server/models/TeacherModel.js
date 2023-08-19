@@ -6,6 +6,10 @@ const TeacherSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    department: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Deparment",
+    },
   },
   { timestamps: true },
   { _id: false }

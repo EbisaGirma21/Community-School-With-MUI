@@ -4,23 +4,24 @@ import { TextField } from "@mui/material";
 import TeacherContext from "../../../context/TeacherContext";
 import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 
-
 const TeacherUpdate = (props) => {
   const { handleClose, open, teacherId } = props;
 
   //   context inclusiion
-  const { editTeacherById, teacher } = useContext(TeacherContext);
+  const { editTeacherById, teachers, error, isLoading } =
+    useContext(TeacherContext);
 
-  const teachers = teacher.filter((teacher) => {
+  const filteredTeacher = teachers.filter((teacher) => {
     return teacher._id === teacherId;
   });
-
   // useSate for hte for input
-  const [firstName, setFirstName] = useState(teachers[0].firstName);
-  const [middleName, setMiddleName] = useState(teachers[0].middleName);
-  const [lastName, setLastName] = useState(teachers[0].lastName);
-  const [gender, setGender] = useState(teachers[0].gender);
-  const [email, setEmail] = useState(teachers[0].email);
+  const [firstName, setFirstName] = useState(filteredTeacher[0].firstName);
+  const [middleName, setMiddleName] = useState(filteredTeacher[0].middleName);
+  const [lastName, setLastName] = useState(filteredTeacher[0].lastName);
+  const [gender, setGender] = useState(filteredTeacher[0].gender);
+  const [email, setEmail] = useState(filteredTeacher[0].email);
+  const [phoneNumber, setPhoneNumber] = useState(filteredTeacher[0].phoneNumber);
+  const [address, setAddress] = useState(filteredTeacher[0].address);
 
   // Change handler funtions
   const handleFirstNameChange = (e) => {
@@ -42,14 +43,36 @@ const TeacherUpdate = (props) => {
     setEmail(e.target.value);
   };
 
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
+
   // submit functions
-  const handleSubmit = () => {
-    editTeacherById(teacherId, firstName, middleName, lastName, gender);
-    setFirstName("");
-    setMiddleName("");
-    setLastName("");
-    setGender("");
-    setEmail("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await editTeacherById(
+      teacherId,
+      firstName,
+      middleName,
+      lastName,
+      gender,
+      email,
+      phoneNumber,
+      address
+    );
+    if (success) {
+      setFirstName("");
+      setMiddleName("");
+      setLastName("");
+      setGender("");
+      setEmail("");
+      setPhoneNumber("");
+      setAddress("");
+      handleClose();
+    }
   };
 
   return (
@@ -59,6 +82,8 @@ const TeacherUpdate = (props) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <TextField
@@ -88,7 +113,7 @@ const TeacherUpdate = (props) => {
           value={lastName}
           onChange={handleLastNameChange}
         />
-         <RadioGroup
+        <RadioGroup
           aria-label="gender"
           name="gender"
           value={gender}
@@ -99,7 +124,7 @@ const TeacherUpdate = (props) => {
           <FormControlLabel value="Male" control={<Radio />} label="Male" />
           <FormControlLabel value="Female" control={<Radio />} label="Female" />
         </RadioGroup>
-        
+
         <TextField
           margin="dense"
           label="Email"
@@ -108,6 +133,25 @@ const TeacherUpdate = (props) => {
           variant="standard"
           value={email}
           onChange={handleEmailChange}
+        />
+
+        <TextField
+          margin="dense"
+          label="Phone Number"
+          type="tel"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={phoneNumber}
+          onChange={handlePhoneNumberChange}
+        />
+        <TextField
+          margin="dense"
+          label="Address"
+          type="text"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={address}
+          onChange={handleAddressChange}
         />
       </form>
     </Modal>

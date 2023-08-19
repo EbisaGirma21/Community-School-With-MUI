@@ -1,10 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import { Box, Button } from "@mui/material";
 import TeacherTable from "./components/TeacherTable";
 import TeacherCreate from "./components/TeacherCreate";
+import TeacherContext from "../../context/TeacherContext";
 
 function Teacher() {
+  const { setError, setIsLoading } = useContext(TeacherContext);
+
+
   {
     localStorage.setItem("path", JSON.stringify("teacher"));
   }

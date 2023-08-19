@@ -8,6 +8,22 @@ const AcademicSessionSchema = new mongoose.Schema(
       min: 1970,
       max: 9999,
     },
+    registrationDate: {
+      type: Date,
+      required: true,
+    },
+    registrationDeadLine: {
+      type: Date,
+      required: true,
+    },
+    classStartDate: {
+      type: Date,
+      required: true,
+    },
+    classEndDate: {
+      type: Date,
+      required: true,
+    },
   },
   { timestamps: true }
 );

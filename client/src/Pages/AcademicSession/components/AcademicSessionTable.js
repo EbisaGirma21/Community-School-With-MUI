@@ -13,7 +13,7 @@ const tableColumns = [
     minWidth: 150,
   },
   {
-    field: "registrationOpen",
+    field: "registrationDate",
     headerName: "Registration Open",
     flex: 1,
     minWidth: 150,
@@ -25,12 +25,18 @@ const tableColumns = [
     minWidth: 150,
   },
   {
-    field: "startOfClass",
+    field: "classStartDate",
     headerName: "Class Start Date",
     flex: 1,
     minWidth: 150,
   },
-  { field: "endOfClass", headerName: "Class End Date", flex: 1, minWidth: 150 },
+
+  {
+    field: "classEndDate",
+    headerName: "Class End Date",
+    flex: 1,
+    minWidth: 150,
+  },
 ];
 
 const AcademicSessionTable = () => {

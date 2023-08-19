@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import Datatable from "../../../components/UI/Datatable";
+import Table from "../../../components/UI/Table";
 import { Box } from "@mui/material";
 import AssessmentWeightContext from "../../../context/AssessmentWeightContext";
 
@@ -42,7 +42,8 @@ const AssignWeightTable = ({ curriculumId, gradeId, setSelectedRows }) => {
         }}
       ></Box>
 
-      <Datatable
+      <Table
+      
         onEdit={() => null}
         tableColumns={tableColumns}
         key={assessmentWeight._id}

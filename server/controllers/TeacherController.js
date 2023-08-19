@@ -17,6 +17,8 @@ const getTeachers = async (req, res) => {
         gender: user ? user.gender : null,
         email: user ? user.email : null,
         role: user ? user.role : null,
+        phoneNumber: user ? user.phoneNumber : null,
+        address: user ? user.address : null,
       };
     })
   );
@@ -42,6 +44,8 @@ const getTeacher = async (req, res) => {
         gender: user ? user.gender : null,
         email: user ? user.email : null,
         role: user ? user.role : null,
+        phoneNumber: user ? user.phoneNumber : null,
+        address: user ? user.address : null,
       };
     })
   );
@@ -54,7 +58,16 @@ const getTeacher = async (req, res) => {
 
 // create a new Teacher
 const createTeacher = async (req, res) => {
-  const { firstName, middleName, lastName, gender, email, role } = req.body;
+  const {
+    firstName,
+    middleName,
+    lastName,
+    gender,
+    email,
+    role,
+    phoneNumber,
+    address,
+  } = req.body;
 
   let emptyFields = [];
 
@@ -76,6 +89,12 @@ const createTeacher = async (req, res) => {
   if (!role) {
     emptyFields.push("role");
   }
+  if (!phoneNumber) {
+    emptyFields.push("phoneNumber");
+  }
+  if (!address) {
+    emptyFields.push("address");
+  }
 
   if (emptyFields.length > 0) {
     return res
@@ -90,7 +109,9 @@ const createTeacher = async (req, res) => {
       lastName,
       gender,
       email,
-      role
+      role,
+      phoneNumber,
+      address
     );
     const teacher = new Teacher({
       _id: user.user._id,
@@ -126,7 +147,15 @@ const deleteTeacher = async (req, res) => {
 // update a Teacher
 const updateTeacher = async (req, res) => {
   const { id } = req.params;
-  const { firstName, middleName, lastName, gender, email } = req.body;
+  const {
+    firstName,
+    middleName,
+    lastName,
+    gender,
+    email,
+    phoneNumber,
+    address,
+  } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such Teacher" });
@@ -137,7 +166,9 @@ const updateTeacher = async (req, res) => {
     middleName,
     lastName,
     gender,
-    email
+    email,
+    phoneNumber,
+    address
   );
   if (!user) {
     return res.status(400).json({ error: "No such Teacher" });

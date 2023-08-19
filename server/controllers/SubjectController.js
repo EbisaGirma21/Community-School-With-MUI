@@ -11,8 +11,7 @@ const getSubjects = async (req, res) => {
     const curriculum = await Curriculum.findById(curriculumId);
     if (!curriculum) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Curriculum not found",
+        error: "Curriculum not found",
       });
     }
 
@@ -22,8 +21,7 @@ const getSubjects = async (req, res) => {
     );
     if (!grade) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Grade not found",
+        error: "Grade not found",
       });
     }
 
@@ -42,17 +40,11 @@ const getSubjects = async (req, res) => {
       })
     );
 
-    res.status(200).json({
-      status: "Success",
-      data: {
-        subjects,
-      },
-    });
+    res.status(200).json(subjects);
   } catch (error) {
     res.status(500).json({
-      status: "Failed",
-      message: "Error retrieving subjects",
-      error: error.message,
+      error: "Error retrieving subjects",
+      error: error.error,
     });
   }
 };
@@ -68,8 +60,7 @@ const getSubject = async (req, res) => {
     const curriculum = await Curriculum.findById(curriculumId);
     if (!curriculum) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Curriculum not found",
+        error: "Curriculum not found",
       });
     }
 
@@ -79,8 +70,7 @@ const getSubject = async (req, res) => {
     );
     if (!grade) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Grade not found",
+        error: "Grade not found",
       });
     }
 
@@ -90,22 +80,15 @@ const getSubject = async (req, res) => {
     );
     if (!subject) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Subject not found",
+        error: "Subject not found",
       });
     }
 
-    res.status(200).json({
-      status: "Success",
-      data: {
-        subject,
-      },
-    });
+    res.status(200).json(subject);
   } catch (error) {
     res.status(500).json({
-      status: "Failed",
-      message: "Error retrieving subject",
-      error: error.message,
+      error: "Error retrieving subject",
+      error: error.error,
     });
   }
 };
@@ -119,22 +102,29 @@ const createSubject = async (req, res) => {
     const subjects = req.body.subjects;
     const subjectLoad = req.body.subjectLoad;
 
+    let emptyFields = [];
+
+    if (!subjects) {
+      emptyFields.push("subjects");
+    }
+    if (!subjectLoad) {
+      emptyFields.push("subjectLoad");
+    }
+
+    if (emptyFields.length > 0) {
+      return res.status(400).json({ error: "Please fill in all the fields" });
+    }
+
     const curriculum = await Curriculum.findById(curriculumId);
     if (!curriculum) {
-      return res.status(404).json({
-        status: "Failed",
-        message: "Curriculum not found",
-      });
+      return res.status(404).json({ error: "Curriculum not found" });
     }
 
     const grade = curriculum.grades.find(
       (grade) => grade._id.toString() === gradeId
     );
     if (!grade) {
-      return res.status(404).json({
-        status: "Failed",
-        message: "Grade not found",
-      });
+      return res.status(404).json({ error: "Grade not found" });
     }
 
     for (let i = 0; i < subjects.modules.length; i++) {
@@ -145,18 +135,11 @@ const createSubject = async (req, res) => {
 
       grade.subjects.push(newSubject);
     }
-
     await curriculum.save();
-
-    res.status(201).json({
-      status: "Success",
-      message: "Subjects created successfully for the grade",
-    });
+    res.status(200).json(curriculum);
   } catch (error) {
-    res.status(500).json({
-      status: "Failed",
-      message: "Error creating subjects for the grade",
-      error: error.message,
+    res.status(400).json({
+      error: error.error,
     });
   }
 };
@@ -173,8 +156,7 @@ const updateSubject = async (req, res) => {
     const curriculum = await Curriculum.findById(curriculumId);
     if (!curriculum) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Curriculum not found",
+        error: "Curriculum not found",
       });
     }
 
@@ -184,8 +166,7 @@ const updateSubject = async (req, res) => {
     );
     if (!grade) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Grade not found",
+        error: "Grade not found",
       });
     }
 
@@ -195,8 +176,7 @@ const updateSubject = async (req, res) => {
     );
     if (!subject) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Subject not found",
+        error: "Subject not found",
       });
     }
 
@@ -205,15 +185,10 @@ const updateSubject = async (req, res) => {
     // Save the updated curriculum
     await curriculum.save();
 
-    res.status(200).json({
-      status: "Success",
-      updatedSubject: subject,
-    });
+    res.status(200).json(subject);
   } catch (error) {
     res.status(500).json({
-      status: "Failed",
-      message: "Error updating subject",
-      error: error.message,
+      error: "Error updating subject",
     });
   }
 };
@@ -229,8 +204,7 @@ const deleteSubject = async (req, res) => {
     const curriculum = await Curriculum.findById(curriculumId);
     if (!curriculum) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Curriculum not found",
+        error: "Curriculum not found",
       });
     }
 
@@ -240,8 +214,7 @@ const deleteSubject = async (req, res) => {
     );
     if (!grade) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Grade not found",
+        error: "Grade not found",
       });
     }
 
@@ -251,8 +224,7 @@ const deleteSubject = async (req, res) => {
     );
     if (subjectIndex === -1) {
       return res.status(404).json({
-        status: "Failed",
-        message: "Subject not found",
+        error: "Subject not found",
       });
     }
 
@@ -262,15 +234,10 @@ const deleteSubject = async (req, res) => {
     // Save the updated curriculum
     await curriculum.save();
 
-    res.status(200).json({
-      status: "Success",
-      deletedSubject: removedSubject,
-    });
+    res.status(200).json(removedSubject);
   } catch (error) {
     res.status(500).json({
-      status: "Failed",
-      message: "Error deleting subject",
-      error: error.message,
+      error: "Error deleting subject",
     });
   }
 };

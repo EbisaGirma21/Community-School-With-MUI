@@ -29,7 +29,7 @@ const userSchema = new Schema({
   phoneNumber: {
     type: String,
   },
-  kebele: {
+  address: {
     type: String,
   },
   role: {
@@ -51,7 +51,7 @@ userSchema.statics.createUser = async function (
   email,
   role,
   phoneNumber,
-  kebele,
+  address,
   password
 ) {
   if (
@@ -88,7 +88,7 @@ userSchema.statics.createUser = async function (
     email,
     role,
     phoneNumber,
-    kebele,
+    address,
     password: hash,
   });
   return user;

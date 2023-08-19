@@ -5,6 +5,7 @@ import MarkListTable from "./MarkListTable";
 
 export default function ResultTab({
   acCurriculumId,
+  semesterId,
   curriculumId,
   gradeId,
   sectionId,
@@ -18,6 +19,7 @@ export default function ResultTab({
         <Box>
           <MarkListTable
             acCurriculumId={acCurriculumId}
+            semesterId={semesterId}
             curriculumId={curriculumId}
             gradeId={gradeId}
             sectionId={sectionId}
@@ -34,6 +36,7 @@ export default function ResultTab({
         <Box>
           <RosterTable
             acCurriculumId={acCurriculumId}
+            semesterId={semesterId}
             curriculumId={curriculumId}
             gradeId={gradeId}
             sectionId={sectionId}

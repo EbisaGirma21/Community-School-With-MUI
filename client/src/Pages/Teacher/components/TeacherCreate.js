@@ -11,8 +11,11 @@ const TeacherCreate = ({ handleClose, open }) => {
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("");
   const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
+
   // context creation
-  const { createTeacher } = useContext(TeacherContext);
+  const { createTeacher, error, isLoading } = useContext(TeacherContext);
 
   // Change handler funtions
   const handleFirstNameChange = (e) => {
@@ -33,15 +36,35 @@ const TeacherCreate = ({ handleClose, open }) => {
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
+  const handlePhoneNumberChange = (e) => {
+    setPhoneNumber(e.target.value);
+  };
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
 
   // submit functions
-  const handleSubmit = () => {
-    createTeacher(firstName, middleName, lastName, gender, email);
-    setFirstName("");
-    setMiddleName("");
-    setLastName("");
-    setGender("");
-    setEmail("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await createTeacher(
+      firstName,
+      middleName,
+      lastName,
+      gender,
+      email,
+      phoneNumber,
+      address
+    );
+    if (success) {
+      setFirstName("");
+      setMiddleName("");
+      setLastName("");
+      setGender("");
+      setEmail("");
+      setPhoneNumber("");
+      setAddress("");
+      handleClose();
+    }
   };
 
   return (
@@ -51,6 +74,8 @@ const TeacherCreate = ({ handleClose, open }) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <TextField
@@ -100,6 +125,25 @@ const TeacherCreate = ({ handleClose, open }) => {
           variant="standard"
           value={email}
           onChange={handleEmailChange}
+        />
+
+        <TextField
+          margin="dense"
+          label="Phone Number"
+          type="tel"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={phoneNumber}
+          onChange={handlePhoneNumberChange}
+        />
+        <TextField
+          margin="dense"
+          label="Address"
+          type="text"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={address}
+          onChange={handleAddressChange}
         />
       </form>
     </Modal>
