@@ -10,6 +10,7 @@ import Dropdown from "../../../components/UI/Dropdown";
 const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
   // useSate for hte for input
   const [curriculumId, setCurriculumId] = useState("");
+  const [passTresholdAverage, setPassTresholdAverage] = useState("");
   const [maxSemester, setMaxSemester] = useState("");
 
   // context creation
@@ -30,6 +31,9 @@ const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
   }));
 
   // Change handler funtions
+  const handlePassTresholdAverageChange = (e) => {
+    setPassTresholdAverage(e.target.value);
+  };
   const handleMaxSemesterChange = (e) => {
     setMaxSemester(e.target.value);
   };
@@ -40,6 +44,7 @@ const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
     const success = await createAcademicCurriculum(
       academicYear,
       curriculumId,
+      passTresholdAverage,
       maxSemester
     );
     if (success) {
@@ -77,6 +82,15 @@ const AcademicCurriculumCreate = ({ handleClose, open, academicYear }) => {
           variant="standard"
           value={maxSemester}
           onChange={handleMaxSemesterChange}
+        />
+        <TextField
+          margin="dense"
+          label="Treshold Average to pass"
+          type="number"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={passTresholdAverage}
+          onChange={handlePassTresholdAverageChange}
         />
       </form>
     </Modal>

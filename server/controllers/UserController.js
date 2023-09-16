@@ -14,9 +14,9 @@ const loginUser = async (req, res) => {
     // create token
     const token = createToken(user._id);
     const role = user.role;
-    const store = user.store;
+    const _id = user._id;
 
-    res.status(200).json({ email, role, store, token });
+    res.status(200).json({ email, role, _id, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -36,17 +36,6 @@ const createUser = async (
   const password = "ABCabc123@#";
 
   try {
-    console.log(
-      firstName,
-      middleName,
-      lastName,
-      gender,
-      email,
-      role,
-      phoneNumber,
-      address,
-      password
-    );
     // Create the user
     const user = await User.createUser(
       firstName,
@@ -152,6 +141,68 @@ const deleteUserById = async (id) => {
   return user;
 };
 
+const createOtherUser = async (req, res) => {
+  const {
+    firstName,
+    middleName,
+    lastName,
+    gender,
+    email,
+    role,
+    phoneNumber,
+    address,
+  } = req.body;
+
+  let emptyFields = [];
+
+  if (!firstName) {
+    emptyFields.push("firstName");
+  }
+  if (!middleName) {
+    emptyFields.push("middleName");
+  }
+  if (!lastName) {
+    emptyFields.push("lastName");
+  }
+  if (!gender) {
+    emptyFields.push("gender");
+  }
+  if (!email) {
+    emptyFields.push("email");
+  }
+  if (!role) {
+    emptyFields.push("role");
+  }
+  if (!phoneNumber) {
+    emptyFields.push("phoneNumber");
+  }
+  if (!address) {
+    emptyFields.push("address");
+  }
+
+  if (emptyFields.length > 0) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in all the fields", emptyFields });
+  }
+
+  try {
+    const user = await createUser(
+      firstName,
+      middleName,
+      lastName,
+      gender,
+      email,
+      role,
+      phoneNumber,
+      address
+    );
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   loginUser,
   getUser,
@@ -159,5 +210,6 @@ module.exports = {
   updateUser,
   deleteUser,
   createUser,
+  createOtherUser,
   deleteUserById,
 };

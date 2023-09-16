@@ -241,9 +241,19 @@ function SideBar() {
           icon: <GradingIcon sx={{ fontSize: "18px" }} />,
           path: "result",
         },
+        {
+          text: <Typography sx={itemTextStyle}>Requests</Typography>,
+          icon: <GradingIcon sx={{ fontSize: "18px" }} />,
+          path: "requests",
+        },
       ];
     } else if (user.role === "teacher") {
       return [
+        {
+          text: <Typography sx={itemTextStyle}>Dashboard</Typography>,
+          icon: <Dashboard sx={{ fontSize: "18px" }} />,
+          path: "/dashboard",
+        },
         {
           text: <Typography sx={itemTextStyle}>Students</Typography>,
           icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
@@ -265,7 +275,7 @@ function SideBar() {
         {
           text: <Typography sx={itemTextStyle}>Club</Typography>,
           icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
-          path: "students",
+          path: "club",
         },
         {
           text: <Typography sx={itemTextStyle}>Result</Typography>,

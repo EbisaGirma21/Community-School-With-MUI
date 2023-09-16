@@ -31,6 +31,7 @@ import { useContext } from "react";
 import { SectionProvider } from "./context/SectionContext";
 import { MarkProvider } from "./context/MarkContext";
 import { AssessmentWeightProvider } from "./context/AssessmentWeightContext";
+import Requests from "./pages/Requests/Requests";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
   const { user } = useContext(AuthContext);
@@ -116,6 +117,9 @@ function App() {
                 }
               />
             </Route>
+            <Route path="requests">
+              <Route index element={<Requests />} />
+            </Route>
             <Route path="modules">
               <Route
                 index
@@ -134,9 +138,11 @@ function App() {
               <Route
                 index
                 element={
-                  <DepartmentProvider>
-                    <Department />
-                  </DepartmentProvider>
+                  <TeacherProvider>
+                    <DepartmentProvider>
+                      <Department />
+                    </DepartmentProvider>
+                  </TeacherProvider>
                 }
               />
             </Route>

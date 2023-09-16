@@ -1,23 +1,56 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Modal from "../../../components/UI/Modal";
-import { TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
 import DepartmentContext from "../../../context/DepartmentContext";
+import TeacherContext from "../../../context/TeacherContext";
 
 const DepartmentCreate = ({ handleClose, open }) => {
   // useSate for hte for input
   const [departmentName, setDepartmentName] = useState("");
+  const [coordinatorTeacher, setCoordinatorTeacher] = useState("");
+  const [selectedTeacherName, setSelectedTeacherName] = useState("");
+
   // context creation
-  const { createDepartment } = useContext(DepartmentContext);
+  const { createDepartment, error, isLoading } = useContext(DepartmentContext);
+  const { teachers, fetchTeachers } = useContext(TeacherContext);
+
+  // / update local teacher state when context teacher changes
+  useEffect(() => {
+    fetchTeachers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const teachersOption = teachers
+    ? teachers.map((teacher) => ({
+        label:
+          teacher.gender === "Male"
+            ? `Mr. ${teacher.firstName}`
+            : `Mrs. ${teacher.firstName}`,
+        value: teacher._id,
+      }))
+    : [];
 
   // Change handler funtions
   const handleDepartmentNameChange = (e) => {
     setDepartmentName(e.target.value);
   };
 
+  const handleCoordinatorTeacherChange = (event, newValue) => {
+    const selectedTeacher = newValue ? newValue.value : "";
+    setCoordinatorTeacher(selectedTeacher);
+    setSelectedTeacherName(newValue ? newValue.label : "");
+  };
+
   // submit functions
-  const handleSubmit = () => {
-    createDepartment(departmentName);
-    setDepartmentName("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await createDepartment(departmentName, coordinatorTeacher);
+    if (success) {
+      setDepartmentName("");
+      setCoordinatorTeacher("");
+      setSelectedTeacherName("");
+      handleClose();
+    }
   };
 
   return (
@@ -27,6 +60,8 @@ const DepartmentCreate = ({ handleClose, open }) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      error={error}
+      isLoading={isLoading}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <TextField
@@ -37,6 +72,25 @@ const DepartmentCreate = ({ handleClose, open }) => {
           variant="standard"
           value={departmentName}
           onChange={handleDepartmentNameChange}
+        />
+        <Autocomplete
+          options={teachersOption}
+          value={selectedTeacherName}
+          onChange={(event, newValue) =>
+            handleCoordinatorTeacherChange(event, newValue)
+          }
+          freeSolo
+          disableClearable
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              margin="dense"
+              label="Coordinator(Optional)"
+              type="text"
+              variant="standard"
+              style={{ width: "300px" }}
+            />
+          )}
         />
       </form>
     </Modal>

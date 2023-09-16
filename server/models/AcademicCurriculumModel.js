@@ -15,6 +15,10 @@ const AcademicCurriculumSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  passTresholdAverage: {
+    type: Number,
+    required: true,
+  },
   semesters: [
     {
       _semesterLabel: {

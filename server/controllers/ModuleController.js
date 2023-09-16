@@ -34,11 +34,22 @@ const getModule = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such module" });
   }
-  const module = await Module.findById(id);
-
-  if (!module) {
-    return res.status(404).json({ error: "No such module" });
-  }
+  const modules = await Module.findById(id);
+  const module = await Promise.all(
+    modules.map(async (mod) => {
+      const department = await Department.findById(mod.department);
+      const teacher = await User.findById(mod.coordinator);
+      return {
+        ...mod._doc,
+        category: department ? department.departmentName : "Not Categorized",
+        coordinatorTeacher: teacher
+          ? teacher.gender === "Male"
+            ? `Mr. ${teacher.firstName}`
+            : `Mrs. ${teacher.firstName}`
+          : "TBA",
+      };
+    })
+  );
 
   res.status(200).json(module);
 };
@@ -115,6 +126,7 @@ const deleteModule = async (req, res) => {
 // update a Module
 const updateModule = async (req, res) => {
   const { id } = req.params;
+  console.log(req.body);
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such Module" });

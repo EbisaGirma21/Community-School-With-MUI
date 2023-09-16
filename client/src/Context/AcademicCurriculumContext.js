@@ -26,6 +26,7 @@ function AcademicCurriculumProvider({ children }) {
   const createAcademicCurriculum = async (
     academicSession,
     curriculum,
+    passTresholdAverage,
     maxSemester
   ) => {
     setIsLoading(true);
@@ -35,6 +36,7 @@ function AcademicCurriculumProvider({ children }) {
       const response = await axios.post("/academicCurriculum", {
         academicSession,
         curriculum,
+        passTresholdAverage,
         maxSemester,
       });
 
@@ -91,24 +93,49 @@ function AcademicCurriculumProvider({ children }) {
     id,
     academicSession,
     newCurriculum,
+    newPassTresholdAverage,
     newMaxSemester
   ) => {
-    const response = await axios.patch(`/academicCurriculum/${id}`, {
-      curriculum: newCurriculum,
-      maxSemester: newMaxSemester,
-    });
+    setIsLoading(true);
+    setError(null);
 
-    const updatedAcademicCurriculums = academicCurriculum.map(
-      (academicCurriculum) => {
-        if (academicCurriculum._id === id) {
-          return { ...academicCurriculum, ...response.data };
-        }
+    try {
+      const response = await axios.patch(`/academicCurriculum/${id}`, {
+        curriculum: newCurriculum,
+        passTresholdAverage: newPassTresholdAverage,
+        maxSemester: newMaxSemester,
+      });
 
-        return academicCurriculum;
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        // fetchAcademicCurriculumByYear(academicSession);
+        const updatedAcademicCurriculums = academicCurriculum.map(
+          (academicCurriculum) => {
+            if (academicCurriculum._id === id) {
+              return { ...academicCurriculum, ...response.data };
+            }
+            return academicCurriculum;
+          }
+        );
+        setAcademicCurriculum(updatedAcademicCurriculums);
+        toast.info("Academic Curriculum updated successfully");
+        return true;
       }
-    );
-    fetchAcademicCurriculumByYear(academicSession);
-    setAcademicCurriculum(updatedAcademicCurriculums);
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to create academic curriculum");
+        return false;
+      }
+    }
   };
 
   // shared operation between components

@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import Table from "../../../components/UI/Table";
 import MarkContext from "../../../context/MarkContext";
 import SubjectContext from "../../../context/SubjectContext";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
+import RosterChecker from "./RosterChecker";
 
 const RosterTable = ({
   acCurriculumId,
@@ -16,6 +17,9 @@ const RosterTable = ({
   const { subject, fetchSubjects } = useContext(SubjectContext);
   const [subjectColumns, setSubjectColumns] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [approveOpen, setApproveOpen] = useState(false);
+
+  const user = JSON.parse(localStorage.getItem("user"));
 
   // Update local mark state when context mark changes
   useEffect(() => {
@@ -51,7 +55,7 @@ const RosterTable = ({
 
   // Create table columns including subject columns
   const tableColumns = [
-    { field: "rollNumber", headerName: "Roll Number", flex: 1, minWidth: 150 },
+    // { field: "rollNumber", headerName: "Roll Number", flex: 1, minWidth: 150 },
     { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150 },
     { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150 },
     { field: "gender", headerName: "Gender", flex: 1, minWidth: 100 },
@@ -65,8 +69,39 @@ const RosterTable = ({
   // Convert mark object to array if necessary
   const tableRows = Array.isArray(mark) ? mark : [mark];
 
+  // toggler funcions
+  // funtions open approval modal
+  const handleApproveOpen = () => {
+    setApproveOpen(true);
+  };
+
+  // funtion close delete modal
+  const handleApproveClose = () => {
+    setApproveOpen(false);
+  };
+
+  const handleRosterApprovalClick = () => {
+    handleApproveOpen();
+  };
+
+  // toggle delete modal
+  let content = "";
+  if (approveOpen) {
+    content = (
+      <RosterChecker open={approveOpen} handleClose={handleApproveClose} />
+    );
+  }
+
   return (
     <Box>
+      <Box
+        className="border-2 border-gray-200 p-2 h-16 rounded-md m-1 flex justify-end"
+        sx={{ display: user.role !== "teacher" ? "none" : "flex" }}
+      >
+        <Button variant="contained" onClick={handleRosterApprovalClick}>
+          Request Approval
+        </Button>
+      </Box>
       <Table
         tableColumns={tableColumns}
         key={mark._id}
@@ -74,7 +109,7 @@ const RosterTable = ({
         setSelectedRows={setSelectedRows}
         getRowId={(row) => row._id || mark.indexOf(row)}
       />
-      {/* {content} */}
+      {content}
     </Box>
   );
 };

@@ -5,6 +5,10 @@ const DepartmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  coordinator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Teacher",
+  },
 });
 
 const Department = mongoose.model("Department", DepartmentSchema);

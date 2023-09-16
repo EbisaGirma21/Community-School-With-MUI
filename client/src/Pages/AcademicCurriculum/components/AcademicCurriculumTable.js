@@ -25,6 +25,12 @@ const tableColumns = [
     flex: 1,
     minWidth: 150,
   },
+  {
+    field: "passTresholdAverage",
+    headerName: "Pass Treshold",
+    flex: 1,
+    minWidth: 150,
+  },
 ];
 
 const AcademicCurriculumTable = () => {

@@ -1,10 +1,26 @@
 const Department = require("../models/DepartmentModel");
 const mongoose = require("mongoose");
+const User = require("../models/UserModel");
 
 // get all Departments
 const getDepartments = async (req, res) => {
   const departments = await Department.find({}).sort({ createdAt: -1 });
-  res.status(200).json(departments);
+
+  const department = await Promise.all(
+    departments.map(async (depar) => {
+      const teacher = await User.findById(depar.coordinator);
+      return {
+        ...depar._doc,
+        coordinatorTeacher: teacher
+          ? teacher.gender === "Male"
+            ? `Mr. ${teacher.firstName} ${teacher.middleName}`
+            : `Mrs. ${teacher.firstName} ${teacher.middleName}`
+          : "TBA",
+      };
+    })
+  );
+
+  res.status(200).json(department);
 };
 
 // get a single Department
@@ -14,20 +30,27 @@ const getDepartment = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such department" });
   }
-  const department = await Department.findById(id);
-
-  if (!department) {
-    return res.status(404).json({ error: "No such department" });
-  }
+  const departments = await Department.findById(id);
+  const department = await Promise.all(
+    departments.map(async (depar) => {
+      const teacher = await User.findById(depar.coordinator);
+      return {
+        ...depar._doc,
+        coordinatorTeacher: teacher
+          ? teacher.gender === "Male"
+            ? `Mr. ${teacher.firstName} ${teacher.middleName}`
+            : `Mrs. ${teacher.firstName} ${teacher.middleName}`
+          : "TBA",
+      };
+    })
+  );
 
   res.status(200).json(department);
 };
 
 // create a new Department
 const createDepartment = async (req, res) => {
-  const {
-    departmentName,
-  } = req.body;
+  const { departmentName, coordinator } = req.body;
 
   let emptyFields = [];
 
@@ -40,12 +63,15 @@ const createDepartment = async (req, res) => {
       .status(400)
       .json({ error: "Please fill in all the fields", emptyFields });
   }
-
   try {
-    const department = await Department.create({
-      departmentName,
-    
-    });
+    const department = coordinator
+      ? await Department.create({
+          departmentName,
+          coordinator: coordinator,
+        })
+      : await Department.create({
+          departmentName,
+        });
     res.status(200).json(department);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -72,7 +98,6 @@ const deleteDepartment = async (req, res) => {
 // update a Department
 const updateDepartment = async (req, res) => {
   const { id } = req.params;
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such Department" });
   }

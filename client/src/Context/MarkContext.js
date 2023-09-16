@@ -22,7 +22,7 @@ function MarkProvider({ children }) {
     const response = await axios.post("/mark/addMark", {
       updatedMark: rows,
     });
-    setMark(response.data);
+    fetchMarkLists(subjectId, semesterId);
   };
 
   // shared operation between components

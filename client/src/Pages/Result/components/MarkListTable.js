@@ -69,7 +69,7 @@ const MarkListTable = ({ curriculumId, gradeId, sectionId, semesterId }) => {
 
   // Create table columns including subject columns
   const tableColumns = [
-    { field: "rollNumber", headerName: "Roll Number", flex: 1, minWidth: 150 },
+    // { field: "rollNumber", headerName: "Roll Number", flex: 1, minWidth: 150 },
     { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150 },
     { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150 },
     { field: "gender", headerName: "Gender", flex: 1, minWidth: 150 },
@@ -100,7 +100,8 @@ const MarkListTable = ({ curriculumId, gradeId, sectionId, semesterId }) => {
   };
 
   // Function to handle Save Changes button click
-  const handleSaveChanges = () => {
+  const handleSaveChanges = (e) => {
+    e.preventDefault();
     addSubjectMarks(rows, subjectId, semesterId);
     setEditedStatus(editedStatus + 1);
     setRows([]);
@@ -117,7 +118,7 @@ const MarkListTable = ({ curriculumId, gradeId, sectionId, semesterId }) => {
             width={"50%"}
           />
         </Box>
-        <Button variant="contained" onClick={handleSaveChanges}>
+        <Button variant="contained" onClick={(e) => handleSaveChanges(e)}>
           Save Changes
         </Button>
       </Box>

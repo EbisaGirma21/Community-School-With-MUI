@@ -29,6 +29,7 @@ const getAcademicCurriculums = async (req, res) => {
                 curriculum.curriculumYear
               } (${curriculum.stage})`
             : null,
+          passTresholdAverage: academicCurriculum.passTresholdAverage,
           maxSemester: academicCurriculum.maxSemester,
           academicYear: academicSession.academicYear,
           semesters: academicCurriculum.semesters,
@@ -68,6 +69,7 @@ const getAcademicCurriculum = async (req, res) => {
           curriculum.stage
         })`
       : null,
+    passTresholdAverage: academicCurriculum.passTresholdAverage,
     maxSemester: academicCurriculum.maxSemester,
     semesters: academicCurriculum.semesters,
   };
@@ -104,6 +106,7 @@ const getAcademicCurriculumByYear = async (req, res) => {
               curriculum.curriculumYear
             } (${curriculum.stage})`
           : null,
+        passTresholdAverage: academicCurriculum.passTresholdAverage,
         maxSemester: academicCurriculum.maxSemester,
         semesters: academicCurriculum.semesters,
       };
@@ -115,10 +118,10 @@ const getAcademicCurriculumByYear = async (req, res) => {
 
 // create a new AcademicCurriculum
 const createAcademicCurriculum = async (req, res) => {
-  const { academicSession, curriculum, maxSemester } = req.body;
-  console.log(academicSession, curriculum, maxSemester);
+  const { academicSession, curriculum, passTresholdAverage, maxSemester } =
+    req.body;
 
-  if (!academicSession || !curriculum || !maxSemester) {
+  if ((!academicSession || !curriculum || !maxSemester, !passTresholdAverage)) {
     return res
       .status(400)
       .json({ error: "Please fill in all the required fields" });
@@ -137,6 +140,7 @@ const createAcademicCurriculum = async (req, res) => {
     const academicCurriculum = await AcademicCurriculum.create({
       academicSession,
       curriculum,
+      passTresholdAverage,
       maxSemester,
       semesters,
     });

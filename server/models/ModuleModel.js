@@ -11,7 +11,7 @@ const ModuleSchema = new mongoose.Schema({
   },
   coordinator: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Teahcer",
+    ref: "Teacher",
   },
 });
 

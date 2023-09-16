@@ -10,6 +10,8 @@ export default function ResultTab({
   gradeId,
   sectionId,
 }) {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const resultTab = [
     {
       id: "1",

@@ -17,7 +17,6 @@ const StudentSchema = new mongoose.Schema(
     currentEnrollement: {
       _academicYear: {
         type: Number,
-        required: true,
       },
       _academicCurriculum: {
         type: mongoose.Schema.Types.ObjectId,
@@ -29,7 +28,6 @@ const StudentSchema = new mongoose.Schema(
       },
       _stage: {
         type: String,
-        required: true,
       },
       _classification: {
         type: String,
@@ -40,11 +38,9 @@ const StudentSchema = new mongoose.Schema(
       },
       _totalMark: {
         type: Number,
-        required: true,
       },
       _average: {
         type: Number,
-        required: true,
       },
       _status: {
         type: String,

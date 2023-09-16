@@ -7,6 +7,7 @@ const {
   getUser,
   deleteUser,
   updateUser,
+  createOtherUser,
 } = require("../controllers/UserController");
 const requireAuth = require("../middleware/requireAuth");
 
@@ -24,6 +25,9 @@ router.get("/", getUsers);
 
 // GET a single user (requires authentication)
 router.get("/:id", getUser);
+
+// POST a new Student
+router.post("/", createOtherUser);
 
 // DELETE a user (requires authentication)
 router.delete("/:id", deleteUser);

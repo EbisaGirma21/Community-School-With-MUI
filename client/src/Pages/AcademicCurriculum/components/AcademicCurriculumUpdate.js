@@ -9,9 +9,8 @@ const AcademicCurriculumUpdate = (props) => {
   const { handleClose, open, academicCurriculumId } = props;
 
   //   context inclusiion
-  const { editAcademicCurriculumById, academicCurriculum } = useContext(
-    AcademicCurriculumContext
-  );
+  const { editAcademicCurriculumById, academicCurriculum, error, isLoading } =
+    useContext(AcademicCurriculumContext);
   const { curriculum, fetchCurriculums } = useContext(CurriculumContext);
 
   //   fetch curriculum useEffect
@@ -41,21 +40,33 @@ const AcademicCurriculumUpdate = (props) => {
   const [maxSemester, setMaxSemester] = useState(
     academicCurriculums[0].maxSemester
   );
+  const [passTresholdAverage, setPassTresholdAverage] = useState(
+    academicCurriculums[0].passTresholdAverage
+  );
 
   // Change handler funtions
+  const handlePassTresholdAverageChange = (e) => {
+    setPassTresholdAverage(e.target.value);
+  };
   const handleMaxSemesterChange = (e) => {
     setMaxSemester(e.target.value);
   };
   // submit functions
-  const handleSubmit = () => {
-    editAcademicCurriculumById(
+  const handleSubmit = async (e) => {
+    const success = editAcademicCurriculumById(
       academicCurriculumId,
       academicYear,
       curriculumId,
+      passTresholdAverage,
       maxSemester
     );
-
-    setAcademicYear("");
+    if (success) {
+      setAcademicYear("");
+      setCurriculumId("");
+      setPassTresholdAverage("");
+      setMaxSemester("");
+      handleClose("");
+    }
   };
 
   return (
@@ -65,6 +76,8 @@ const AcademicCurriculumUpdate = (props) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      error={error}
+      isLoading={isLoading}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <Dropdown
@@ -84,6 +97,15 @@ const AcademicCurriculumUpdate = (props) => {
           variant="standard"
           value={maxSemester}
           onChange={handleMaxSemesterChange}
+        />
+        <TextField
+          margin="dense"
+          label="Treshold Average to pass"
+          type="number"
+          sx={{ minWidth: 300 }}
+          variant="standard"
+          value={passTresholdAverage}
+          onChange={handlePassTresholdAverageChange}
         />
       </form>
     </Modal>
