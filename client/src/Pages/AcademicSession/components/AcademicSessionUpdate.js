@@ -19,16 +19,16 @@ const AcademicSessionUpdate = (props) => {
     academicSessions[0].academicYear
   );
   const [registrationDate, setRegistrationDate] = useState(
-    academicSessions[0].registrationDate
+    formatDate(academicSessions[0].registrationDate)
   );
   const [registrationDeadLine, setRegistrationDeadLine] = useState(
-    academicSessions[0].registrationDeadLine
+    formatDate(academicSessions[0].registrationDeadLine)
   );
   const [classStartDate, setClassStartDate] = useState(
-    academicSessions[0].classStartDate
+    formatDate(academicSessions[0].classStartDate)
   );
   const [classEndDate, setClassEndDate] = useState(
-    academicSessions[0].classEndDate
+    formatDate(academicSessions[0].classEndDate)
   );
 
   // Change handler funtions
@@ -64,6 +64,20 @@ const AcademicSessionUpdate = (props) => {
       handleClose();
     }
   };
+  
+
+  function formatDate(inputDateStr) {
+    const inputDate = new Date(inputDateStr);
+    if (isNaN(inputDate.getTime())) {
+      return "Invalid Date"; // Handle invalid input
+    }
+
+    const year = inputDate.getFullYear();
+    const month = (inputDate.getMonth() + 1).toString().padStart(2, "0"); // Add 1 because months are 0-indexed
+    const day = inputDate.getDate().toString().padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
 
   return (
     <Modal

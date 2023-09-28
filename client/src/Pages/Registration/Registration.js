@@ -98,50 +98,97 @@ function Registration() {
         value: gr._id,
       }));
 
+  const countDownDate = new Date("Jan 5, 2022 15:37:25").getTime();
+  const [timeRemaining, setTimeRemaining] = useState(null);
+
+  // academicSession[0].registrationDate
+  //   ? new Date(academicSession[0].registrationDate).getTime()
+  //   :
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        setTimeRemaining("EXPIRED");
+      } else {
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        setTimeRemaining({
+          days,
+          hours,
+          minutes,
+          seconds,
+        });
+      }
+    }, 1000);
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, [timeRemaining]);
+
   return (
     <Box>
-      <Typography sx={{ m: 1 }}>Registrations</Typography>
-      <Grid
-        container
-        spacing={1}
-        sx={{ p: 1, border: "1px solid #dbdde0", borderRadius: "10px" }}
-      >
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Dropdown
-            label="Academic Year"
-            options={academicSessionOption}
-            value={acSession}
-            onChange={(e) => {
-              setAcSession(e.target.value);
-            }}
-            width={"140px"}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Dropdown
-            label="Academic Curriculum"
-            options={acCurriculumOption}
-            value={acCurriculumId}
-            onChange={(e) => {
-              setGradeId("");
-              setAcCurriculumId(e.target.value);
-            }}
-            width={"250px"}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Dropdown
-            label="Grade"
-            options={gradeOption}
-            value={gradeId}
-            onChange={(e) => {
-              setGradeId(e.target.value);
-            }}
-            width={"80px"}
-          />
-        </Grid>
-      </Grid>
-      <RegistrationTab acCurriculumId={acCurriculumId} gradeId={gradeId} />
+      <Box>
+        {timeRemaining === "EXPIRED" ? (
+          <Box>
+            <Typography sx={{ m: 1 }}>Registrations</Typography>
+            <Box
+              className="flex p-1 gap-4"
+              sx={{ p: 1, border: "1px solid #dbdde0", borderRadius: "10px" }}
+            >
+              <Dropdown
+                label="Academic Year"
+                options={academicSessionOption}
+                value={acSession}
+                onChange={(e) => {
+                  setAcSession(e.target.value);
+                }}
+                width={"140px"}
+              />
+
+              <Dropdown
+                label="Academic Curriculum"
+                options={acCurriculumOption}
+                value={acCurriculumId}
+                onChange={(e) => {
+                  setGradeId("");
+                  setAcCurriculumId(e.target.value);
+                }}
+                width={"250px"}
+              />
+
+              <Dropdown
+                label="Grade"
+                options={gradeOption}
+                value={gradeId}
+                onChange={(e) => {
+                  setGradeId(e.target.value);
+                }}
+                width={"80px"}
+              />
+            </Box>
+            <RegistrationTab
+              acCurriculumId={acCurriculumId}
+              gradeId={gradeId}
+            />
+          </Box>
+        ) : timeRemaining !== null ? (
+          <Box className="flex items-center justify-center h-screen">
+            <Typography className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-4 rounded-lg">
+              {timeRemaining.days}:{timeRemaining.hours}:{timeRemaining.minutes}
+              :{timeRemaining.seconds}
+            </Typography>
+          </Box>
+        ) : (
+          <Typography>Loading...</Typography>
+        )}
+      </Box>
     </Box>
   );
 }

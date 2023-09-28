@@ -7,7 +7,8 @@ const SectionUpdate = (props) => {
   const { handleClose, open, sectionId } = props;
 
   //   context inclusiion
-  const { editSectionById, section } = useContext(SectionContext);
+  const { editSectionById, section, error, isLoading } =
+    useContext(SectionContext);
 
   const sections = section.filter((section) => {
     return section._id === sectionId;
@@ -18,15 +19,17 @@ const SectionUpdate = (props) => {
 
   // Change handler funtions
   const handleSectionLabelChange = (e) => {
-    console.log(e.target.value);
     setSectionLabel(e.target.value);
   };
 
   // submit functions
-  const handleSubmit = () => {
-    editSectionById(sectionId, sectionLabel);
-
-    setSectionLabel("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = await editSectionById(sectionId, sectionLabel);
+    if (success) {
+      setSectionLabel("");
+      handleClose();
+    }
   };
 
   return (
@@ -36,6 +39,8 @@ const SectionUpdate = (props) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <TextField

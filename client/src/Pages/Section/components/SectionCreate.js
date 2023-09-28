@@ -7,7 +7,7 @@ import SubjectContext from "../../../context/SubjectContext";
 
 const SectionCreate = ({ handleClose, open, acCurriculumId, gradeId }) => {
   //  Context
-  const { createSection } = useContext(SectionContext);
+  const { createSection, error, isLoading } = useContext(SectionContext);
   const { academicCurriculum, fetchAcademicCurriculums } = useContext(
     AcademicCurriculumContext
   );
@@ -31,7 +31,6 @@ const SectionCreate = ({ handleClose, open, acCurriculumId, gradeId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gradeId]);
 
-  
   //   fetch subject
   useEffect(() => {
     curriculumId && fetchSubjects(curriculumId, gradeId);
@@ -48,10 +47,15 @@ const SectionCreate = ({ handleClose, open, acCurriculumId, gradeId }) => {
   };
 
   // Submit function
-  const handleSubmit = () => {
-    curriculumId &&
-      createSection(sectionLabel, acCurriculumId, gradeId, subjects);
-    setSectionLabel("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const success = curriculumId
+      ? await createSection(sectionLabel, acCurriculumId, gradeId, subjects)
+      : null;
+    if (success) {
+      setSectionLabel("");
+      handleClose();
+    }
   };
 
   return (
@@ -61,6 +65,8 @@ const SectionCreate = ({ handleClose, open, acCurriculumId, gradeId }) => {
       onSubmit={handleSubmit}
       open={open}
       handleClose={handleClose}
+      isLoading={isLoading}
+      error={error}
     >
       <form style={{ display: "inline-grid", padding: "10px" }}>
         <TextField

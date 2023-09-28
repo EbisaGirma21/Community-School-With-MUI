@@ -32,6 +32,7 @@ import { SectionProvider } from "./context/SectionContext";
 import { MarkProvider } from "./context/MarkContext";
 import { AssessmentWeightProvider } from "./context/AssessmentWeightContext";
 import Requests from "./pages/Requests/Requests";
+import { RequestProvider } from "./context/RequestContext";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
   const { user } = useContext(AuthContext);
@@ -118,7 +119,14 @@ function App() {
               />
             </Route>
             <Route path="requests">
-              <Route index element={<Requests />} />
+              <Route
+                index
+                element={
+                  <RequestProvider>
+                    <Requests />
+                  </RequestProvider>
+                }
+              />
             </Route>
             <Route path="modules">
               <Route
@@ -197,7 +205,9 @@ function App() {
                           <SectionProvider>
                             <MarkProvider>
                               <SubjectProvider>
-                                <Result />
+                                <RequestProvider>
+                                  <Result />
+                                </RequestProvider>
                               </SubjectProvider>
                             </MarkProvider>
                           </SectionProvider>

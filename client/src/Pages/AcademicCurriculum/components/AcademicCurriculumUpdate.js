@@ -53,6 +53,7 @@ const AcademicCurriculumUpdate = (props) => {
   };
   // submit functions
   const handleSubmit = async (e) => {
+    e.preventDefault();
     const success = editAcademicCurriculumById(
       academicCurriculumId,
       academicYear,

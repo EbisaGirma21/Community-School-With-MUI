@@ -163,7 +163,7 @@ const deleteAcademicCurriculum = async (req, res) => {
     if (!academicCurriculum) {
       return res.status(404).json({ error: "AcademicCurriculum not found" });
     }
-    res.status(204).json(academicCurriculum);
+    res.status(200).json(academicCurriculum);
   } catch (error) {
     res.status(500).json({ error: "Failed to delete AcademicCurriculum" });
   }

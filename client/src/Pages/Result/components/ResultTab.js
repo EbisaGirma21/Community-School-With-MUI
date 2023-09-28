@@ -9,6 +9,7 @@ export default function ResultTab({
   curriculumId,
   gradeId,
   sectionId,
+  prevSemester
 }) {
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -25,6 +26,8 @@ export default function ResultTab({
             curriculumId={curriculumId}
             gradeId={gradeId}
             sectionId={sectionId}
+            prevSemester={prevSemester}
+
           />
         </Box>
       ),

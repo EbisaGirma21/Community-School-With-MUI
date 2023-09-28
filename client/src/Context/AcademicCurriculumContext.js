@@ -67,6 +67,7 @@ function AcademicCurriculumProvider({ children }) {
   const deleteAcademicCurriculumById = async (id) => {
     try {
       const response = await axios.delete(`/academicCurriculum/${id}`);
+      console.log(response);
       if (response.status !== 200) {
         toast.error(response.data.error);
       } else {
@@ -75,7 +76,6 @@ function AcademicCurriculumProvider({ children }) {
             return academicCurriculum._id !== id;
           }
         );
-
         setAcademicCurriculum(updatedAcademicCurriculum);
         toast.warning("Academic curriculum deleted successfully");
       }
@@ -114,15 +114,16 @@ function AcademicCurriculumProvider({ children }) {
         setError(null);
         setIsLoading(false);
         // fetchAcademicCurriculumByYear(academicSession);
-        const updatedAcademicCurriculums = academicCurriculum.map(
-          (academicCurriculum) => {
-            if (academicCurriculum._id === id) {
-              return { ...academicCurriculum, ...response.data };
-            }
-            return academicCurriculum;
-          }
-        );
-        setAcademicCurriculum(updatedAcademicCurriculums);
+        // const updatedAcademicCurriculums = academicCurriculum.map(
+        //   (academicCurriculum) => {
+        //     if (academicCurriculum._id === id) {
+        //       return { ...academicCurriculum, ...response.data };
+        //     }
+        //     return academicCurriculum;
+        //   }
+        // );
+        // setAcademicCurriculum(updatedAcademicCurriculums);
+        fetchAcademicCurriculums();
         toast.info("Academic Curriculum updated successfully");
         return true;
       }

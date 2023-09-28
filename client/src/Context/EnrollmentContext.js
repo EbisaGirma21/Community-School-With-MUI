@@ -1,10 +1,13 @@
 import { createContext, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const ElligibleStudentContext = createContext();
 
 function ElligibleStudentProvider({ children }) {
   const [elligibleStudent, setElligibleStudent] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
 
   //  function  used to fetch data from database
   const fetchElligibleStudents = async (gradeId) => {
@@ -18,18 +21,47 @@ function ElligibleStudentProvider({ children }) {
     sectionId,
     acCurriculumId
   ) => {
-    const response = await axios.patch("/student/enroll", {
-      elligibleStudent,
-      gradeId,
-      sectionId,
-      acCurriculumId,
-    });
-    fetchElligibleStudents(gradeId);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.patch("/student/enroll", {
+        elligibleStudent,
+        gradeId,
+        sectionId,
+        acCurriculumId,
+      });
+
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchElligibleStudents(gradeId);
+        toast.success("Student enrolled successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to enroll student");
+        return false;
+      }
+    }
   };
 
   // shared operation between components
   const elligibleStudentOperation = {
     elligibleStudent,
+    error,
+    isLoading,
+    setError,
+    setIsLoading,
     enrollStudents,
     fetchElligibleStudents,
   };

@@ -21,6 +21,7 @@ function Result() {
   const [sectionId, setSectionId] = useState("");
   const [curriculumId, setCurriculumId] = useState("");
   const [semesterId, setSemesterId] = useState("");
+  const [prevSemester, setPrevSemester] = useState("");
 
   // context
   const { academicCurriculum, fetchAcademicCurriculums } = useContext(
@@ -137,7 +138,6 @@ function Result() {
         value: sec._id,
       }));
 
-
   const filteredAcademicCurriculum = academicCurriculum.filter(
     (acCurriculum) => {
       return acCurriculum._id === acCurriculumId;
@@ -164,67 +164,69 @@ function Result() {
     }
   };
 
+  //   setPrevSemester
+  useEffect(() => {
+    const index = semesterOption.findIndex((item) => item.value === semesterId);
+    const prevSemester = semesterId
+      ? index === 0
+        ? -1
+        : semesterOption[index - 1].value
+      : -1;
+    setPrevSemester(prevSemester);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [semesterId]);
+
   return (
     <Box>
       <Typography sx={{ m: 1 }}>Student Result</Typography>
       <Box className="flex justify-between p-2 border-2 border-gray-200 rounded-md">
-        <Grid container spacing={1}>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Dropdown
-              label="Academic Year"
-              options={academicSessionOption}
-              value={acSession}
-              onChange={(e) => {
-                setAcSession(e.target.value);
-              }}
-              width={"140px"}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Dropdown
-              label="Academic Curriculum"
-              options={acCurriculumOption}
-              value={acCurriculumId}
-              onChange={handleAcCurriculumChange}
-              width={"150px"}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Dropdown
-              label="Grade"
-              options={gradeOption}
-              value={gradeId}
-              onChange={(e) => {
-                setGradeId(e.target.value);
-              }}
-              width={"40px"}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Box>
-              <Dropdown
-                label="Section"
-                options={sectionOption}
-                value={sectionId}
-                onChange={(e) => {
-                  setSectionId(e.target.value);
-                }}
-                width={"40px"}
-              />
-            </Box>
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Box>
-              <Dropdown
-                label="Semesters"
-                options={semesterOption}
-                value={semesterId}
-                onChange={(e) => setSemesterId(e.target.value)}
-                width={"50%"}
-              />
-            </Box>
-          </Grid>
-        </Grid>
+        <Box className="flex p-1 gap-4">
+          <Dropdown
+            label="Academic Year"
+            options={academicSessionOption}
+            value={acSession}
+            onChange={(e) => {
+              setAcSession(e.target.value);
+            }}
+            width={"140px"}
+          />
+
+          <Dropdown
+            label="Academic Curriculum"
+            options={acCurriculumOption}
+            value={acCurriculumId}
+            onChange={handleAcCurriculumChange}
+            width={"240px"}
+          />
+
+          <Dropdown
+            label="Grade"
+            options={gradeOption}
+            value={gradeId}
+            onChange={(e) => {
+              setGradeId(e.target.value);
+            }}
+            width={"120px"}
+          />
+
+          <Dropdown
+            label="Section"
+            options={sectionOption}
+            value={sectionId}
+            onChange={(e) => {
+              setSectionId(e.target.value);
+            }}
+            width={"80px"}
+          />
+
+          <Dropdown
+            label="Semesters"
+            options={semesterOption}
+            value={semesterId}
+            onChange={(e) => setSemesterId(e.target.value)}
+            width={"150px"}
+          />
+        </Box>
       </Box>
       <ResultTab
         acCurriculumId={acCurriculumId}
@@ -232,9 +234,9 @@ function Result() {
         curriculumId={curriculumId}
         gradeId={gradeId}
         sectionId={sectionId}
+        prevSemester={prevSemester}
       />
     </Box>
   );
 }
-
 export default Result;

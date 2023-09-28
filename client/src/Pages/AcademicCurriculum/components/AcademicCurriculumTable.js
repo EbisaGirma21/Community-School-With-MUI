@@ -120,6 +120,7 @@ const AcademicCurriculumTable = () => {
         open={deleteOpen}
         handleClose={handleDeleteClose}
         academicCurriculumId={academicCurriculumId}
+        academicYear={academicYear}
       />
     );
   }

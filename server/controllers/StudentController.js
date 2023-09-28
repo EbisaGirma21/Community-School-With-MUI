@@ -173,6 +173,7 @@ const createSeniorStudent = async (req, res) => {
     previousAverage,
     previousAcademicStatus,
   } = req.body;
+  console.log(familyAddress);
 
   let emptyFields = [];
 
@@ -219,6 +220,15 @@ const createSeniorStudent = async (req, res) => {
     emptyFields.push("familyInfo");
   }
   if (emptyFields.length > 0) {
+    console.log(
+      familyFirstName,
+      familyMiddleName,
+      familyLastName,
+      familyGender,
+      familyEmail,
+      familyPhoneNumber,
+      familyAddress
+    );
     return res
       .status(400)
       .json({ error: "Please fill in all the fields", emptyFields });

@@ -4,7 +4,6 @@ const {
   getRequests,
   getRequest,
   approveRequest,
-  deleteRequest,
 } = require("../controllers/RequestController");
 const router = express.Router();
 
@@ -16,8 +15,6 @@ router.get("/:id", getRequest);
 
 // POST a new Request
 router.post("/", createRequest);
-
-
 
 // UPDATE a Request
 router.patch("/:id", approveRequest);

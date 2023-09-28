@@ -112,7 +112,7 @@ function ModuleProvider({ children }) {
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        toast.error("Failed to create module");
+        toast.error("Failed to update module");
         return false;
       }
     }

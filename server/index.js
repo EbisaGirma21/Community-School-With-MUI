@@ -15,7 +15,8 @@ const SubjectRoutes = require("./routes/SubjectRoutes");
 const SectionRoutes = require("./routes/SectionRoutes");
 const UserRoutes = require("./routes/UserRoutes");
 const MarkRoutes = require("./routes/MarkRoutes");
-const AssessmentWeighRoutes = require("./routes/AssessmentWeightRoutes");
+const AssessmentWeightRoutes = require("./routes/AssessmentWeightRoutes");
+const RequestRoutes = require("./routes/RequestRoutes");
 
 // express app
 const app = express();
@@ -42,7 +43,8 @@ app.use("/api/subject", SubjectRoutes);
 app.use("/api/section", SectionRoutes);
 app.use("/api/user", UserRoutes);
 app.use("/api/mark", MarkRoutes);
-app.use("/api/assessmentWeight", AssessmentWeighRoutes);
+app.use("/api/assessmentWeight", AssessmentWeightRoutes);
+app.use("/api/request", RequestRoutes);
 
 // MONGOOSE CONFIGURATION
 mongoose

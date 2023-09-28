@@ -4,6 +4,7 @@ import MarkContext from "../../../context/MarkContext";
 import SubjectContext from "../../../context/SubjectContext";
 import { Box, Button } from "@mui/material";
 import RosterChecker from "./RosterChecker";
+import { toast } from "react-toastify";
 
 const RosterTable = ({
   acCurriculumId,
@@ -72,7 +73,11 @@ const RosterTable = ({
   // toggler funcions
   // funtions open approval modal
   const handleApproveOpen = () => {
-    setApproveOpen(true);
+    if (semesterId.length === 0) {
+      toast.warning("No selected semester");
+    } else {
+      setApproveOpen(true);
+    }
   };
 
   // funtion close delete modal
@@ -88,7 +93,15 @@ const RosterTable = ({
   let content = "";
   if (approveOpen) {
     content = (
-      <RosterChecker open={approveOpen} handleClose={handleApproveClose} />
+      <RosterChecker
+        open={approveOpen}
+        handleClose={handleApproveClose}
+        acCurriculumId={acCurriculumId}
+        semesterId={semesterId}
+        curriculumId={curriculumId}
+        gradeId={gradeId}
+        sectionId={sectionId}
+      />
     );
   }
 
@@ -96,7 +109,7 @@ const RosterTable = ({
     <Box>
       <Box
         className="border-2 border-gray-200 p-2 h-16 rounded-md m-1 flex justify-end"
-        sx={{ display: user.role !== "teacher" ? "none" : "flex" }}
+        // sx={{ display: user.role !== "teacher" ? "none" : "flex" }}
       >
         <Button variant="contained" onClick={handleRosterApprovalClick}>
           Request Approval

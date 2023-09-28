@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
 
 const RequestSchema = new mongoose.Schema({
-  requestAcademicCurriculum: {
+  requestedAcademicCurriculum: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "AcademicCurriculum",
   },
-  requestGrade: {
+  requestedGrade: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Grade",
   },
-  requestSection: {
+  requestedSection: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Section",
   },
-  requestSemister: {
+  requestedSemester: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "AcademicCurriclum.Semester",
   },
@@ -23,7 +23,7 @@ const RequestSchema = new mongoose.Schema({
   },
   requestStatus: {
     type: String,
-    required: True,
+    required: true,
   },
 });
 

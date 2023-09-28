@@ -15,24 +15,47 @@ function RequestProvider({ children }) {
     setRequest(response.data);
   };
 
-
-
   // function used to create request
   const createRequest = async (
-    requestLabel,
-    academicCurriculum,
-    grade,
-    subjects
+    requestedAcademicCurriculum,
+    requestedGrade,
+    requestedSection,
+    requestedSemester
   ) => {
-    const response = await axios.post("/request", {
-      requestLabel,
-      academicCurriculum,
-      grade,
-      subjects,
-    });
+    setIsLoading(true);
+    setError(null);
 
-    const updateRequest = [...request, response.data];
-    setRequest(updateRequest);
+    try {
+      const response = await axios.post("/request", {
+        requestedAcademicCurriculum,
+        requestedGrade,
+        requestedSection,
+        requestedSemester,
+        requestType: "rosterApproval",
+      });
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        const updateRequest = [...request, response.data];
+        setRequest(updateRequest);
+        toast.success("Request sent successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.warning("Request already sent");
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to sent request");
+        return false;
+      }
+    }
   };
 
   // shared operation between components

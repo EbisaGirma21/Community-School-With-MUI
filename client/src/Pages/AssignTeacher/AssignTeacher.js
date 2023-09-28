@@ -91,7 +91,6 @@ function AssignTeacher() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [acCurriculumId, curriculum]);
 
-
   // gradeOption
   const gradeOption = !acCurriculumId
     ? [{ label: "Not found", value: 1 }]
@@ -103,46 +102,41 @@ function AssignTeacher() {
   return (
     <Box>
       <Typography sx={{ m: 1 }}>AssignTeachers</Typography>
-      <Grid
-        container
-        spacing={1}
-        sx={{ p: 1, border: "1px solid #dbdde0", borderRadius: "10px" }}
+      <Box
+        className="flex p-1 gap-4"
+        sx={{ border: "1px solid #dbdde0", borderRadius: "10px" }}
       >
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Dropdown
-            label="Academic Year"
-            options={academicSessionOption}
-            value={acSession}
-            onChange={(e) => {
-              setAcSession(e.target.value);
-            }}
-            width={"140px"}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Dropdown
-            label="Academic Curriculum"
-            options={acCurriculumOption}
-            value={acCurriculumId}
-            onChange={(e) => {
-              setGradeId("");
-              setAcCurriculumId(e.target.value);
-            }}
-            width={"250px"}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <Dropdown
-            label="Grade"
-            options={gradeOption}
-            value={gradeId}
-            onChange={(e) => {
-              setGradeId(e.target.value);
-            }}
-            width={"80px"}
-          />
-        </Grid>
-      </Grid>
+        <Dropdown
+          label="Academic Year"
+          options={academicSessionOption}
+          value={acSession}
+          onChange={(e) => {
+            setAcSession(e.target.value);
+          }}
+          width={"140px"}
+        />
+
+        <Dropdown
+          label="Academic Curriculum"
+          options={acCurriculumOption}
+          value={acCurriculumId}
+          onChange={(e) => {
+            setGradeId("");
+            setAcCurriculumId(e.target.value);
+          }}
+          width={"250px"}
+        />
+
+        <Dropdown
+          label="Grade"
+          options={gradeOption}
+          value={gradeId}
+          onChange={(e) => {
+            setGradeId(e.target.value);
+          }}
+          width={"80px"}
+        />
+      </Box>
       <AssignTeacherTab gradeId={gradeId} acCurriculumId={acCurriculumId} />
     </Box>
   );

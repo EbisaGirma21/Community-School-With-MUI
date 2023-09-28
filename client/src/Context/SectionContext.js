@@ -30,43 +30,102 @@ function SectionProvider({ children }) {
     grade,
     subjects
   ) => {
-    const response = await axios.post("/section", {
-      sectionLabel,
-      academicCurriculum,
-      grade,
-      subjects,
-    });
+    setIsLoading(true);
+    setError(null);
 
-    const updateSection = [...section, response.data];
-    setSection(updateSection);
+    try {
+      const response = await axios.post("/section", {
+        sectionLabel,
+        academicCurriculum,
+        grade,
+        subjects,
+      });
+
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchSections();
+        toast.success("Section created successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to create section");
+        return false;
+      }
+    }
   };
 
   // function used to delete section
   const deleteSectionById = async (id) => {
-    await axios.delete(`/section/${id}`);
+    try {
+      const response = await axios.delete(`/section/${id}`);
 
-    const updatedSection = section.filter((section) => {
-      return section._id !== id;
-    });
+      if (response.status !== 200) {
+        toast.error(response.data.error);
+      } else {
+        const updatedSection = section.filter((section) => {
+          return section._id !== id;
+        });
 
-    setSection(updatedSection);
+        setSection(updatedSection);
+        toast.warning("Section deleted successfully");
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("Failed to delete section");
+      }
+    }
   };
 
-  // function used to delete section
-  // function used to delete newStudent
+  // function used to edit section
   const editSectionById = async (id, newSectionLabel) => {
-    const response = await axios.patch(`/section/${id}`, {
-      sectionLabel: newSectionLabel,
-    });
-    const updatedSections = section.map((section) => {
-      if (section._id === id) {
-        return { ...section, ...response.data };
-      }
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axios.patch(`/section/${id}`, {
+        sectionLabel: newSectionLabel,
+      });
 
-      return section;
-    });
-    fetchSections();
-    setSection(updatedSections);
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        const updatedSections = section.map((section) => {
+          if (section._id === id) {
+            return { ...section, ...response.data };
+          }
+
+          return section;
+        });
+        // fetchSections();
+        setSection(updatedSections);
+        toast.info("Section updated successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to update section");
+        return false;
+      }
+    }
   };
 
   const assignTeacher = async (

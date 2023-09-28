@@ -30,7 +30,7 @@ function NewStudentProvider({ children }) {
     familyGender,
     familyEmail,
     familyPhoneNumber,
-    familyKebele
+    familyAddress
   ) => {
     setIsLoading(true);
     setError(null);
@@ -50,7 +50,7 @@ function NewStudentProvider({ children }) {
         familyGender,
         familyEmail,
         familyPhoneNumber,
-        familyKebele,
+        familyAddress,
       });
       if (response.status !== 200) {
         setError(response.data.error);
@@ -90,7 +90,7 @@ function NewStudentProvider({ children }) {
     familyGender,
     familyEmail,
     familyPhoneNumber,
-    familyKebele,
+    familyAddress,
     previousYear,
     previousStage,
     previousGrade,
@@ -118,7 +118,7 @@ function NewStudentProvider({ children }) {
         familyGender,
         familyEmail,
         familyPhoneNumber,
-        familyKebele,
+        familyAddress,
         previousYear,
         previousStage,
         previousGrade,

@@ -1,12 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
-import Datatable from "../../../components/UI/Datatable";
 import MarkContext from "../../../context/MarkContext";
 import SubjectContext from "../../../context/SubjectContext";
 import { Box, Button } from "@mui/material";
 import Dropdown from "../../../components/UI/Dropdown";
 import { DataGrid } from "@mui/x-data-grid";
+import RequestContext from "../../../context/RequestContext";
+import { toast } from "react-toastify";
 
-const MarkListTable = ({ curriculumId, gradeId, sectionId, semesterId }) => {
+const MarkListTable = ({
+  curriculumId,
+  gradeId,
+  sectionId,
+  semesterId,
+  prevSemester,
+}) => {
   // useStattes
   const [subjectId, setSubjectId] = useState("");
   const [subjectColumns, setSubjectColumns] = useState([]);
@@ -16,6 +23,20 @@ const MarkListTable = ({ curriculumId, gradeId, sectionId, semesterId }) => {
   // Component contexts
   const { mark, fetchMarkLists, addSubjectMarks } = useContext(MarkContext);
   const { subject, fetchSubjects } = useContext(SubjectContext);
+  const { request, fetchRequests } = useContext(RequestContext);
+
+  // Update of prevsemetser check in request
+  useEffect(() => {
+    fetchRequests();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [semesterId]);
+
+  const previousSemester = request.filter((request) => {
+    return (
+      request.requestedSemester === prevSemester &&
+      request.requestStatus === "notApproved"
+    );
+  });
 
   // Update local mark state when context mark changes
   useEffect(() => {
@@ -44,7 +65,7 @@ const MarkListTable = ({ curriculumId, gradeId, sectionId, semesterId }) => {
           field: key,
           headerName: key,
           type: "number",
-          editable: true,
+          editable: previousSemester.length !== 0 ? false : true,
           align: "left",
           headerAlign: "left",
           flex: 1,
@@ -102,9 +123,13 @@ const MarkListTable = ({ curriculumId, gradeId, sectionId, semesterId }) => {
   // Function to handle Save Changes button click
   const handleSaveChanges = (e) => {
     e.preventDefault();
-    addSubjectMarks(rows, subjectId, semesterId);
-    setEditedStatus(editedStatus + 1);
-    setRows([]);
+    if (subjectId) {
+      addSubjectMarks(rows, subjectId, semesterId);
+      setEditedStatus(editedStatus + 1);
+      setRows([]);
+    } else {
+      toast.warning("No selected subject");
+    }
   };
   return (
     <Box>
@@ -128,6 +153,15 @@ const MarkListTable = ({ curriculumId, gradeId, sectionId, semesterId }) => {
           columns={tableColumns}
           getRowId={(row) => row._id || mark.indexOf(row)}
           key={mark._id}
+          onRowClick={() => {
+            let toastDisplayed = false;
+            if (previousSemester.length !== 0 && !toastDisplayed) {
+              toastDisplayed = true;
+              return toast.warning("The previous semester not ended");
+            } else {
+              return null;
+            }
+          }}
           processRowUpdate={processRowUpdate}
         />
       </Box>

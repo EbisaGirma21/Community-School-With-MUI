@@ -8,14 +8,14 @@ import { useContext } from "react";
 import AcademicCurriculumContext from "../../../context/AcademicCurriculumContext";
 
 export default function AcademicCurriculumDelete(props) {
-  const { handleClose, open, academicCurriculumId } = props;
+  const { handleClose, open, academicCurriculumId, academicYear } = props;
 
   const { deleteAcademicCurriculumById } = useContext(
     AcademicCurriculumContext
   );
 
   const handleSave = () => {
-    deleteAcademicCurriculumById(academicCurriculumId);
+    deleteAcademicCurriculumById(academicCurriculumId, academicYear);
     handleClose();
   };
 

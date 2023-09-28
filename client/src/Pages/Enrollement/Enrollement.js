@@ -7,6 +7,7 @@ import SectionContext from "../../context/SectionContext";
 import Dropdown from "../../components/UI/Dropdown";
 import EnrollDialog from "./components/EnrollDialog";
 import EnrollmentContext from "../../context/EnrollmentContext";
+import { toast } from "react-toastify";
 
 const Enrollement = ({ acCurriculumId, gradeId }) => {
   const [sectionId, setSectionId] = useState("");
@@ -52,12 +53,12 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
         value: sec._id,
       }));
 
-  const handleEnrollStudent = () => {
+  const handleEnrollStudent = async (e) => {
     const filteredElligibleStudent = elligibleStudent.filter((student) => {
       return selectedRows.includes(student._id);
     });
 
-    enrollStudents(
+    const success = await enrollStudents(
       filteredElligibleStudent,
       gradeId,
       sectionId,
@@ -90,14 +91,13 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
         <Button
           variant="contained"
           onClick={() => {
-            setDisplayed(true);
+            gradeId ? setDisplayed(true) : toast.warning("No selected grade.");
           }}
-          disabled={gradeId ? false : true}
         >
           <DoneIcon /> Display Elligible Students
         </Button>
 
-        <Box sx={{ display: "flex" }}>
+        <Box className="flex gap-4">
           <Dropdown
             label="Section"
             options={sectionOption}
@@ -105,13 +105,16 @@ const Enrollement = ({ acCurriculumId, gradeId }) => {
             onChange={(e) => {
               setSectionId(e.target.value);
             }}
-            width={"80px"}
+            width={"100px"}
           />
           <Button
             variant="contained"
-            disabled={sectionId ? false : true}
             onClick={() => {
-              handleEnrollOpen();
+              sectionId
+                ? selectedRows.length !== 0
+                  ? handleEnrollOpen()
+                  : toast.warning("No  selected student.")
+                : toast.warning("No  selected section.");
             }}
           >
             <AddIcon />

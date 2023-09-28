@@ -5,11 +5,22 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useContext } from "react";
+import RequestContext from "../../../context/RequestContext";
 
-export default function RosterChecker(props) {
-  const { handleClose, open } = props;
+export default function RosterChecker({
+  handleClose,
+  open,
+  acCurriculumId,
+  semesterId,
+  curriculumId,
+  gradeId,
+  sectionId,
+}) {
+  const { createRequest } = useContext(RequestContext);
 
   const handleSave = () => {
+    createRequest(acCurriculumId, gradeId, sectionId, semesterId);
     handleClose();
   };
 
@@ -29,7 +40,6 @@ export default function RosterChecker(props) {
             Are you sure do you want to send this request?
           </DialogContentText>
         </DialogContent>
-        <Checkbox />
         <DialogActions>
           <Button variant="contained" onClick={handleClose}>
             Cancel
