@@ -6,6 +6,8 @@ import AcademicCurriculumContext from "../../context/AcademicCurriculumContext";
 import CurriculumContext from "../../context/CurriculumContext";
 import GradeContext from "../../context/GradeContext";
 import AcademicSessionContext from "../../context/AcademicSessionContext";
+import Spinner from "../../components/UI/Spinner";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Registration() {
   {
@@ -186,7 +188,9 @@ function Registration() {
             </Typography>
           </Box>
         ) : (
-          <Typography>Loading...</Typography>
+          <Box className=" mt-64 flex justify-center items-start ">
+            <Spinner className="" />
+          </Box>
         )}
       </Box>
     </Box>

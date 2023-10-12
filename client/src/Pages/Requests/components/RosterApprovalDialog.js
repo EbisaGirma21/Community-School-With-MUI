@@ -1,4 +1,3 @@
-import { Checkbox } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -8,23 +7,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useContext } from "react";
 import RequestContext from "../../../context/RequestContext";
 
-export default function RosterChecker({
-  handleClose,
-  open,
-  acCurriculumId,
-  semesterId,
-  gradeId,
-  sectionId,
-  mark,
-}) {
-  const { createRequest, approveStudent } = useContext(RequestContext);
+export default function RosterApproval({ handleClose, open, semesterId }) {
+  const { approveRequest } = useContext(RequestContext);
 
-  const handleSave = async () => {
-    if (semesterId === "average") {
-      await approveStudent(mark);
-    } else {
-      await createRequest(acCurriculumId, gradeId, sectionId, semesterId);
-    }
+  const handleSave = () => {
+    approveRequest(semesterId);
     handleClose();
   };
 
@@ -41,9 +28,7 @@ export default function RosterChecker({
         </DialogTitle>
         <DialogContent className="flex flex-col justify-start">
           <DialogContentText id="alert-dialog-description">
-            {semesterId === "average"
-              ? "Are you sure do you want to approve this average roster?"
-              : "Are you sure do you want to send this request?"}
+            Are you sure do you want to send this request?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -51,7 +36,7 @@ export default function RosterChecker({
             Cancel
           </Button>
           <Button variant="contained" onClick={handleSave} autoFocus>
-            {semesterId === "average" ? "Approve" : "Send"}
+            Send
           </Button>
         </DialogActions>
       </Dialog>

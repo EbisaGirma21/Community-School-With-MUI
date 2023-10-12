@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import { useMediaQuery } from "@mui/material";
+import { Divider, useMediaQuery } from "@mui/material";
 import {
   Box,
   Drawer,
@@ -28,6 +28,8 @@ import SidebarContext from "../context/SidebarContext";
 import { styled } from "@mui/material/styles";
 import ActivePageContext from "../context/ActivePageContext";
 import GradingIcon from "@mui/icons-material/Grading";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import Groups2Icon from "@mui/icons-material/Groups2";
 
 function SideBar() {
   const { isSidebarOpen } = useContext(SidebarContext);
@@ -185,91 +187,115 @@ function SideBar() {
   function getMenuItems() {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user.role === "director") {
-      return [
-        {
-          text: <Typography sx={itemTextStyle}>Dashboard</Typography>,
-          icon: <Dashboard sx={{ fontSize: "18px" }} />,
-          path: "/dashboard",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Ac. Session</Typography>,
-          icon: <CalendarMonthOutlinedIcon sx={{ fontSize: "18px" }} />,
-          path: "academicSession",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Curriculum</Typography>,
-          icon: <StyleIcon sx={{ fontSize: "18px" }} />,
-          path: "curriculum",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Ac. Curriculum</Typography>,
-          icon: <SourceOutlinedIcon sx={{ fontSize: "18px" }} />,
-          path: "academicCurriculum",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Students</Typography>,
-          icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
-          path: "students",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Teachers</Typography>,
-          icon: <CastForEducationIcon sx={{ fontSize: "18px" }} />,
-          path: "teachers",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Modules</Typography>,
-          icon: <ViewModuleIcon sx={{ fontSize: "18px" }} />,
-          path: "modules",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Departments</Typography>,
-          icon: <SafetyDividerIcon sx={{ fontSize: "18px" }} />,
-          path: "departments",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Ass. Teachers</Typography>,
-          icon: <AssignmentReturnIcon sx={{ fontSize: "18px" }} />,
-          path: "assignTeacher",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Registration</Typography>,
-          icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
-          path: "registration",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Student Result</Typography>,
-          icon: <GradingIcon sx={{ fontSize: "18px" }} />,
-          path: "result",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Requests</Typography>,
-          icon: <GradingIcon sx={{ fontSize: "18px" }} />,
-          path: "requests",
-        },
-      ];
+      return {
+        dashboard: [
+          {
+            text: <Typography sx={itemTextStyle}>Dashboard</Typography>,
+            icon: <Dashboard sx={{ fontSize: "18px" }} />,
+            path: "/dashboard",
+          },
+        ],
+        basics: [
+          {
+            text: <Typography sx={itemTextStyle}>Ac. Session</Typography>,
+            icon: <CalendarMonthOutlinedIcon sx={{ fontSize: "18px" }} />,
+            path: "academicSession",
+          },
+          {
+            text: <Typography sx={itemTextStyle}>Modules</Typography>,
+            icon: <ViewModuleIcon sx={{ fontSize: "18px" }} />,
+            path: "modules",
+          },
+          {
+            text: <Typography sx={itemTextStyle}>Departments</Typography>,
+            icon: <SafetyDividerIcon sx={{ fontSize: "18px" }} />,
+            path: "departments",
+          },
+        ],
+        lists: [
+          {
+            text: <Typography sx={itemTextStyle}>Teachers</Typography>,
+            icon: <CastForEducationIcon sx={{ fontSize: "18px" }} />,
+            path: "teachers",
+          },
+          {
+            text: <Typography sx={itemTextStyle}>Students</Typography>,
+            icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
+            path: "students",
+          },
+          {
+            text: <Typography sx={itemTextStyle}>Clubs</Typography>,
+            icon: <Groups2Icon sx={{ fontSize: "18px" }} />,
+            path: "clubs",
+          },
+        ],
+
+        academics: [
+          {
+            text: <Typography sx={itemTextStyle}>Curriculum</Typography>,
+            icon: <StyleIcon sx={{ fontSize: "18px" }} />,
+            path: "curriculum",
+          },
+          {
+            text: <Typography sx={itemTextStyle}>Ac. Curriculum</Typography>,
+            icon: <SourceOutlinedIcon sx={{ fontSize: "18px" }} />,
+            path: "academicCurriculum",
+          },
+          {
+            text: <Typography sx={itemTextStyle}>Registration</Typography>,
+            icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
+            path: "registration",
+          },
+        ],
+        operations: [
+          {
+            text: <Typography sx={itemTextStyle}>Ass. Teachers</Typography>,
+            icon: <AssignmentReturnIcon sx={{ fontSize: "18px" }} />,
+            path: "assignTeacher",
+          },
+          {
+            text: <Typography sx={itemTextStyle}>Student Result</Typography>,
+            icon: <GradingIcon sx={{ fontSize: "18px" }} />,
+            path: "result",
+          },
+
+          {
+            text: <Typography sx={itemTextStyle}>Requests</Typography>,
+            icon: <FeedbackIcon sx={{ fontSize: "18px" }} />,
+            path: "requests",
+          },
+        ],
+      };
     } else if (user.role === "teacher") {
-      return [
-        {
-          text: <Typography sx={itemTextStyle}>Dashboard</Typography>,
-          icon: <Dashboard sx={{ fontSize: "18px" }} />,
-          path: "/dashboard",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Students</Typography>,
-          icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
-          path: "students",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Registration</Typography>,
-          icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
-          path: "registration",
-        },
-        {
-          text: <Typography sx={itemTextStyle}>Student Result</Typography>,
-          icon: <GradingIcon sx={{ fontSize: "18px" }} />,
-          path: "result",
-        },
-      ];
+      return {
+        dashboard: [
+          {
+            text: <Typography sx={itemTextStyle}>Dashboard</Typography>,
+            icon: <Dashboard sx={{ fontSize: "18px" }} />,
+            path: "/dashboard",
+          },
+        ],
+        basicItems: [
+          {
+            text: <Typography sx={itemTextStyle}>Registration</Typography>,
+            icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
+            path: "registration",
+          },
+        ],
+        operation: [
+          {
+            text: <Typography sx={itemTextStyle}>Students</Typography>,
+            icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
+            path: "students",
+          },
+
+          {
+            text: <Typography sx={itemTextStyle}>Student Result</Typography>,
+            icon: <GradingIcon sx={{ fontSize: "18px" }} />,
+            path: "result",
+          },
+        ],
+      };
     } else {
       return [
         {
@@ -285,7 +311,6 @@ function SideBar() {
       ];
     }
   }
-
   const handleClick = (path) => {
     localStorage.setItem("path", JSON.stringify(path));
     setIsActivePage(JSON.parse(localStorage.getItem("path")));
@@ -366,6 +391,8 @@ function SideBar() {
   //   },
   // ];
 
+  console.log(menuItems);
+
   // returned drawer
   return (
     <Drawer variant="permanent" anchor="left" sx={styledDrawer}>
@@ -386,14 +413,14 @@ function SideBar() {
             fontSize: "20px",
           }}
         >
-          WKU-SMS
+          WKU-CSMS
         </Typography>
       </SideBarTitle>
 
       {/* list of admin page */}
       <Box sx={{ marginTop: "83px", padding: "0" }}>
-        <List sx={styledList}>
-          {/* <Typography sx={itemTitleStyle}>Main</Typography> */}
+        {/* <List sx={styledList}>
+          <Typography sx={itemTitleStyle}>Main</Typography>
           {menuItems.map((item) => (
             <Link to={item.path} key={item.path} style={styledLink}>
               <ListItemButton
@@ -407,41 +434,94 @@ function SideBar() {
               </ListItemButton>
             </Link>
           ))}
+        </List> */}
+        <List sx={styledList}>
+          <Typography sx={itemTitleStyle}>Dashoboard</Typography>
+          {menuItems.dashboard.map((item) => (
+            <Link to={item.path} key={item.path} style={styledLink}>
+              <ListItemButton
+                onClick={() => handleClick(item.path)}
+                sx={
+                  isActivePage === item.path ? styledActiveButton : styledButton
+                }
+              >
+                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                <ListItemText primary={item.text} sx={listStyle} />
+              </ListItemButton>
+            </Link>
+          ))}
         </List>
+        <Divider />
+        <List sx={styledList}>
+          <Typography sx={itemTitleStyle}>Basics</Typography>
+          {menuItems.basics.map((item) => (
+            <Link to={item.path} key={item.path} style={styledLink}>
+              <ListItemButton
+                onClick={() => handleClick(item.path)}
+                sx={
+                  isActivePage === item.path ? styledActiveButton : styledButton
+                }
+              >
+                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                <ListItemText primary={item.text} sx={listStyle} />
+              </ListItemButton>
+            </Link>
+          ))}
+        </List>
+        <Divider />
+        <List sx={styledList}>
+          <Typography sx={itemTitleStyle}>Academics</Typography>
+          {menuItems.academics.map((item) => (
+            <Link to={item.path} key={item.path} style={styledLink}>
+              <ListItemButton
+                onClick={() => handleClick(item.path)}
+                sx={
+                  isActivePage === item.path ? styledActiveButton : styledButton
+                }
+              >
+                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                <ListItemText primary={item.text} sx={listStyle} />
+              </ListItemButton>
+            </Link>
+          ))}
+        </List>
+        <Divider />
+        <List sx={styledList}>
+          <Typography sx={itemTitleStyle}>Lists</Typography>
+          {menuItems.lists.map((item) => (
+            <Link to={item.path} key={item.path} style={styledLink}>
+              <ListItemButton
+                onClick={() => handleClick(item.path)}
+                sx={
+                  isActivePage === item.path ? styledActiveButton : styledButton
+                }
+              >
+                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                <ListItemText primary={item.text} sx={listStyle} />
+              </ListItemButton>
+            </Link>
+          ))}
+        </List>
+        <Divider />
+
+        <List sx={styledList}>
+          <Typography sx={itemTitleStyle}>Operations</Typography>
+          {menuItems.operations.map((item) => (
+            <Link to={item.path} key={item.path} style={styledLink}>
+              <ListItemButton
+                onClick={() => handleClick(item.path)}
+                sx={
+                  isActivePage === item.path ? styledActiveButton : styledButton
+                }
+              >
+                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                <ListItemText primary={item.text} sx={listStyle} />
+              </ListItemButton>
+            </Link>
+          ))}
+        </List>
+
         {/* <List sx={styledList}>
-          <Typography sx={itemTitleStyle}>Basic</Typography>
-          {basicItems.map((item) => (
-            <Link to={item.path} key={item.path} style={styledLink}>
-              <ListItemButton sx={styledButton}>
-                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
-                <ListItemText primary={item.text} sx={listStyle} />
-              </ListItemButton>
-            </Link>
-          ))}
-        </List>
-        <List sx={styledList}>
-          <Typography sx={itemTitleStyle}>List</Typography>
-          {listItems.map((item) => (
-            <Link to={item.path} key={item.path} style={styledLink}>
-              <ListItemButton sx={styledButton}>
-                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
-                <ListItemText primary={item.text} sx={listStyle} />
-              </ListItemButton>
-            </Link>
-          ))}
-        </List>
-        <List sx={styledList}>
-          <Typography sx={itemTitleStyle}>Operation</Typography>
-          {operationItems.map((item) => (
-            <Link to={item.path} key={item.path} style={styledLink}>
-              <ListItemButton sx={styledButton}>
-                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
-                <ListItemText primary={item.text} sx={listStyle} />
-              </ListItemButton>
-            </Link>
-          ))}
-        </List>
-        <List sx={styledList}>
           <Typography sx={itemTitleStyle}>User</Typography>
           {userItems.map((item) => (
             <Link to={item.path} key={item.path} style={styledLink}>

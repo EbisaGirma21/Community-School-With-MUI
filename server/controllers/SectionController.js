@@ -2,6 +2,8 @@ const Section = require("../models/SectionModel");
 const User = require("../models/UserModel");
 const Student = require("../models/StudentModel");
 const mongoose = require("mongoose");
+const Mark = require("../models/MarkModel");
+const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 
 // get all Sections
 const getSections = async (req, res) => {
@@ -70,6 +72,18 @@ const createSection = async (req, res) => {
       .json({ error: "Please fill in all the fields", emptyFields });
   }
 
+  const acCurriculum = await AcademicCurriculum.findById(academicCurriculum);
+
+  const semesters = [];
+
+  for (let i = 0; i < acCurriculum.semesters.length; i++) {
+    let status = i === 0 ? "ONP" : "REG";
+    semesters.push({
+      _semester: acCurriculum.semesters[i]._id,
+      _status: status,
+    });
+  }
+
   try {
     const teachers = subjects.map((subject) => ({
       subject: subject,
@@ -79,6 +93,7 @@ const createSection = async (req, res) => {
       sectionLabel,
       academicCurriculum,
       grade,
+      semesters,
       teachers,
     });
 
@@ -93,6 +108,14 @@ const deleteSection = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such Section" });
+  }
+  const mark = await Mark.findOne({
+    section: id,
+  });
+  if (mark) {
+    return res
+      .status(405)
+      .json({ error: "Student Registered on these section" });
   }
 
   const section = await Section.findOneAndDelete({ _id: id });

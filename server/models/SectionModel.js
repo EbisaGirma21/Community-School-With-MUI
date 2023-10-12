@@ -7,7 +7,6 @@ const SectionSchema = new mongoose.Schema(
       required: true,
     },
     academicCurriculum: {
-      type: String,
       type: mongoose.Schema.Types.ObjectId,
       ref: "AcademicCurriculum",
     },
@@ -20,6 +19,20 @@ const SectionSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Teacher",
     },
+    semesters:[
+      {
+        _semester: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "AcademicCurriculum.semesters",
+        },
+        _status: {
+          type: String,
+          required: true,
+          default: "REG",
+          enum: ["REG", "ONP", "CMP"],
+        },
+      }
+    ],
     teachers: [
       {
         teacher: {

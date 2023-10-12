@@ -1,11 +1,10 @@
 const Mark = require("../models/MarkModel");
-const MarkModel = require("../models/MarkModel");
 const User = require("../models/UserModel");
 
 // get all Marks
 const getMarks = async (req, res) => {
-  const { semesterId } = req.params;
-  const marks = await MarkModel.find({}).sort({
+  const { gradeId, sectionId, semesterId } = req.params;
+  const marks = await Mark.find({ section: sectionId }).sort({
     createdAt: -1,
   });
 
@@ -17,8 +16,7 @@ const getMarks = async (req, res) => {
         return result._semesters.toString() == semesterId;
       });
 
-      console.log(semesterId);
-      // function to assign total mark by subject Id
+      // Function to calculate the total mark by subject Id
       results[0].result.forEach((resultItem) => {
         const subjectId = resultItem.subject.toString();
         const assessment = resultItem.assessment;
@@ -45,17 +43,99 @@ const getMarks = async (req, res) => {
         gender: user ? user.gender : null,
         totalMark,
         average,
+        status: average >= 50 ? "Pass" : "Fail",
         ...totalMarksBySubject,
       };
     })
   );
 
+  // Calculate rank
+  marksData.forEach((mark) => {
+    mark.rank = 1; // Default rank is 1
+    marksData.forEach((otherMark) => {
+      if (otherMark.average > mark.average) {
+        mark.rank++;
+      }
+    });
+  });
+
   res.status(200).json(marksData);
 };
-const getMarkLists = async (req, res) => {
-  const { subjectId, semesterId } = req.params;
 
-  const marks = await MarkModel.find({}).sort({
+// get averege Marks
+const getAverageMarks = async (req, res) => {
+  const { gradeId, sectionId } = req.params;
+  const marks = await Mark.find({ section: sectionId }).sort({
+    createdAt: -1,
+  });
+
+  const marksData = await Promise.all(
+    marks.map(async (mark) => {
+      const user = await User.findById(mark.student);
+      const totalMarksBySubject = {};
+      let totalSemester = 0;
+      let totalSubject = 0;
+
+      // Iterate through all semesters for this student
+      mark.results.forEach((semesterResult) => {
+        semesterResult.result.forEach((resultItem) => {
+          const subjectId = resultItem.subject.toString();
+          const assessment = resultItem.assessment;
+          const totalMarks = Object.values(assessment).reduce(
+            (acc, curr) => acc + (curr.value || 0),
+            0
+          );
+
+          if (totalMarksBySubject[subjectId]) {
+            totalMarksBySubject[subjectId] += totalMarks;
+          } else {
+            totalMarksBySubject[subjectId] = totalMarks;
+          }
+        });
+        totalSemester++;
+      });
+      // Iterate through the totalMarksBySubject and divide each value by the totalSemester
+      for (const key in totalMarksBySubject) {
+        if (totalMarksBySubject.hasOwnProperty(key)) {
+          totalMarksBySubject[key] = totalMarksBySubject[key] / totalSemester;
+        }
+        totalSubject++;
+      }
+
+      // totalMark and average mark calculation
+      const totalMark = totalMarkResult(totalMarksBySubject);
+      const average = totalAverageMark(totalMarksBySubject, totalSubject);
+
+      return {
+        ...mark._doc,
+        firstName: user ? user.firstName : null,
+        middleName: user ? user.middleName : null,
+        lastName: user ? user.lastName : null,
+        gender: user ? user.gender : null,
+        totalMark,
+        average,
+        status: average >= 50 ? "Pass" : "Fail",
+        ...totalMarksBySubject,
+      };
+    })
+  );
+  // Calculate rank
+  marksData.forEach((mark) => {
+    mark.rank = 1; // Default rank is 1
+    marksData.forEach((otherMark) => {
+      if (otherMark.average > mark.average) {
+        mark.rank++;
+      }
+    });
+  });
+
+  res.status(200).json(marksData);
+};
+// marklist for each subject
+const getMarkLists = async (req, res) => {
+  const { gradeId, sectionId, subjectId, semesterId } = req.params;
+
+  const marks = await Mark.find({ section: sectionId }).sort({
     createdAt: -1,
   });
   const marksData = await Promise.all(
@@ -69,7 +149,6 @@ const getMarkLists = async (req, res) => {
       const filteredResult = filteredSemester[0].result.filter((item) => {
         return item.subject.toString() === subjectId;
       });
-      console.log(filteredSemester[0]._semesters.toString());
       // Calculate the total mark by summing all assessment values
       const totalMark = Object.values(filteredResult[0].assessment)
         .filter((assessment) => assessment.status === "assigned")
@@ -105,6 +184,80 @@ const getMarkLists = async (req, res) => {
             ? filteredResult[0].assessment.finalExam.value
             : null,
         totalMark,
+      };
+    })
+  );
+
+  res.status(200).json(marksData);
+};
+
+const getAverageMarkLists = async (req, res) => {
+  const { gradeId, sectionId, subjectId } = req.params;
+  const marks = await Mark.find({ section: sectionId }).sort({
+    createdAt: -1,
+  });
+
+  const marksData = await Promise.all(
+    marks.map(async (mark) => {
+      const user = await User.findById(mark.student);
+
+      // Merge all results for the subject across all semesters
+      const allResults = mark.results.reduce(
+        (accumulator, semester) => {
+          const subjectResult = semester.result.find(
+            (item) => item.subject.toString() === subjectId
+          );
+
+          if (subjectResult && subjectResult.assessment) {
+            Object.keys(subjectResult.assessment).forEach((assessmentType) => {
+              const assessment = subjectResult.assessment[assessmentType];
+              if (assessment.status === "assigned") {
+                accumulator[assessmentType].value += assessment.value;
+                accumulator[assessmentType].count += 1;
+              }
+            });
+          }
+
+          return accumulator;
+        },
+        {
+          quiz: { value: 0, count: 0 },
+          test: { value: 0, count: 0 },
+          assignment: { value: 0, count: 0 },
+          midExam: { value: 0, count: 0 },
+          finalExam: { value: 0, count: 0 },
+        }
+      );
+
+      // Calculate the average for each assessment type
+      const calculateAverage = (type) => {
+        return allResults[type].count > 0
+          ? allResults[type].value / allResults[type].count
+          : null;
+      };
+
+      // calculating total mark of assessment
+      const total =
+        calculateAverage("quiz") +
+        calculateAverage("test") +
+        calculateAverage("assignment") +
+        calculateAverage("midExam") +
+        calculateAverage("finalExam");
+
+      return {
+        _id: mark._id,
+        student: mark.student,
+        firstName: user ? user.firstName : null,
+        middleName: user ? user.middleName : null,
+        lastName: user ? user.lastName : null,
+        gender: user ? user.gender : null,
+        subject: subjectId,
+        quiz: calculateAverage("quiz"),
+        test: calculateAverage("test"),
+        assignment: calculateAverage("assignment"),
+        midExam: calculateAverage("midExam"),
+        finalExam: calculateAverage("finalExam"),
+        totalMark: total, // Include the total mark in the result
       };
     })
   );
@@ -172,6 +325,16 @@ const totalMarkResult = (mark) => {
   return totalResult;
 };
 
+const totalAverageMark = (mark, semester) => {
+  let totalResult = 0;
+  let subjectNumber = 0;
+  for (key in mark) {
+    totalResult += mark[key];
+    subjectNumber += 1;
+  }
+  return totalResult / semester;
+};
+
 const averageResult = (mark) => {
   let totalResult = 0;
   let subjectNumber = 0;
@@ -186,4 +349,6 @@ module.exports = {
   getMarks,
   getMarkLists,
   addSubjectMarks,
+  getAverageMarks,
+  getAverageMarkLists,
 };

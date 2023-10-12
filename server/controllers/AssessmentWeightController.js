@@ -1,4 +1,5 @@
 const Curriculum = require("../models/CurriculumModel");
+const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 const Module = require("../models/ModuleModel");
 
 // All assessmentWeight in specific grade
@@ -114,6 +115,15 @@ const getAssessmentWeight = async (req, res) => {
 const createAssessmentWeight = async (req, res) => {
   try {
     const { curriculumId, gradeId, subjects, weights } = req.body;
+
+    const exist = await AcademicCurriculum.findOne({
+      curriculum: curriculumId,
+    });
+    if (exist) {
+      return res.status(405).json({
+        error: "Curriculum already registered on academic curriculum",
+      });
+    }
 
     const curriculum = await Curriculum.findById(curriculumId);
     if (!curriculum) {

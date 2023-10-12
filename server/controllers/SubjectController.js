@@ -217,6 +217,26 @@ const deleteSubject = async (req, res) => {
         error: "Grade not found",
       });
     }
+    // Find the grade in the curriculum by gradeId
+    const subject = grade.subjects.find(
+      (subject) => subject._id.toString() === subjectId
+    );
+    if (!subject) {
+      return res.status(404).json({
+        error: "Grade not found",
+      });
+    }
+    if (
+      subject.assessment.quiz ||
+      subject.assessment.test ||
+      subject.assessment.assignment ||
+      subject.assessment.midExam ||
+      subject.assessment.finalExam
+    ) {
+      return res.status(404).json({
+        error: "Assessment already assigned",
+      });
+    }
 
     // Find the subject index in the grade by subjectId
     const subjectIndex = grade.subjects.findIndex(
@@ -227,7 +247,6 @@ const deleteSubject = async (req, res) => {
         error: "Subject not found",
       });
     }
-
     // Remove the subject from the grade
     const removedSubject = grade.subjects.splice(subjectIndex, 1)[0];
 

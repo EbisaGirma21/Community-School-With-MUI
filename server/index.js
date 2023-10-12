@@ -17,6 +17,8 @@ const UserRoutes = require("./routes/UserRoutes");
 const MarkRoutes = require("./routes/MarkRoutes");
 const AssessmentWeightRoutes = require("./routes/AssessmentWeightRoutes");
 const RequestRoutes = require("./routes/RequestRoutes");
+const ClubRoutes = require("./routes/ClubRoutes");
+const ClubMemberRoutes = require("./routes/ClubMemberRoutes");
 
 // express app
 const app = express();
@@ -45,6 +47,8 @@ app.use("/api/user", UserRoutes);
 app.use("/api/mark", MarkRoutes);
 app.use("/api/assessmentWeight", AssessmentWeightRoutes);
 app.use("/api/request", RequestRoutes);
+app.use("/api/club", ClubRoutes);
+app.use("/api/club", ClubMemberRoutes);
 
 // MONGOOSE CONFIGURATION
 mongoose

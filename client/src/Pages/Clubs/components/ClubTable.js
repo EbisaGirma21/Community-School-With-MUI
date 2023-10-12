@@ -1,29 +1,34 @@
 import React, { useContext, useEffect, useState } from "react";
 import Datatable from "../../../components/UI/Datatable";
-import ModuleDelete from "./ModuleDelete";
-import ModuleUpdate from "./ModuleUpdate";
-import ModuleContext from "../../../context/ModuleContext";
+import ClubDelete from "./ClubDelete";
+import ClubUpdate from "./ClubUpdate";
+import ClubContext from "../../../context/ClubContext";
 
-// Module Basic information datatable Column
+// Club Basic information datatable Column
 const tableColumns = [
-  { field: "moduleTitle", headerName: "Title", flex: 1, minWidth: 150 },
-  { field: "category", headerName: "Category Under", flex: 1, minWidth: 150 },
-  { field: "coordinatorTeacher", headerName: "Coordinator", flex: 1, minWidth: 150 },
+  { field: "clubName", headerName: "Title", flex: 1, minWidth: 150 },
+  { field: "leaderStudent", headerName: "Leader", flex: 1, minWidth: 150 },
+  {
+    field: "coordinatorTeacher",
+    headerName: "Coordinator",
+    flex: 1,
+    minWidth: 150,
+  },
 ];
 
-const ModuleTable = () => {
+const ClubTable = () => {
   // component states
   const [deleteOpen, setdDeleteOpen] = useState(false);
   const [editOpen, setdEditOpen] = useState(false);
-  const [moduleId, setModuleId] = useState("");
+  const [clubId, setClubId] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
 
   // component context
-  const { module, fetchModules } = useContext(ModuleContext);
+  const { club, fetchClubs } = useContext(ClubContext);
 
-  // update local module state when context module changes
+  // update local club state when context club changes
   useEffect(() => {
-    fetchModules();
+    fetchClubs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -36,13 +41,13 @@ const ModuleTable = () => {
   // funtion close delete modal
   const handleDeleteClose = () => {
     setdDeleteOpen(false);
-    setModuleId("");
+    setClubId("");
   };
 
   // delete handler
   const handleDelete = (id) => {
     handleDeleteOpen();
-    setModuleId(id);
+    setClubId(id);
   };
 
   // funtions open edit modal
@@ -53,38 +58,40 @@ const ModuleTable = () => {
   // funtion close Edit modal
   const handleEditClose = () => {
     setdEditOpen(false);
-    setModuleId("");
+    setClubId("");
   };
 
   // edit handler
   const handleEdit = (id) => {
     handleEditOpen();
-    setModuleId(id);
+    setClubId(id);
   };
 
-  // convert module object to array if necessary
-  const tableRows = Array.isArray(module) ? module : [module];
+  // convert club object to array if necessary
+  const tableRows = Array.isArray(club) ? club : [club];
 
   // toggle delete modal
   let content = "";
   if (deleteOpen) {
     content = (
-      <ModuleDelete
+      <ClubDelete
         open={deleteOpen}
         handleClose={handleDeleteClose}
-        moduleId={moduleId}
+        clubId={clubId}
       />
     );
   }
   if (editOpen) {
     content = (
-      <ModuleUpdate
+      <ClubUpdate
         open={editOpen}
         handleClose={handleEditClose}
-        moduleId={moduleId}
+        clubId={clubId}
       />
     );
   }
+
+  console.log(tableRows);
 
   return (
     <div>
@@ -92,14 +99,14 @@ const ModuleTable = () => {
         onDelete={handleDelete}
         onEdit={handleEdit}
         tableColumns={tableColumns}
-        key={module._id}
+        key={club._id}
         tableRows={tableRows}
         setSelectedRows={setSelectedRows}
-        getRowId={(row) => row._id || module.indexOf(row)}
+        getRowId={(row) => row._id || club.indexOf(row)}
       />
       {content}
     </div>
   );
 };
 
-export default ModuleTable;
+export default ClubTable;

@@ -1,4 +1,3 @@
-import { Checkbox } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -6,25 +5,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useContext } from "react";
-import RequestContext from "../../../context/RequestContext";
+import ClubMemberContext from "../../../context/ClubMemberContext";
 
-export default function RosterChecker({
-  handleClose,
-  open,
-  acCurriculumId,
-  semesterId,
-  gradeId,
-  sectionId,
-  mark,
-}) {
-  const { createRequest, approveStudent } = useContext(RequestContext);
+export default function ClubDelete(props) {
+  const { handleClose, open, clubMemberId } = props;
 
-  const handleSave = async () => {
-    if (semesterId === "average") {
-      await approveStudent(mark);
-    } else {
-      await createRequest(acCurriculumId, gradeId, sectionId, semesterId);
-    }
+  const { deleteClubMemberById } = useContext(ClubMemberContext);
+
+  const handleSave = () => {
+    deleteClubMemberById(clubMemberId);
     handleClose();
   };
 
@@ -37,13 +26,11 @@ export default function RosterChecker({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle variant="contained" id="alert-dialog-title">
-          {"Approval Request"}
+          {"Delete Club"}
         </DialogTitle>
-        <DialogContent className="flex flex-col justify-start">
+        <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {semesterId === "average"
-              ? "Are you sure do you want to approve this average roster?"
-              : "Are you sure do you want to send this request?"}
+            Are you sure do you want to delete this record?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -51,7 +38,7 @@ export default function RosterChecker({
             Cancel
           </Button>
           <Button variant="contained" onClick={handleSave} autoFocus>
-            {semesterId === "average" ? "Approve" : "Send"}
+            Delete
           </Button>
         </DialogActions>
       </Dialog>

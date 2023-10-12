@@ -4,6 +4,7 @@ const {
   getRequests,
   getRequest,
   approveRequest,
+  approveStudent,
 } = require("../controllers/RequestController");
 const router = express.Router();
 
@@ -18,5 +19,8 @@ router.post("/", createRequest);
 
 // UPDATE a Request
 router.patch("/:id", approveRequest);
+
+// UPDATE a Request
+router.patch("/", approveStudent);
 
 module.exports = router;

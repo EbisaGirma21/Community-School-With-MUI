@@ -355,6 +355,9 @@ const enrollStudents = async (req, res) => {
     _section: sectionId,
     status: "ONP",
   };
+  const enrollHistory = {
+    _status: "NEW",
+  };
 
   try {
     // Find the academic curriculum
@@ -414,7 +417,9 @@ const enrollStudents = async (req, res) => {
             $set: {
               currentEnrollement: newEnrollment,
             },
-            $push: { enrollment_history: newEnrollment },
+            $push: {
+              enrollment_history: enrollHistory,
+            },
           },
           { new: true }
         );
@@ -443,10 +448,18 @@ const getElligibleStudent = async (req, res) => {
   const grade = await Grade.findById({ _id: gradeId });
   const prevGrade = previousGrade(grade);
   if (prevGrade[0] === "null") {
-    // students with no enrollment
+    // students with no enrollment or failed in KG 1
     const students = await Student.find({
-      enrollment_history: { $size: 0 },
-    }).sort({ createdAt: -1 });
+      $or: [
+        {
+          "currentEnrollement._grade": gradeId,
+          "currentEnrollement._status": "FAL",
+        },
+        { enrollment_history: { $size: 0 } },
+      ],
+    });
+
+    console.log(gradeId);
 
     // integrating students and user collecton
     const student = await Promise.all(

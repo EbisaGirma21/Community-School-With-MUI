@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Curriculum = require("../models/CurriculumModel");
 const AcademicSession = require("../models/AcademicSessionModel");
 const AcademicCurriculum = require("../models/AcademicCurriculumModel");
+const Mark = require("../models/MarkModel");
 
 // get all AcademicCurriculums
 const getAcademicCurriculums = async (req, res) => {
@@ -133,7 +134,6 @@ const createAcademicCurriculum = async (req, res) => {
     for (let i = 1; i <= maxSemester; i++) {
       semesters.push({
         _semesterLabel: semestersOption[i - 1],
-        _status: "REG",
       });
     }
 
@@ -157,6 +157,16 @@ const deleteAcademicCurriculum = async (req, res) => {
     return res.status(400).json({ error: "Invalid AcademicCurriculum ID" });
   }
   try {
+    const mark = await Mark.findOne({
+      academicCurriculum: id,
+    });
+
+    if (mark) {
+      return res
+        .status(405)
+        .json({ error: "Student Registered on these academic curriculum" });
+    }
+
     const academicCurriculum = await AcademicCurriculumModel.findOneAndDelete({
       _id: id,
     });
@@ -165,26 +175,65 @@ const deleteAcademicCurriculum = async (req, res) => {
     }
     res.status(200).json(academicCurriculum);
   } catch (error) {
+    s;
     res.status(500).json({ error: "Failed to delete AcademicCurriculum" });
   }
 };
 
-// update a AcademicCurriculum
 const updateAcademicCurriculum = async (req, res) => {
   const { id } = req.params;
+  const { curriculum, passTresholdAverage, maxSemester } = req.body;
+
+  console.log(curriculum, passTresholdAverage, maxSemester);
+
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such AcademicCurriculum" });
   }
-  const academicCurriculum = await AcademicCurriculumModel.findOneAndUpdate(
-    { _id: id },
-    {
-      ...req.body,
-    }
-  );
-  if (!academicCurriculum) {
-    return res.status(400).json({ error: "No such AcademicCurriculum" });
+
+  const mark = await Mark.findOne({
+    academicCurriculum: id,
+  });
+
+  if (mark) {
+    return res
+      .status(405)
+      .json({ error: "Student Registered on these academic curriculum" });
   }
-  res.status(200).json(academicCurriculum);
+
+  if (!curriculum || !maxSemester || !passTresholdAverage) {
+    return res
+      .status(400)
+      .json({ error: "Please fill in all the required fields" });
+  }
+
+  try {
+    const updatedSemesters = [];
+    const semestersOption = ["I", "II", "III", "IV", "V"];
+    for (let i = 1; i <= maxSemester; i++) {
+      updatedSemesters.push({
+        _semesterLabel: semestersOption[i - 1],
+      });
+    }
+
+    const academicCurriculum = await AcademicCurriculumModel.findOneAndUpdate(
+      { _id: id },
+      {
+        curriculum: curriculum,
+        passTresholdAverage: passTresholdAverage,
+        maxSemester: maxSemester,
+        semesters: updatedSemesters,
+      },
+      { new: true } // To return the updated document
+    );
+
+    if (!academicCurriculum) {
+      return res.status(404).json({ error: "No such AcademicCurriculum" });
+    }
+
+    res.status(200).json(academicCurriculum);
+  } catch (error) {
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 // assigning classification

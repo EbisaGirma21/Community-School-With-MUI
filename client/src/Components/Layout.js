@@ -7,6 +7,7 @@ import TogglePovider from "../context/SidebarContext";
 import { createTheme } from "@mui/material/styles";
 import { useMediaQuery } from "@mui/material";
 import { ActivePageProvider } from "../context/ActivePageContext";
+import { RequestProvider } from "../context/RequestContext";
 
 function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -24,7 +25,9 @@ function Layout() {
   return (
     <TogglePovider.Provider value={ValueToShare}>
       <Box>
-        <NavBar />
+        <RequestProvider>
+          <NavBar />
+        </RequestProvider>
         <ActivePageProvider>
           <SideBar />
         </ActivePageProvider>

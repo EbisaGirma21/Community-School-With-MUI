@@ -14,10 +14,12 @@ import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import ToggleProvider from "../context/SidebarContext";
-import { useContext, useState } from "react";
-import { Button, useMediaQuery } from "@mui/material";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Button, Typography, useMediaQuery } from "@mui/material";
 import { Logout } from "../context/LogoutContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import RequestContext from "../context/RequestContext";
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -102,6 +104,9 @@ const imgStyle = {
 export default function Navbar() {
   // switching navbar with sidebar
   const { toggleSidebar, isSidebarOpen } = useContext(ToggleProvider);
+  // context
+  const { request, fetchRequests } = useContext(RequestContext);
+
   const theme = createTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
   const drawerWidth = 260;
@@ -109,9 +114,12 @@ export default function Navbar() {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [isNotification, setIsNotification] = useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const isIconRef = useRef(false);
 
   const { logout } = Logout();
   const navigate = useNavigate();
@@ -135,6 +143,37 @@ export default function Navbar() {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  // fecth varint from database
+  useEffect(() => {
+    fetchRequests();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // request that is not approved
+  const unApprovedRequest = request.filter((request) => {
+    return request.requestStatus === "notApproved";
+  });
+
+  // request that approved
+  const approvedRequest = request.filter((request) => {
+    return request.requestStatus === "approved";
+  });
+
+  const styledButton = {
+    color: "#22c55e",
+    background: "#bbf7d0",
+    textTransform: "lowercase",
+    borderRadius: "20px",
+    fontSize: "14px",
+    height: "28px",
+    marginTop: "5px",
+    boxShadow: "none",
+    padding: "10px",
+    "&:hover": {
+      background: "#bbf7d0",
+    },
   };
 
   // styled app bar with parameter
@@ -222,6 +261,33 @@ export default function Navbar() {
     </Menu>
   );
 
+  // notification panel handler
+  const handleNotificationOpen = () => {
+    setIsNotification(!isNotification);
+    isIconRef.current = true;
+  };
+
+  const notificationRef = useRef(null);
+
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        if (!isIconRef.current) {
+          setIsNotification(false);
+        }
+        isIconRef.current = false;
+      }
+    };
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, []);
+
   return (
     <Box
       sx={{ flexGrow: 1 }}
@@ -256,8 +322,12 @@ export default function Navbar() {
             </IconWrapper>
 
             {/* notification icon */}
-            <IconWrapper sx={styledMenu}>
-              <Badge badgeContent={17} color="error">
+            <IconWrapper
+              sx={styledMenu}
+              ref={notificationRef}
+              onClick={handleNotificationOpen}
+            >
+              <Badge badgeContent={unApprovedRequest.length} color="error">
                 <NotificationsIcon sx={{ fontSize: "19px" }} />
               </Badge>
             </IconWrapper>
@@ -287,6 +357,122 @@ export default function Navbar() {
               <MoreIcon />
             </IconButton>
           </Box>
+          {/* Notification Box */}
+          <Box
+            ref={notificationRef}
+            sx={{ display: isNotification ? "block" : "none" }}
+            className="absolute bg-white shadow-2xl w-80 h-auto right-16 top-16 rounded-xl "
+          >
+            {/* header */}
+            <Box className="text-blue-950 pt-5 px-2  h-16 border-b border-b-gray-300 flex justify-between text-sm">
+              <Typography variant="p">App Notification</Typography>
+              <Link>Mark as all unread</Link>
+            </Box>
+
+            {/* body */}
+            <Box className="w-80 h-96 overflow-y-auto">
+              {/* unapproved notification */}
+              {unApprovedRequest.map((request) => {
+                return (
+                  <Box
+                    key={request._id}
+                    className="flex p-2 border-b border-t-gray-300 hover:bg-slate-200"
+                    sx={{ background: "#E3F2FD" }}
+                  >
+                    <img
+                      src={require("../assets/warning.png")}
+                      alt="store"
+                      className=" rounded-full object-contain w-12 h-12 bg-red-200"
+                    />
+                    <Box className="text-blue-950 px-2 py-3 h-32">
+                      <Box className=" text-sm flex justify-between">
+                        <Typography variant="p" className=" font-semibold	">
+                          Unapproved:
+                        </Typography>
+                        <Typography variant="p" className="text-xs">
+                          {formatDistanceToNow(new Date(request.updatedAt), {
+                            addSuffiX: true,
+                          })}
+                        </Typography>
+                      </Box>
+
+                      <Box className="text-xs flex justify-center p-2">
+                        <Typography
+                          variant="p"
+                          className="text-xs whitespace-break-spaces "
+                        >
+                          {request.acCurriculum} goes under threshold value.
+                          Request for transfer as soon as possible
+                        </Typography>
+                      </Box>
+                      <Box className="flex justify-start">
+                        <button className="text-red-500 text-sm  bg-red-200 lowercase p-1 rounded-full px-2 !important m-1 ">
+                          {"unread"}
+                        </button>
+                        <Button disabled={false} sx={styledButton}>
+                          {"Approve"}
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+              })}
+
+              {/* Approved request */}
+              {approvedRequest.map((request) => {
+                return (
+                  <Box
+                    key={request._id}
+                    className="flex p-2 border-b border-t-gray-300 hover:bg-slate-200"
+                  >
+                    <img
+                      src={require("../assets/store.png")}
+                      alt="store"
+                      className=" rounded-full object-contain w-12 h-12 bg-green-200"
+                    />
+                    <Box className="text-blue-950 px-2 py-3 h-32">
+                      <Box className=" text-sm flex justify-between">
+                        <Typography variant="p" className=" font-semibold	">
+                          Approved:
+                        </Typography>
+                        <Typography variant="p" className="text-xs">
+                          {formatDistanceToNow(new Date(request.updatedAt), {
+                            addSuffiX: true,
+                          })}
+                        </Typography>
+                      </Box>
+
+                      <Box className="text-xs flex justify-center p-2">
+                        <Typography
+                          variant="p"
+                          className="text-xs whitespace-break-spaces "
+                        >
+                          {request.acCurriculum} goes under threshold value.
+                          Request for transfer as soon as possible
+                        </Typography>
+                      </Box>
+                      <Box className="flex justify-start">
+                        <button className="text-red-500 text-sm  bg-red-200 lowercase p-1 rounded-full px-2 !important m-1 ">
+                          approved
+                        </button>
+                        <Button
+                          // onClick={() => handleSeenApproved(request._id)}
+                          sx={styledButton}
+                        >
+                          View
+                        </Button>
+                      </Box>
+                    </Box>
+                  </Box>
+                );
+              })}
+            </Box>
+            {/* footer */}
+            <Box className=" bg-white  pt-1 text-sky-500 border border-t-slate-300 flex justify-center rounded-bl-xl rounded-br-xl">
+              <Button className=" ">View All</Button>
+            </Box>
+          </Box>
+          {/* End of notification box */}
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

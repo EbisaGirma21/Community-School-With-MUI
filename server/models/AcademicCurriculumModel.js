@@ -25,12 +25,6 @@ const AcademicCurriculumSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      _status: {
-        type: String,
-        required: true,
-        default: "REG",
-        enum: ["REG", "ONP", "CMP"],
-      },
     },
   ],
 });

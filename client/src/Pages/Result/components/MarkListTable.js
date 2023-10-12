@@ -12,7 +12,7 @@ const MarkListTable = ({
   gradeId,
   sectionId,
   semesterId,
-  prevSemester,
+  currentStatus,
 }) => {
   // useStattes
   const [subjectId, setSubjectId] = useState("");
@@ -21,26 +21,27 @@ const MarkListTable = ({
   const [editedStatus, setEditedStatus] = useState(0);
 
   // Component contexts
-  const { mark, fetchMarkLists, addSubjectMarks } = useContext(MarkContext);
+  const { markList, fetchMarkLists, fetchAverageMarkLists, addSubjectMarks } =
+    useContext(MarkContext);
   const { subject, fetchSubjects } = useContext(SubjectContext);
   const { request, fetchRequests } = useContext(RequestContext);
-
   // Update of prevsemetser check in request
   useEffect(() => {
     fetchRequests();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [semesterId]);
 
-  const previousSemester = request.filter((request) => {
-    return (
-      request.requestedSemester === prevSemester &&
-      request.requestStatus === "notApproved"
-    );
-  });
-
   // Update local mark state when context mark changes
   useEffect(() => {
-    subjectId && semesterId && fetchMarkLists(subjectId, semesterId);
+    subjectId &&
+      semesterId !== "average" &&
+      fetchMarkLists(gradeId, sectionId, subjectId, semesterId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [subjectId, editedStatus, semesterId]);
+
+  // Update local average state when context average changes
+  useEffect(() => {
+    subjectId && semesterId === "average" && fetchAverageMarkLists(gradeId,sectionId,subjectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subjectId, editedStatus, semesterId]);
 
@@ -57,7 +58,6 @@ const MarkListTable = ({
       return sub._id === subjectId;
     })
     .map((sub) => sub.assessments);
-
   useEffect(() => {
     const fetchSubjectColumns = async () => {
       if (assessment.length > 0) {
@@ -65,7 +65,12 @@ const MarkListTable = ({
           field: key,
           headerName: key,
           type: "number",
-          editable: previousSemester.length !== 0 ? false : true,
+          editable:
+            currentStatus === "ONP"
+              ? semesterId !== "average"
+                ? true
+                : false
+              : false,
           align: "left",
           headerAlign: "left",
           flex: 1,
@@ -99,7 +104,11 @@ const MarkListTable = ({
   ];
 
   // Convert mark object to array if necessary
-  const tableRows = Array.isArray(mark) ? mark : [mark];
+  const tableRows = subjectId
+    ? Array.isArray(markList)
+      ? markList
+      : [markList]
+    : [];
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
@@ -124,13 +133,15 @@ const MarkListTable = ({
   const handleSaveChanges = (e) => {
     e.preventDefault();
     if (subjectId) {
-      addSubjectMarks(rows, subjectId, semesterId);
+      addSubjectMarks(rows, subjectId, semesterId, gradeId, sectionId);
       setEditedStatus(editedStatus + 1);
       setRows([]);
     } else {
       toast.warning("No selected subject");
     }
   };
+
+
   return (
     <Box>
       <Box className="border-2 border-gray-200 p-2 rounded-md m-1 flex justify-between">
@@ -143,7 +154,11 @@ const MarkListTable = ({
             width={"50%"}
           />
         </Box>
-        <Button variant="contained" onClick={(e) => handleSaveChanges(e)}>
+        <Button
+          variant="contained"
+          disabled={semesterId === "average" ? true : false}
+          onClick={(e) => handleSaveChanges(e)}
+        >
           Save Changes
         </Button>
       </Box>
@@ -151,13 +166,15 @@ const MarkListTable = ({
         <DataGrid
           rows={tableRows}
           columns={tableColumns}
-          getRowId={(row) => row._id || mark.indexOf(row)}
-          key={mark._id}
+          getRowId={(row) => row._id || markList.indexOf(row)}
+          key={markList._id}
           onRowClick={() => {
-            let toastDisplayed = false;
-            if (previousSemester.length !== 0 && !toastDisplayed) {
-              toastDisplayed = true;
+            if (semesterId === "average") {
+              return null;
+            } else if (currentStatus === "REG") {
               return toast.warning("The previous semester not ended");
+            } else if (currentStatus === "CMP") {
+              return toast.warning("The semester is already ended");
             } else {
               return null;
             }

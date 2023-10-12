@@ -5,6 +5,7 @@ import SubjectContext from "../../../context/SubjectContext";
 import { Box, Button } from "@mui/material";
 import RosterChecker from "./RosterChecker";
 import { toast } from "react-toastify";
+import RequestContext from "../../../context/RequestContext";
 
 const RosterTable = ({
   acCurriculumId,
@@ -12,19 +13,36 @@ const RosterTable = ({
   curriculumId,
   gradeId,
   sectionId,
+  currentStatus,
 }) => {
-  // Component contexts
-  const { mark, fetchMarks } = useContext(MarkContext);
-  const { subject, fetchSubjects } = useContext(SubjectContext);
   const [subjectColumns, setSubjectColumns] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [approveOpen, setApproveOpen] = useState(false);
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  // Component contexts
+  const { mark, fetchMarks, fetchAverageMarks } = useContext(MarkContext);
+  const { subject, fetchSubjects } = useContext(SubjectContext);
+  const { request, fetchRequests } = useContext(RequestContext);
+
+  // Update of prevsemetser check in request
+  useEffect(() => {
+    fetchRequests();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [semesterId]);
 
   // Update local mark state when context mark changes
   useEffect(() => {
-    sectionId && fetchMarks(semesterId);
+    sectionId &&
+      semesterId !== "average" &&
+      fetchMarks(gradeId, sectionId, semesterId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionId, semesterId]);
+
+  // Update local mark state when context mark changes
+  useEffect(() => {
+    sectionId &&
+      semesterId === "average" &&
+      fetchAverageMarks(gradeId, sectionId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sectionId, semesterId]);
 
@@ -75,12 +93,18 @@ const RosterTable = ({
   const handleApproveOpen = () => {
     if (semesterId.length === 0) {
       toast.warning("No selected semester");
+    } else if (semesterId === "average") {
+      setApproveOpen(true);
+    } else if (currentStatus === "REG") {
+      toast.warning("Previous semester not ended");
+    } else if (currentStatus === "CMP") {
+      toast.warning("The semester is already approved");
     } else {
       setApproveOpen(true);
     }
   };
 
-  // funtion close delete modal
+  // funtion close approve modal
   const handleApproveClose = () => {
     setApproveOpen(false);
   };
@@ -101,6 +125,8 @@ const RosterTable = ({
         curriculumId={curriculumId}
         gradeId={gradeId}
         sectionId={sectionId}
+        currentStatus={currentStatus}
+        mark={mark}
       />
     );
   }
@@ -112,7 +138,7 @@ const RosterTable = ({
         // sx={{ display: user.role !== "teacher" ? "none" : "flex" }}
       >
         <Button variant="contained" onClick={handleRosterApprovalClick}>
-          Request Approval
+          {semesterId === "average" ? "Enroll to next" : "Request Approval"}
         </Button>
       </Box>
       <Table

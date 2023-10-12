@@ -21,7 +21,7 @@ function Result() {
   const [sectionId, setSectionId] = useState("");
   const [curriculumId, setCurriculumId] = useState("");
   const [semesterId, setSemesterId] = useState("");
-  const [prevSemester, setPrevSemester] = useState("");
+  const [currentStatus, setCurrentStatus] = useState("");
 
   // context
   const { academicCurriculum, fetchAcademicCurriculums } = useContext(
@@ -146,14 +146,20 @@ function Result() {
 
   const semesterOption = !acCurriculumId
     ? [{ label: "Not found", value: 1 }]
-    : filteredAcademicCurriculum[0].semesters.map((semester) => ({
-        label: semester._semesterLabel,
-        value: semester._id,
-      }));
+    : [
+        ...filteredAcademicCurriculum[0].semesters.map((semester) => ({
+          label: `Semester - ${semester._semesterLabel}`,
+          value: semester._id,
+        })),
+        { label: "Average", value: "average" }, // Add the "Average" option manually
+      ];
 
   // Event handler for dropdown value change
   const handleAcCurriculumChange = (e) => {
     setAcCurriculumId(e.target.value);
+    setGradeId("");
+    setSectionId("");
+    setSemesterId("");
     const selectedCurriculum = academicCurriculum.find(
       (acCurriculum) => acCurriculum._id === e.target.value
     );
@@ -164,15 +170,23 @@ function Result() {
     }
   };
 
-  //   setPrevSemester
+  const filteredSection = sectionId
+    ? sections.filter((section) => {
+        return section._id === sectionId;
+      })
+    : [];
+
+  //   setCurrentStatus
   useEffect(() => {
-    const index = semesterOption.findIndex((item) => item.value === semesterId);
-    const prevSemester = semesterId
-      ? index === 0
-        ? -1
-        : semesterOption[index - 1].value
-      : -1;
-    setPrevSemester(prevSemester);
+    const currentSemester = acCurriculumId
+      ? filteredSection[0].semesters.filter((semester) => {
+          return semester._semester === semesterId;
+        })
+      : [];
+    currentSemester.length !== 0 &&
+      console.log(currentSemester[0]._status, semesterId);
+    currentSemester.length !== 0 &&
+      setCurrentStatus(currentSemester[0]._status);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [semesterId]);
 
@@ -187,6 +201,10 @@ function Result() {
             value={acSession}
             onChange={(e) => {
               setAcSession(e.target.value);
+              setAcCurriculumId("");
+              setGradeId("");
+              setSectionId("");
+              setSemesterId("");
             }}
             width={"140px"}
           />
@@ -205,6 +223,8 @@ function Result() {
             value={gradeId}
             onChange={(e) => {
               setGradeId(e.target.value);
+              setSectionId("");
+              setSemesterId("");
             }}
             width={"120px"}
           />
@@ -215,6 +235,7 @@ function Result() {
             value={sectionId}
             onChange={(e) => {
               setSectionId(e.target.value);
+              setSemesterId("");
             }}
             width={"80px"}
           />
@@ -234,7 +255,7 @@ function Result() {
         curriculumId={curriculumId}
         gradeId={gradeId}
         sectionId={sectionId}
-        prevSemester={prevSemester}
+        currentStatus={currentStatus}
       />
     </Box>
   );

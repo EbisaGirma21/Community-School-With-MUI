@@ -6,6 +6,8 @@ const AssessmentWeightContext = createContext();
 
 function AssessmentWeightProvider({ children }) {
   const [assessmentWeight, setAssessmentWeight] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
 
   //  function  used to fetch data from database
   const fetchAssessmentWeights = async (curriculumId, gradeId) => {
@@ -30,19 +32,38 @@ function AssessmentWeightProvider({ children }) {
     subjects,
     weights
   ) => {
-    console.log(assessmentWeight);
-    const response = await axios.post("/assessmentWeight", {
-      curriculumId,
-      gradeId,
-      subjects,
-      weights,
-    });
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await axios.post("/assessmentWeight", {
+        curriculumId,
+        gradeId,
+        subjects,
+        weights,
+      });
 
-    if (response.status === 200) {
-      toast.success("Weight assigned successfully");
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        toast.success("Weight assigned successfully");
+        fetchAssessmentWeights(curriculumId, gradeId);
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        toast.error("Curriculum already registered on academic curriculum!");
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to assign weight");
+        return false;
+      }
     }
-
-    fetchAssessmentWeights(curriculumId, gradeId);
   };
 
   // function used to delete assessmentWeight

@@ -33,6 +33,9 @@ import { MarkProvider } from "./context/MarkContext";
 import { AssessmentWeightProvider } from "./context/AssessmentWeightContext";
 import Requests from "./pages/Requests/Requests";
 import { RequestProvider } from "./context/RequestContext";
+import { ClubProvider } from "./context/ClubContext";
+import { StudentProvider } from "./context/StudentContext";
+import ClubTab from "./pages/Clubs/ClubTab";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
   const { user } = useContext(AuthContext);
@@ -115,6 +118,20 @@ function App() {
                   <TeacherProvider>
                     <Teacher />
                   </TeacherProvider>
+                }
+              />
+            </Route>
+            <Route path="clubs">
+              <Route
+                index
+                element={
+                  <StudentProvider>
+                    <TeacherProvider>
+                      <ClubProvider>
+                        <ClubTab />
+                      </ClubProvider>
+                    </TeacherProvider>
+                  </StudentProvider>
                 }
               />
             </Route>

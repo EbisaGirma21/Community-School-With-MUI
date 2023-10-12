@@ -11,7 +11,12 @@ const tableColumns = [
   { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150 },
   { field: "gender", headerName: "Gender", flex: 1, minWidth: 150 },
   { field: "email", headerName: "Email", flex: 1, minWidth: 150 },
-  { field: "studentBirthDate", headerName: "Birth Date", flex: 1, minWidth: 150 },
+  {
+    field: "studentBirthDate",
+    headerName: "Birth Date",
+    flex: 1,
+    minWidth: 150,
+  },
 ];
 
 const NewStudentTable = () => {
@@ -65,8 +70,19 @@ const NewStudentTable = () => {
     setNewStudentId(id);
   };
 
+  const filteredNewStudent = newStudent.filter((newStudent) => {
+    // Check if enrollment_history is an array and has a length greater than zero
+    return (
+      Array.isArray(newStudent.enrollment_history) &&
+      newStudent.enrollment_history.length === 0
+    );
+  });
+  console.log(filteredNewStudent);
+
   // convert newStudent object to array if necessary
-  const tableRows = Array.isArray(newStudent) ? newStudent : [newStudent];
+  const tableRows = Array.isArray(filteredNewStudent)
+    ? filteredNewStudent
+    : [filteredNewStudent];
 
   // toggle delete modal
   let content = "";

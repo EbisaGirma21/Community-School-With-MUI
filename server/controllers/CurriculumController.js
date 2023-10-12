@@ -7,7 +7,7 @@ const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 const getCurriculums = async (req, res) => {
   try {
     await init();
-    const curriculums = await CurriculumModel.find({}).sort({ createdAt: -1 });
+    const curriculums = await CurriculumModel.find({});
 
     const curriculumsWithSubjectCount = curriculums.map((curriculum) => {
       const subjectCount = curriculum.grades.reduce((count, grade) => {

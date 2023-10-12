@@ -46,7 +46,7 @@ const StudentSchema = new mongoose.Schema(
         type: String,
         required: true,
         default: "REG",
-        enum: ["REG", "ONP", "PAS", "FAL"],
+        enum: ["NEW","REG", "ONP", "PAS", "FAL"],
       },
     },
     enrollment_history: [
