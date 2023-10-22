@@ -7,6 +7,7 @@ const Mark = require("../models/MarkModel");
 const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 const Curriculum = require("../models/CurriculumModel");
 const { format } = require("date-fns");
+const AcademicSession = require("../models/AcademicSessionModel");
 
 // get all Students
 const getStudents = async (req, res) => {
@@ -124,12 +125,7 @@ const createStudent = async (req, res) => {
       familyPhoneNumber,
       familyAddress
     );
-    const student = new Student({
-      _id: user.user._id,
-      birthDate,
-      registrationType,
-    });
-    await student.save();
+
     // create student family
     const family = await createUser(
       familyFirstName,
@@ -141,6 +137,14 @@ const createStudent = async (req, res) => {
       familyPhoneNumber,
       familyAddress
     );
+    console.log(family);
+    const student = new Student({
+      _id: user.user._id,
+      birthDate,
+      registrationType,
+      family: family.user._id,
+    });
+    await student.save();
 
     res.status(200).json(student);
   } catch (error) {
@@ -261,16 +265,6 @@ const createSeniorStudent = async (req, res) => {
     if (!user) {
       res.status(500).json({ error: "Failed to add user" });
     }
-    const student = new Student({
-      _id: user.user._id,
-      birthDate,
-      registrationType,
-      currentEnrollement: seniorEnrollment,
-      enrollment_history: [seniorEnrollment],
-    });
-    await student.save();
-
-    // add senior information
 
     // create student family
     const family = await createUser(
@@ -283,6 +277,18 @@ const createSeniorStudent = async (req, res) => {
       familyPhoneNumber,
       familyAddress
     );
+    console.log(family._id);
+    const student = new Student({
+      _id: user.user._id,
+      birthDate,
+      registrationType,
+      family: family.user._id,
+      currentEnrollement: seniorEnrollment,
+      enrollment_history: [seniorEnrollment],
+    });
+    await student.save();
+
+    // add senior information
 
     res.status(200).json(student);
   } catch (error) {
@@ -298,6 +304,13 @@ const deleteStudent = async (req, res) => {
     return res.status(400).json({ error: "No such Student" });
   }
 
+  // geting  student
+  const studentInfo = await Student.findById(id);
+
+  // deleting student family
+  const family = await deleteUserById(studentInfo.family);
+
+  // deleting student
   const user = await deleteUserById(id);
   if (!user) {
     return res.status(400).json({ error: "No such Student" });
@@ -510,6 +523,81 @@ const getElligibleStudent = async (req, res) => {
   }
 };
 
+const getSpecificStudent = async (req, res) => {
+  const { academicYear, academicCurriculum, grade, section } = req.params;
+
+  try {
+    // Search criteria
+    const searchCriteria = {
+      "currentEnrollement._academicCurriculum": academicCurriculum,
+      "currentEnrollement._grade": grade,
+      "currentEnrollement._section": section,
+    };
+
+    // Find students with currentEnrollement matching the criteria
+    const students = await Student.find(searchCriteria);
+
+    if (students.length > 0) {
+      const results = [];
+
+      for (const student of students) {
+        const userData = await User.findById(student._id.toString());
+
+        const result = {
+          _id: student._id,
+          firstName: userData ? userData.firstName : null,
+          middleName: userData ? userData.middleName : null,
+          lastName: userData ? userData.lastName : null,
+          gender: userData ? userData.gender : null,
+          email: userData ? userData.email : null,
+          role: userData ? userData.role : null,
+          birthDate: student.birthDate,
+        };
+
+        results.push(result);
+      }
+      console.log(results);
+      res.status(200).json(results);
+    } else {
+      // No match in currentEnrollment, now check enrollment_history
+      const studentsInHistory = await Student.find({
+        "enrollment_history._academicYear": academicYear,
+        "enrollment_history._academicCurriculum": academicCurriculum,
+        "enrollment_history._grade": grade,
+        "enrollment_history._section": section,
+      });
+
+      if (studentsInHistory.length > 0) {
+        const results = [];
+
+        for (const student of studentsInHistory) {
+          const userData = await User.findById(student._id.toString());
+
+          const result = {
+            _id: student._id,
+            firstName: userData ? userData.firstName : null,
+            middleName: userData ? userData.middleName : null,
+            lastName: userData ? userData.lastName : null,
+            gender: userData ? userData.gender : null,
+            email: userData ? userData.email : null,
+            role: userData ? userData.role : null,
+            birthDate: student.birthDate,
+          };
+
+          results.push(result);
+        }
+
+        res.status(200).json(results);
+      } else {
+        res.status(404).json({ message: "No matching students found" });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("An error occurred");
+  }
+};
+
 // funtion check previos enrollement of student when enrolled
 function previousGrade(grade) {
   if (grade.stage === "KG") {
@@ -547,4 +635,5 @@ module.exports = {
   updateStudent,
   getElligibleStudent,
   enrollStudents,
+  getSpecificStudent,
 };

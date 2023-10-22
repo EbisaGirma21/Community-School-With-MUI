@@ -21,7 +21,7 @@ router.post(
 );
 
 // GET all users (requires authentication)
-router.get("/", getUsers);
+router.get("/",  getUsers);
 
 // GET a single user (requires authentication)
 router.get("/:id", getUser);

@@ -9,7 +9,8 @@ export default function ResultTab({
   curriculumId,
   gradeId,
   sectionId,
-  currentStatus
+  currentStatus,
+  currentSectionHomeRoom,
 }) {
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -27,7 +28,6 @@ export default function ResultTab({
             gradeId={gradeId}
             sectionId={sectionId}
             currentStatus={currentStatus}
-
           />
         </Box>
       ),
@@ -37,8 +37,21 @@ export default function ResultTab({
       id: "2",
       label: "Roster",
       value: "2",
+      style: {
+        display:
+          user.role.includes("director") || user.role.includes("homeRoom")
+            ? "block"
+            : "none",
+      },
+
       content: (
-        <Box>
+        <Box
+          display={
+            currentSectionHomeRoom || user.role.includes("director")
+              ? "block"
+              : "none"
+          }
+        >
           <RosterTable
             acCurriculumId={acCurriculumId}
             semesterId={semesterId}
@@ -46,7 +59,6 @@ export default function ResultTab({
             gradeId={gradeId}
             sectionId={sectionId}
             currentStatus={currentStatus}
-
           />
         </Box>
       ),

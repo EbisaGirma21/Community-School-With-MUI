@@ -6,7 +6,7 @@ import StudentContext from "../../../context/StudentContext";
 import Dropdown from "../../../components/UI/Dropdown";
 
 
-const ClubMemberCreate = ({ handleClose, open, club }) => {
+const ClubMemberCreate = ({ handleClose, open, clubId }) => {
   // useSate for hte for input
   const [member, setMember] = useState("");
   const [selectedStudentName, setSelectedStudentName] = useState("");
@@ -37,7 +37,7 @@ const ClubMemberCreate = ({ handleClose, open, club }) => {
   // submit functions
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const success = await createClubMember(club, member, role);
+    const success = await createClubMember(clubId, member, role);
     if (success) {
       setMember("");
       setSelectedStudentName("");
@@ -74,7 +74,7 @@ const ClubMemberCreate = ({ handleClose, open, club }) => {
             <TextField
               {...params}
               margin="dense"
-              label="Leader(Optional)"
+              label="Student Name"
               type="text"
               variant="standard"
               style={{ width: "300px" }}

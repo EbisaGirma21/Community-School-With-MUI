@@ -6,19 +6,19 @@ import ClubMemberContext from "../../../context/ClubMemberContext";
 
 // Club Basic information datatable Column
 const tableColumns = [
-  { field: "First Name", headerName: "fistName", flex: 1, minWidth: 150 },
-  { field: "Middle Name", headerName: "middleName", flex: 1, minWidth: 150 },
-  { field: "Last Name", headerName: "LastName", flex: 1, minWidth: 150 },
-  { field: "Grade", headerName: "grade", flex: 1, minWidth: 150 },
+  { field: "firstName", headerName: "First Name", flex: 1, minWidth: 150 },
+  { field: "middleName", headerName: "Middle Name", flex: 1, minWidth: 150 },
+  { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 150 },
+  { field: "grade", headerName: "Grade", flex: 1, minWidth: 150 },
   {
-    field: "Role",
-    headerName: "role",
+    field: "role",
+    headerName: "Role",
     flex: 1,
     minWidth: 150,
   },
 ];
 
-const ClubTable = () => {
+const ClubTable = ({ clubId }) => {
   // component states
   const [deleteOpen, setdDeleteOpen] = useState(false);
   const [editOpen, setdEditOpen] = useState(false);
@@ -69,8 +69,15 @@ const ClubTable = () => {
     setClubMemberId(id);
   };
 
+  const filteredClubMembers = clubId
+    ? clubMember.filter((member) => {
+        return member.club === clubId;
+      })
+    : [];
   // convert club object to array if necessary
-  const tableRows = Array.isArray(clubMember) ? clubMember : [clubMember];
+  const tableRows = Array.isArray(filteredClubMembers)
+    ? filteredClubMembers
+    : [filteredClubMembers];
 
   // toggle delete modal
   let content = "";
@@ -89,11 +96,10 @@ const ClubTable = () => {
         open={editOpen}
         handleClose={handleEditClose}
         clubMemberId={clubMemberId}
+        clubId={clubId}
       />
     );
   }
-
-  console.log(tableRows);
 
   return (
     <div>
@@ -101,10 +107,10 @@ const ClubTable = () => {
         onDelete={handleDelete}
         onEdit={handleEdit}
         tableColumns={tableColumns}
-        key={clubMember._id}
+        key={filteredClubMembers._id}
         tableRows={tableRows}
         setSelectedRows={setSelectedRows}
-        getRowId={(row) => row._id || clubMember.indexOf(row)}
+        getRowId={(row) => row._id || filteredClubMembers.indexOf(row)}
       />
       {content}
     </div>

@@ -186,7 +186,7 @@ function SideBar() {
   const [menuItems, setMenuItems] = useState(() => getMenuItems());
   function getMenuItems() {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (user.role === "director") {
+    if (user.role.includes("director")) {
       return {
         dashboard: [
           {
@@ -266,7 +266,7 @@ function SideBar() {
           },
         ],
       };
-    } else if (user.role === "teacher") {
+    } else if (user.role.includes("head")) {
       return {
         dashboard: [
           {
@@ -275,14 +275,64 @@ function SideBar() {
             path: "/dashboard",
           },
         ],
-        basicItems: [
+        academics: [
           {
             text: <Typography sx={itemTextStyle}>Registration</Typography>,
             icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
             path: "registration",
           },
         ],
-        operation: [
+        lists: [
+          {
+            text: <Typography sx={itemTextStyle}>Students</Typography>,
+            icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
+            path: "students",
+          },
+          {
+            text: <Typography sx={itemTextStyle}>Clubs</Typography>,
+            icon: <Groups2Icon sx={{ fontSize: "18px" }} />,
+            path: "clubs",
+          },
+        ],
+        operations: [
+          {
+            text: <Typography sx={itemTextStyle}>Ass. Teachers</Typography>,
+            icon: <AssignmentReturnIcon sx={{ fontSize: "18px" }} />,
+            path: "assignTeacher",
+          },
+          {
+            text: <Typography sx={itemTextStyle}>Student Result</Typography>,
+            icon: <GradingIcon sx={{ fontSize: "18px" }} />,
+            path: "result",
+          },
+
+          {
+            text: <Typography sx={itemTextStyle}>Requests</Typography>,
+            icon: <FeedbackIcon sx={{ fontSize: "18px" }} />,
+            path: "requests",
+          },
+        ],
+      };
+    } else if (
+      user.role.includes("homeRoom") ||
+      user.role.includes("subjectTeach")
+    ) {
+      return {
+        dashboard: [
+          {
+            text: <Typography sx={itemTextStyle}>Dashboard</Typography>,
+            icon: <Dashboard sx={{ fontSize: "18px" }} />,
+            path: "/dashboard",
+          },
+        ],
+        academics: [
+          {
+            text: <Typography sx={itemTextStyle}>Registration</Typography>,
+            icon: <AppRegistrationIcon sx={{ fontSize: "18px" }} />,
+            path: "registration",
+          },
+        ],
+        operations: [
           {
             text: <Typography sx={itemTextStyle}>Students</Typography>,
             icon: <SchoolIcon sx={{ fontSize: "18px" }} />,
@@ -391,8 +441,6 @@ function SideBar() {
   //   },
   // ];
 
-  console.log(menuItems);
-
   // returned drawer
   return (
     <Drawer variant="permanent" anchor="left" sx={styledDrawer}>
@@ -435,91 +483,111 @@ function SideBar() {
             </Link>
           ))}
         </List> */}
-        <List sx={styledList}>
-          <Typography sx={itemTitleStyle}>Dashoboard</Typography>
-          {menuItems.dashboard.map((item) => (
-            <Link to={item.path} key={item.path} style={styledLink}>
-              <ListItemButton
-                onClick={() => handleClick(item.path)}
-                sx={
-                  isActivePage === item.path ? styledActiveButton : styledButton
-                }
-              >
-                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
-                <ListItemText primary={item.text} sx={listStyle} />
-              </ListItemButton>
-            </Link>
-          ))}
-        </List>
+        {menuItems.dashboard && (
+          <List sx={styledList}>
+            <Typography sx={itemTitleStyle}>Dashoboard</Typography>
+            {menuItems.dashboard.map((item) => (
+              <Link to={item.path} key={item.path} style={styledLink}>
+                <ListItemButton
+                  onClick={() => handleClick(item.path)}
+                  sx={
+                    isActivePage === item.path
+                      ? styledActiveButton
+                      : styledButton
+                  }
+                >
+                  <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                  <ListItemText primary={item.text} sx={listStyle} />
+                </ListItemButton>
+              </Link>
+            ))}
+          </List>
+        )}
         <Divider />
-        <List sx={styledList}>
-          <Typography sx={itemTitleStyle}>Basics</Typography>
-          {menuItems.basics.map((item) => (
-            <Link to={item.path} key={item.path} style={styledLink}>
-              <ListItemButton
-                onClick={() => handleClick(item.path)}
-                sx={
-                  isActivePage === item.path ? styledActiveButton : styledButton
-                }
-              >
-                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
-                <ListItemText primary={item.text} sx={listStyle} />
-              </ListItemButton>
-            </Link>
-          ))}
-        </List>
+        {menuItems.basics && (
+          <List sx={styledList}>
+            <Typography sx={itemTitleStyle}>Basics</Typography>
+            {menuItems.basics.map((item) => (
+              <Link to={item.path} key={item.path} style={styledLink}>
+                <ListItemButton
+                  onClick={() => handleClick(item.path)}
+                  sx={
+                    isActivePage === item.path
+                      ? styledActiveButton
+                      : styledButton
+                  }
+                >
+                  <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                  <ListItemText primary={item.text} sx={listStyle} />
+                </ListItemButton>
+              </Link>
+            ))}
+          </List>
+        )}
         <Divider />
-        <List sx={styledList}>
-          <Typography sx={itemTitleStyle}>Academics</Typography>
-          {menuItems.academics.map((item) => (
-            <Link to={item.path} key={item.path} style={styledLink}>
-              <ListItemButton
-                onClick={() => handleClick(item.path)}
-                sx={
-                  isActivePage === item.path ? styledActiveButton : styledButton
-                }
-              >
-                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
-                <ListItemText primary={item.text} sx={listStyle} />
-              </ListItemButton>
-            </Link>
-          ))}
-        </List>
+        {menuItems.academics && (
+          <List sx={styledList}>
+            <Typography sx={itemTitleStyle}>Academics</Typography>
+            {menuItems.academics.map((item) => (
+              <Link to={item.path} key={item.path} style={styledLink}>
+                <ListItemButton
+                  onClick={() => handleClick(item.path)}
+                  sx={
+                    isActivePage === item.path
+                      ? styledActiveButton
+                      : styledButton
+                  }
+                >
+                  <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                  <ListItemText primary={item.text} sx={listStyle} />
+                </ListItemButton>
+              </Link>
+            ))}
+          </List>
+        )}
         <Divider />
-        <List sx={styledList}>
-          <Typography sx={itemTitleStyle}>Lists</Typography>
-          {menuItems.lists.map((item) => (
-            <Link to={item.path} key={item.path} style={styledLink}>
-              <ListItemButton
-                onClick={() => handleClick(item.path)}
-                sx={
-                  isActivePage === item.path ? styledActiveButton : styledButton
-                }
-              >
-                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
-                <ListItemText primary={item.text} sx={listStyle} />
-              </ListItemButton>
-            </Link>
-          ))}
-        </List>
+        {menuItems.lists && (
+          <List sx={styledList}>
+            <Typography sx={itemTitleStyle}>Lists</Typography>
+            {menuItems.lists.map((item) => (
+              <Link to={item.path} key={item.path} style={styledLink}>
+                <ListItemButton
+                  onClick={() => handleClick(item.path)}
+                  sx={
+                    isActivePage === item.path
+                      ? styledActiveButton
+                      : styledButton
+                  }
+                >
+                  <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                  <ListItemText primary={item.text} sx={listStyle} />
+                </ListItemButton>
+              </Link>
+            ))}
+          </List>
+        )}
         <Divider />
 
-        <List sx={styledList}>
-          <Typography sx={itemTitleStyle}>Operations</Typography>
-          {menuItems.operations.map((item) => (
-            <Link to={item.path} key={item.path} style={styledLink}>
-              <ListItemButton
-                onClick={() => handleClick(item.path)}
-                sx={
-                  isActivePage === item.path ? styledActiveButton : styledButton
-                }
-              >
-                <StyledIconWrapper>{item.icon}</StyledIconWrapper>
-                <ListItemText primary={item.text} sx={listStyle} />
-              </ListItemButton>
-            </Link>
-          ))}
-        </List>
+        {menuItems.operations && (
+          <List sx={styledList}>
+            <Typography sx={itemTitleStyle}>Operations</Typography>
+            {menuItems.operations.map((item) => (
+              <Link to={item.path} key={item.path} style={styledLink}>
+                <ListItemButton
+                  onClick={() => handleClick(item.path)}
+                  sx={
+                    isActivePage === item.path
+                      ? styledActiveButton
+                      : styledButton
+                  }
+                >
+                  <StyledIconWrapper>{item.icon}</StyledIconWrapper>
+                  <ListItemText primary={item.text} sx={listStyle} />
+                </ListItemButton>
+              </Link>
+            ))}
+          </List>
+        )}
 
         {/* <List sx={styledList}>
           <Typography sx={itemTitleStyle}>User</Typography>

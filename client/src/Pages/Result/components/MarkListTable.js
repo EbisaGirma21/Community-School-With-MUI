@@ -14,6 +14,10 @@ const MarkListTable = ({
   semesterId,
   currentStatus,
 }) => {
+  
+  // getting user from local storage
+  const user = JSON.parse(localStorage.getItem("user"));
+
   // useStattes
   const [subjectId, setSubjectId] = useState("");
   const [subjectColumns, setSubjectColumns] = useState([]);
@@ -41,7 +45,9 @@ const MarkListTable = ({
 
   // Update local average state when context average changes
   useEffect(() => {
-    subjectId && semesterId === "average" && fetchAverageMarkLists(gradeId,sectionId,subjectId);
+    subjectId &&
+      semesterId === "average" &&
+      fetchAverageMarkLists(gradeId, sectionId, subjectId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subjectId, editedStatus, semesterId]);
 
@@ -65,12 +71,13 @@ const MarkListTable = ({
           field: key,
           headerName: key,
           type: "number",
-          editable:
-            currentStatus === "ONP"
+          editable: user.role.includes("subjectTeach")
+            ? currentStatus === "ONP"
               ? semesterId !== "average"
                 ? true
                 : false
-              : false,
+              : false
+            : false,
           align: "left",
           headerAlign: "left",
           flex: 1,
@@ -132,7 +139,9 @@ const MarkListTable = ({
   // Function to handle Save Changes button click
   const handleSaveChanges = (e) => {
     e.preventDefault();
-    if (subjectId) {
+    if (rows.length === 0) {
+      toast.warning("No change on mark");
+    } else if (subjectId) {
       addSubjectMarks(rows, subjectId, semesterId, gradeId, sectionId);
       setEditedStatus(editedStatus + 1);
       setRows([]);
@@ -140,7 +149,6 @@ const MarkListTable = ({
       toast.warning("No selected subject");
     }
   };
-
 
   return (
     <Box>

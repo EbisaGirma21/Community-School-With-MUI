@@ -1,11 +1,14 @@
 import { createContext, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const MarkContext = createContext();
 
 function MarkProvider({ children }) {
   const [mark, setMark] = useState([]);
   const [markList, setMarkList] = useState([]);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
 
   //  fetching marks(roster form database)
   const fetchMarks = async (gradeId, sectionId, semesterId) => {
@@ -16,7 +19,7 @@ function MarkProvider({ children }) {
   };
 
   //  fetching marks(roster form database)
-  const fetchAverageMarks = async (gradeId,sectionId) => {
+  const fetchAverageMarks = async (gradeId, sectionId) => {
     const response = await axios.get(`/mark/${gradeId}/${sectionId}`);
     setMark(response.data);
   };
@@ -44,10 +47,35 @@ function MarkProvider({ children }) {
     gradeId,
     sectionId
   ) => {
-    const response = await axios.post("/mark/addMark", {
-      updatedMark: rows,
-    });
-    fetchMarkLists(gradeId, sectionId, subjectId, semesterId);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.post("/mark/addMark", {
+        updatedMark: rows,
+      });
+
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchMarkLists(gradeId, sectionId, subjectId, semesterId);
+        toast.success("student mark is updated  successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to update mark of student");
+        return false;
+      }
+    }
   };
 
   // shared operation between components

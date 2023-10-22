@@ -8,6 +8,7 @@ const {
   deleteStudent,
   getElligibleStudent,
   enrollStudents,
+  getSpecificStudent,
 } = require("../controllers/StudentController");
 
 const router = express.Router();
@@ -33,9 +34,13 @@ router.patch("/enroll", enrollStudents);
 // UPDATE a Student
 router.patch("/:id", updateStudent);
 
-
 // Get a  Elligible Student
 router.get("/elligible/:gradeId", getElligibleStudent);
 
+// Get a  Elligible Student
+router.get(
+  "/specificStudent/:academicYear/:academicCurriculum/:grade/:section",
+  getSpecificStudent
+);
 
 module.exports = router;

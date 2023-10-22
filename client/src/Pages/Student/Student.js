@@ -122,7 +122,7 @@ function Student() {
 
   return (
     <Box>
-      <Typography sx={{ m: 1 }}>Registrations</Typography>
+      <Typography sx={{ m: 1 }}>Student</Typography>
       <Box
         className="flex p-1 gap-4 "
         sx={{ border: "1px solid #dbdde0", borderRadius: "10px" }}
@@ -133,6 +133,9 @@ function Student() {
           value={acSession}
           onChange={(e) => {
             setAcSession(e.target.value);
+            setAcCurriculumId("");
+            setGradeId("");
+            setSectionId("");
           }}
           width={"140px"}
         />
@@ -143,6 +146,7 @@ function Student() {
           value={acCurriculumId}
           onChange={(e) => {
             setGradeId("");
+            setSectionId("");
             setAcCurriculumId(e.target.value);
           }}
           width={"250px"}
@@ -154,6 +158,7 @@ function Student() {
           value={gradeId}
           onChange={(e) => {
             setGradeId(e.target.value);
+            setSectionId("");
           }}
           width={"120px"}
         />
@@ -171,6 +176,7 @@ function Student() {
         </Box>
       </Box>
       <StudentTable
+        acSession={acSession}
         acCurriculumId={acCurriculumId}
         gradeId={gradeId}
         sectionId={sectionId}

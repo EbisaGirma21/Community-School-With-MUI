@@ -48,7 +48,7 @@ app.use("/api/mark", MarkRoutes);
 app.use("/api/assessmentWeight", AssessmentWeightRoutes);
 app.use("/api/request", RequestRoutes);
 app.use("/api/club", ClubRoutes);
-app.use("/api/club", ClubMemberRoutes);
+app.use("/api/clubMember", ClubMemberRoutes);
 
 // MONGOOSE CONFIGURATION
 mongoose

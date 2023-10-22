@@ -36,6 +36,7 @@ import { RequestProvider } from "./context/RequestContext";
 import { ClubProvider } from "./context/ClubContext";
 import { StudentProvider } from "./context/StudentContext";
 import ClubTab from "./pages/Clubs/ClubTab";
+import { ClubMemberProvider } from "./context/ClubMemberContext";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
   const { user } = useContext(AuthContext);
@@ -102,7 +103,9 @@ function App() {
                       <CurriculumProvider>
                         <GradeProvider>
                           <SectionProvider>
-                            <Student />
+                            <StudentProvider>
+                              <Student />
+                            </StudentProvider>
                           </SectionProvider>
                         </GradeProvider>
                       </CurriculumProvider>
@@ -128,7 +131,9 @@ function App() {
                   <StudentProvider>
                     <TeacherProvider>
                       <ClubProvider>
-                        <ClubTab />
+                        <ClubMemberProvider>
+                          <ClubTab />
+                        </ClubMemberProvider>
                       </ClubProvider>
                     </TeacherProvider>
                   </StudentProvider>

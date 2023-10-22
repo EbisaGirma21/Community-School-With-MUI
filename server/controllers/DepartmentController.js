@@ -64,6 +64,14 @@ const createDepartment = async (req, res) => {
       .json({ error: "Please fill in all the fields", emptyFields });
   }
   try {
+    // First, update the teacher's role to include 'head' if there coordinator
+    if (coordinator) {
+      await User.findByIdAndUpdate(
+        { _id: coordinator },
+        { $push: { role: "head" } }
+      );
+    }
+
     const department = coordinator
       ? await Department.create({
           departmentName,
@@ -98,9 +106,25 @@ const deleteDepartment = async (req, res) => {
 // update a Department
 const updateDepartment = async (req, res) => {
   const { id } = req.params;
+  const { coordinator } = req.body;
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "No such Department" });
   }
+
+  // First, update the teacher's role to include 'head' if there coordinator
+  if (coordinator) {
+    await User.findByIdAndUpdate(
+      { _id: coordinator },
+      { $push: { role: "head" } }
+    );
+  }
+  const departmentInfo = await Department.findById(id);
+
+  // removing the head role from the user
+  await User.findByIdAndUpdate(
+    { _id: departmentInfo.coordinator },
+    { $pull: { role: "head" } }
+  );
 
   const department = await Department.findOneAndUpdate(
     { _id: id },

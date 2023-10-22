@@ -33,7 +33,7 @@ const userSchema = new Schema({
     type: String,
   },
   role: {
-    type: String,
+    type: [String], // Change the type to an array of strings
     required: true,
   },
   password: {

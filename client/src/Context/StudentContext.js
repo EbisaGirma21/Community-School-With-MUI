@@ -6,6 +6,7 @@ const StudentContext = createContext();
 
 function StudentProvider({ children }) {
   const [student, setStudent] = useState([]);
+  const [specificStudent, setSpecificStudent] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
 
@@ -15,14 +16,29 @@ function StudentProvider({ children }) {
     setStudent(response.data);
   };
 
+  const fetchStudentsBySpecifying = async (
+    academicYear,
+    academicCurriculum,
+    grade,
+    section
+  ) => {
+    const response = await axios.get(
+      `/student/specificStudent/${academicYear}/${academicCurriculum}/${grade}/${section}`
+    );
+
+    setSpecificStudent(response.data);
+  };
+
   // shared operation between components
   const studentOperation = {
     student,
+    specificStudent,
     error,
     isLoading,
     setError,
     setIsLoading,
     fetchStudents,
+    fetchStudentsBySpecifying,
   };
 
   return (

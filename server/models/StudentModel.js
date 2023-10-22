@@ -14,6 +14,10 @@ const StudentSchema = new mongoose.Schema(
       type: String,
       enum: ["NOR", "TRN"],
     },
+    family: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     currentEnrollement: {
       _academicYear: {
         type: Number,
@@ -46,7 +50,7 @@ const StudentSchema = new mongoose.Schema(
         type: String,
         required: true,
         default: "REG",
-        enum: ["NEW","REG", "ONP", "PAS", "FAL"],
+        enum: ["NEW", "REG", "ONP", "PAS", "FAL"],
       },
     },
     enrollment_history: [

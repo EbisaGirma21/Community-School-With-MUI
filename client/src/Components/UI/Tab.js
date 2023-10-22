@@ -21,6 +21,7 @@ export default function Tabs(props) {
                 key={tab_content.id}
                 label={tab_content.label}
                 value={tab_content.value || 1}
+                style={tab_content.style}
               />
             ))}
           </TabList>

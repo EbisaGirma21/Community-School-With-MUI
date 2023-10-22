@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const User = require("../models/UserModel");
 const Department = require("../models/DepartmentModel");
 const Curriculum = require("../models/CurriculumModel");
+const ClubMember = require("../models/ClubMemberModel");
 
 // get all Clubs
 const getClubs = async (req, res) => {
@@ -12,14 +13,19 @@ const getClubs = async (req, res) => {
     clubs.map(async (club) => {
       const student = await User.findById(club.leader);
       const teacher = await User.findById(club.coordinator);
+      const clubMember = await ClubMember.findOne({ club: club._id });
+      const members = [clubMember];
       return {
         ...club._doc,
-        leaderStudent: student ? `${student.firstName}` : "TBA",
+        leaderStudent: student
+          ? `${student.firstName} ${student.middleName}`
+          : "TBA",
         coordinatorTeacher: teacher
           ? teacher.gender === "Male"
-            ? `Mr. ${teacher.firstName}`
-            : `Mrs. ${teacher.firstName}`
+            ? `Mr. ${teacher.firstName} ${teacher.middleName}`
+            : `Mrs. ${teacher.firstName} ${teacher.middleName}`
           : "TBA",
+        members: members.length,
       };
     })
   );
@@ -39,14 +45,19 @@ const getClub = async (req, res) => {
     clubs.map(async (club) => {
       const student = await User.findById(club.leader);
       const teacher = await User.findById(club.coordinator);
+      const clubMember = await ClubMember.findOne({ club: club._id });
+      console.log(clubMember);
       return {
         ...club._doc,
-        leaderStudent: student ? `${student.firstName}` : "TBA",
+        leaderStudent: student
+          ? `${student.firstName} ${student.middleName}`
+          : "TBA",
         coordinatorTeacher: teacher
           ? teacher.gender === "Male"
-            ? `Mr. ${teacher.firstName}`
-            : `Mrs. ${teacher.firstName}`
+            ? `Mr. ${teacher.firstName} ${teacher.middleName}`
+            : `Mrs. ${teacher.firstName} ${teacher.middleName}`
           : "TBA",
+        members: clubMember.length,
       };
     })
   );

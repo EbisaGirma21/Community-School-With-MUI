@@ -3,6 +3,8 @@ const User = require("../models/UserModel");
 const Department = require("../models/DepartmentModel");
 const Curriculum = require("../models/CurriculumModel");
 const ClubMember = require("../models/ClubMemberModel");
+const Student = require("../models/StudentModel");
+const Grade = require("../models/GradeModel");
 
 // get all ClubMembers
 const getClubMembers = async (req, res) => {
@@ -10,13 +12,20 @@ const getClubMembers = async (req, res) => {
 
   const clubMember = await Promise.all(
     clubMembers.map(async (clubMember) => {
-      const student = await User.findById(clubMember.member);
+      const user = await User.findById(clubMember.member);
+      const student = await Student.findById(clubMember.member);
+      const grade = await Grade.findById(student.currentEnrollement._grade);
+
       return {
         ...clubMember._doc,
-        firstName: student ? student.firstName : null,
-        middleName: student ? student.middleName : null,
-        lastName: student ? student.lastName : null,
-        grade: student ? student.currentEnrollement.grades : null,
+        firstName: user ? user.firstName : null,
+        middleName: user ? user.middleName : null,
+        lastName: user ? user.lastName : null,
+        grade: grade
+          ? grade.stage === "KG"
+            ? `KG - ${grade.level}`
+            : `Grade - ${grade.level}`
+          : null,
       };
     })
   );

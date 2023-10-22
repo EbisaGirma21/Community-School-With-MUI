@@ -83,7 +83,7 @@ const ClubMemberUpdate = (props) => {
             <TextField
               {...params}
               margin="dense"
-              label="Leader(Optional)"
+              label="Student Name"
               type="text"
               variant="standard"
               style={{ width: "300px" }}

@@ -15,6 +15,9 @@ const RosterTable = ({
   sectionId,
   currentStatus,
 }) => {
+  // get user from local storage
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const [subjectColumns, setSubjectColumns] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   const [approveOpen, setApproveOpen] = useState(false);
@@ -135,7 +138,7 @@ const RosterTable = ({
     <Box>
       <Box
         className="border-2 border-gray-200 p-2 h-16 rounded-md m-1 flex justify-end"
-        // sx={{ display: user.role !== "teacher" ? "none" : "flex" }}
+        sx={{ display: user.role.includes("homeRoom") ? "block" : "none" }}
       >
         <Button variant="contained" onClick={handleRosterApprovalClick}>
           {semesterId === "average" ? "Enroll to next" : "Request Approval"}

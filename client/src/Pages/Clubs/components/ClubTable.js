@@ -14,6 +14,12 @@ const tableColumns = [
     flex: 1,
     minWidth: 150,
   },
+  {
+    field: "members",
+    headerName: "Members",
+    flex: 1,
+    minWidth: 150,
+  },
 ];
 
 const ClubTable = () => {
@@ -90,8 +96,6 @@ const ClubTable = () => {
       />
     );
   }
-
-  console.log(tableRows);
 
   return (
     <div>

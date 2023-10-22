@@ -22,6 +22,7 @@ function Result() {
   const [curriculumId, setCurriculumId] = useState("");
   const [semesterId, setSemesterId] = useState("");
   const [currentStatus, setCurrentStatus] = useState("");
+  const [currentSectionHomeRoom, setCurrentSectionHomeRoom] = useState(false);
 
   // context
   const { academicCurriculum, fetchAcademicCurriculums } = useContext(
@@ -138,6 +139,24 @@ function Result() {
         value: sec._id,
       }));
 
+  // check if teacher is home roomteacher of the current section
+  useEffect(() => {
+    const filterSectionByTeacher = sectionId
+      ? sections.filter((section) => {
+          return section._id === sectionId;
+        })
+      : [];
+    if (
+      filterSectionByTeacher.length !== 0 &&
+      filterSectionByTeacher[0].homeRoomTeacher === user._id
+    ) {
+      setCurrentSectionHomeRoom(true);
+    } else {
+      setCurrentSectionHomeRoom(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionId]);
+
   const filteredAcademicCurriculum = academicCurriculum.filter(
     (acCurriculum) => {
       return acCurriculum._id === acCurriculumId;
@@ -183,8 +202,7 @@ function Result() {
           return semester._semester === semesterId;
         })
       : [];
-    currentSemester.length !== 0 &&
-      console.log(currentSemester[0]._status, semesterId);
+
     currentSemester.length !== 0 &&
       setCurrentStatus(currentSemester[0]._status);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -256,6 +274,7 @@ function Result() {
         gradeId={gradeId}
         sectionId={sectionId}
         currentStatus={currentStatus}
+        currentSectionHomeRoom={currentSectionHomeRoom}
       />
     </Box>
   );

@@ -22,10 +22,17 @@ const getSection = async (req, res) => {
 };
 
 // assigning teacher
-const assignTeacher = (req, res) => {
+const assignTeacher = async (req, res) => {
   const { sectionId } = req.params;
   const { subjectId, teacherId } = req.body;
-  const section = Section.findOneAndUpdate(
+
+  // First, update the teacher's role to include 'subjectTeach'
+  await User.findByIdAndUpdate(
+    { _id: teacherId },
+    { $push: { role: "subjectTeach" } }
+  );
+
+  const section = await Section.findOneAndUpdate(
     {
       _id: sectionId,
       teachers: {
@@ -52,6 +59,13 @@ const assignTeacher = (req, res) => {
 // home room teacher assign
 const assignHomeRoomTeacher = async (req, res) => {
   const { sectionId, teacherId } = req.params;
+
+  // First, update the teacher's role to include 'homeRoom'
+  await User.findByIdAndUpdate(
+    { _id: teacherId },
+    { $push: { role: "homeRoom" } }
+  );
+
   const section = await Section.findByIdAndUpdate(
     { _id: sectionId },
     { homeRoomTeacher: teacherId }

@@ -63,13 +63,13 @@ function ClubMemberProvider({ children }) {
         });
 
         setClubMember(updatedClubMember);
-        toast.warning("ClubMember deleted successfully");
+        toast.warning("Club Member deleted successfully");
       }
     } catch (error) {
       if (error.response) {
         toast.error(error.response.data.error);
       } else {
-        toast.error("Failed to delete clubMember");
+        toast.error("Failed to delete club member");
       }
     }
   };
