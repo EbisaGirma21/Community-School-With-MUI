@@ -26,7 +26,8 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("user", JSON.stringify(json));
         setUser(JSON.parse(localStorage.getItem("user")));
         setIsLoading(false);
-        return true;
+        console.log(json);
+        return json;
       }
     } catch (error) {
       setIsLoading(false);

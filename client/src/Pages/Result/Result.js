@@ -116,20 +116,19 @@ function Result() {
   }, [acCurriculumId]);
 
   //  filter section by grade
-  const sections =
-    user.role === "teacher"
-      ? section.filter((sec) => {
-          const hasHomeRoomTeacher = sec.homeRoomTeacher === user._id;
-          const hasDesiredTeacher = sec.teachers.some(
-            (teacher) => teacher.teacher === user._id
-          );
-          return hasHomeRoomTeacher || hasDesiredTeacher;
-        })
-      : section.filter((sec) => {
-          return (
-            sec.grade === gradeId && sec.academicCurriculum === acCurriculumId
-          );
-        });
+  const sections = user.role.includes("teacher")
+    ? section.filter((sec) => {
+        const hasHomeRoomTeacher = sec.homeRoomTeacher === user._id;
+        const hasDesiredTeacher = sec.teachers.some(
+          (teacher) => teacher.teacher === user._id
+        );
+        return hasHomeRoomTeacher || hasDesiredTeacher;
+      })
+    : section.filter((sec) => {
+        return (
+          sec.grade === gradeId && sec.academicCurriculum === acCurriculumId
+        );
+      });
 
   // section option
   const sectionOption = !acCurriculumId

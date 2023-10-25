@@ -37,6 +37,7 @@ import { ClubProvider } from "./context/ClubContext";
 import { StudentProvider } from "./context/StudentContext";
 import ClubTab from "./pages/Clubs/ClubTab";
 import { ClubMemberProvider } from "./context/ClubMemberContext";
+import { StudentInfo } from "./pages/StudentInfo/StudentInfo";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
   const { user } = useContext(AuthContext);
@@ -47,6 +48,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
+          <Route
+            path="/studentInfo"
+            element={user !== null ? <StudentInfo /> : <Navigate to="/login" />}
+          />
+
           <Route
             path="/dashboard"
             element={user !== null ? <Layout /> : <Navigate to="/login" />}

@@ -1,12 +1,25 @@
-import styled from "@emotion/styled";
-import { AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { styled, createTheme } from "@mui/material/styles";
+import IconButton from "@mui/material/IconButton";
+import Badge from "@mui/material/Badge";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import SearchIcon from "@mui/icons-material/Search";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import MailIcon from "@mui/icons-material/Mail";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import MoreIcon from "@mui/icons-material/MoreVert";
+import { Box, Button, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Logout } from "../../context/LogoutContext";
 
 export const StyledLink = styled(Link)(() => ({
   textDecoration: "none",
-  color: "#fff",
-  fontSize: "20px",
-  marginLeft: "10px",
+  color: "#000",
+  fontSize: "16px",
+  fontWeight: "55px",
 }));
 const styledImage = {
   marginRight: "10px",
@@ -15,26 +28,162 @@ const styledImage = {
   borderRadius: "50%",
   objectFit: "cover",
 };
+
+// profile style
+const ProfileStyle = styled(Button)(() => ({
+  height: "50px",
+  backgroundColor: " #C7E4FC",
+  paddingRight: "20px",
+  borderRadius: "30px",
+  color: "#1E88E5",
+  "&:hover": {
+    backgroundColor: "#1E88E5",
+    color: "#C7E4FC",
+  },
+}));
+
+const imgStyle = {
+  width: "30px",
+  height: "30px",
+  borderRadius: "100%",
+  marginRight: "5px",
+  objectFit: "cover",
+  border: "5px solid #fff",
+};
+
 const Header = ({ isLogin }) => {
-  return (
-    <AppBar
-      position="fixed"
-      sx={{
-        p: 3,
-        paddingLeft: "100px",
-        paddingRight: "100px",
-        backgroundColor: "#5e35b1",
+  const [hasShadow, setHasShadow] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [isNotification, setIsNotification] = useState(false);
+
+  const isMenuOpen = Boolean(anchorEl);
+  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  const { logout } = Logout();
+  const navigate = useNavigate(); // Move the navigate hook here
+  const handleLogoutClick = () => {
+    logout();
+    navigate("/login"); // Use the navigate function from the outer scope
+  };
+
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMoreAnchorEl(null);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
+  const handleMobileMenuOpen = (event) => {
+    setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setHasShadow(true);
+      } else {
+        setHasShadow(false);
+      }
+    };
+    // Attach the scroll event listener when the component mounts
+    window.addEventListener("scroll", handleScroll);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const menuId = "primary-search-account-menu";
+  const renderMenu = (
+    <Menu
+      anchorEl={anchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
       }}
+      id={menuId}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isMenuOpen}
+      onClose={handleMenuClose}
     >
-      <Toolbar
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          backgroundColor: "#5e35b1",
-        }}
+      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+    </Menu>
+  );
+
+  const mobileMenuId = "primary-search-account-menu-mobile";
+  const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{
+        vertical: "top",
+        horizontal: "right",
+      }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem>
+        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+          <Badge badgeContent={4} color="error">
+            <MailIcon />
+          </Badge>
+        </IconButton>
+        <p>Messages</p>
+      </MenuItem>
+      <MenuItem>
+        <IconButton
+          size="large"
+          aria-label="show 17 new notifications"
+          color="inherit"
+        >
+          <Badge badgeContent={17} color="error">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <p>Notifications</p>
+      </MenuItem>
+      <MenuItem onClick={handleProfileMenuOpen}>
+        <IconButton>
+          <AccountCircle />
+        </IconButton>
+        <p>Profile</p>
+      </MenuItem>
+    </Menu>
+  );
+
+  return (
+    <Box
+      sx={{ background: "#FDFDFE" }}
+      className={`fixed w-full py-4 ${
+        hasShadow ? "shadow-lg" : ""
+      } 2xl:pl-72 2xl:pr-72 xl:pl-48 xl:pr-48 lg:pl-24 lg:pr-24 pl-10 pr-10 ease-in-out duration-300 z-50`}
+    >
+      <Box
+        sx={{ background: "#FDFDFE" }}
+        className="flex w-full justify-between"
       >
         <StyledLink to="/">
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Box sx={{ margin: "0", display: "flex", alignItems: "center" }}>
             <img
               src={require("../../assets/unnamed.png")}
               alt={"W"}
@@ -46,14 +195,48 @@ const Header = ({ isLogin }) => {
             </Typography>
           </Box>
         </StyledLink>
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Box className="flex justify-end gap-5 items-center">
           <StyledLink to="/">Home</StyledLink>
+          {user && user.role.includes("student") && (
+            <StyledLink to="/studentInfo">My Docs</StyledLink>
+          )}
           <StyledLink to="/">About</StyledLink>
-          <StyledLink to="/">Contact</StyledLink>
-          {isLogin && <StyledLink to="login">Login</StyledLink>}
+          <StyledLink to="/">Contacts</StyledLink>
+          {isLogin && !user && (
+            <Button
+              sx={{
+                background: "#5E35B1",
+                color: "#fff",
+                "&:hover": { background: "#5E35B1" },
+                textTransform: "capitalize",
+                fontWeight: "bold",
+              }}
+              onClick={() => {
+                navigate("/login");
+              }}
+            >
+              Login
+            </Button>
+          )}
+          {/* user icon */}
+          {user && (
+            <ProfileStyle aria-controls={menuId}>
+              <img
+                src={require("../../assets/unnamed.png")}
+                alt="CSMS"
+                style={imgStyle}
+              />
+              <AccountCircle
+                onClick={handleProfileMenuOpen}
+                sx={{ fontSize: "19px" }}
+              />
+            </ProfileStyle>
+          )}
         </Box>
-      </Toolbar>
-    </AppBar>
+        {renderMobileMenu}
+        {renderMenu}
+      </Box>
+    </Box>
   );
 };
 

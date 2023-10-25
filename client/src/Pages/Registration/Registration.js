@@ -7,7 +7,6 @@ import CurriculumContext from "../../context/CurriculumContext";
 import GradeContext from "../../context/GradeContext";
 import AcademicSessionContext from "../../context/AcademicSessionContext";
 import Spinner from "../../components/UI/Spinner";
-import CircularProgress from "@mui/material/CircularProgress";
 
 function Registration() {
   {
@@ -17,6 +16,7 @@ function Registration() {
   const [acSession, setAcSession] = useState("");
   const [acCurriculumId, setAcCurriculumId] = useState("");
   const [gradeId, setGradeId] = useState("");
+  // const [countDownDate, setCountDownDate] = useState("");
 
   const { academicCurriculum, fetchAcademicCurriculums } = useContext(
     AcademicCurriculumContext
@@ -34,6 +34,7 @@ function Registration() {
     fetchAcademicSessions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  console.log(academicSession);
 
   //   fetch curriculum useEffect
   useEffect(() => {
@@ -99,13 +100,16 @@ function Registration() {
         label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
         value: gr._id,
       }));
-
-  const countDownDate = new Date("Jan 5, 2022 15:37:25").getTime();
-  const [timeRemaining, setTimeRemaining] = useState(null);
-
   // academicSession[0].registrationDate
   //   ? new Date(academicSession[0].registrationDate).getTime()
   //   :
+
+  const countDownDate =
+    academicSession.length !== 0
+      ? new Date(academicSession[0].registrationDate).getTime()
+      : "";
+
+  const [timeRemaining, setTimeRemaining] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -122,12 +126,13 @@ function Registration() {
         );
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        setTimeRemaining({
-          days,
-          hours,
-          minutes,
-          seconds,
-        });
+        academicSession &&
+          setTimeRemaining({
+            days,
+            hours,
+            minutes,
+            seconds,
+          });
       }
     }, 1000);
 
@@ -181,11 +186,20 @@ function Registration() {
             />
           </Box>
         ) : timeRemaining !== null ? (
-          <Box className="flex items-center justify-center h-screen">
-            <Typography className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 p-4 rounded-lg">
-              {timeRemaining.days}:{timeRemaining.hours}:{timeRemaining.minutes}
-              :{timeRemaining.seconds}
-            </Typography>
+          <Box className="flex items-center justify-center  mt-40 gap-4 ">
+            <Box className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 p-4 rounded-lg">
+              {timeRemaining.days} <Typography>Days</Typography>
+            </Box>
+            <Box className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 p-4 rounded-lg">
+              {timeRemaining.hours}
+              <Typography>Hours</Typography>
+            </Box>
+            <Box className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 p-4 rounded-lg">
+              {timeRemaining.minutes} <Typography>Minutes</Typography>
+            </Box>
+            <Box className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 p-4 rounded-lg">
+              {timeRemaining.seconds} <Typography>Seconds</Typography>
+            </Box>
           </Box>
         ) : (
           <Box className=" mt-64 flex justify-center items-start ">

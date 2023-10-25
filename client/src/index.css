@@ -2,10 +2,9 @@
 * {
   font-family: "Poppins";
   margin: 0;
-  padding: 0;
 }
 body {
-  background-color: #fff !important;
+  background-color: #FDFDFE !important;
   font-family: "Poppins";
   overflow: scroll !important;
   padding-right: 0 !important;

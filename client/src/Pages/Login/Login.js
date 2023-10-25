@@ -28,23 +28,7 @@ export const StyledInput = styled(Input)(() => ({
   margin: "5px",
   marginTop: "10px",
 }));
-const StyledBox = styled(Box)(() => ({
-  minHeight: "calc(100vh - 250px)",
-  height: "auto",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-}));
 
-const CardWrapper = styled(Box)(() => ({
-  border: "0",
-  boxShadow: "0 10px 10px 20px #b0b8d617, 10px 10px 15px -5px #b0b8d6",
-  borderRadius: "8px",
-  padding: "50px",
-  minHeight: "440px",
-  marginTop: "200px",
-  backgroundColor: "#fff",
-}));
 const styledImage = {
   width: "100px",
   borderRadius: "50%",
@@ -57,6 +41,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const { login, error, isLoading } = useContext(AuthContext);
   const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -69,10 +54,17 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const success = await login(username, password);
+
     if (success) {
-      navigate("/dashboard");
-      setUsername("");
-      setPassword("");
+      if (success.role.includes("student")) {
+        navigate("/studentInfo");
+        setUsername("");
+        setPassword("");
+      } else {
+        navigate("/dashboard");
+        setUsername("");
+        setPassword("");
+      }
     }
   };
   // changing active page to dashboard
@@ -80,10 +72,13 @@ const Login = () => {
 
   return (
     <>
-      <Box sx={{ backgroundColor: "#EDF0FE", height: "100vh" }}>
+      <Box
+        sx={{ backgroundColor: "#EEF2F6" }}
+        className="flex  justify-center min-h-screen"
+      >
         <Header isLogin={false} />
-        <StyledBox>
-          <CardWrapper>
+        <Box className="min-w-[20%]  m-10 min-h-[80%] ">
+          <Box className="border-0 shadow-lg bg-white  rounded-lg p-10 mt-24 ">
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <img
                 src={require("../../assets/unnamed.png")}
@@ -140,8 +135,8 @@ const Login = () => {
               {error && <ErrorLabel>{error}</ErrorLabel>}
             </form>
             <Link to="/forgot-password">Forgot password?</Link>
-          </CardWrapper>
-        </StyledBox>
+          </Box>
+        </Box>
       </Box>
     </>
   );
