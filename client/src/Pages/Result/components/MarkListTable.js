@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import MarkContext from "../../../context/MarkContext";
 import SubjectContext from "../../../context/SubjectContext";
-import { Box, Button } from "@mui/material";
+import { Box, Button, filledInputClasses } from "@mui/material";
 import Dropdown from "../../../components/UI/Dropdown";
 import { DataGrid } from "@mui/x-data-grid";
 import RequestContext from "../../../context/RequestContext";
@@ -14,7 +14,6 @@ const MarkListTable = ({
   semesterId,
   currentStatus,
 }) => {
-  
   // getting user from local storage
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -51,7 +50,8 @@ const MarkListTable = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subjectId, editedStatus, semesterId]);
 
-  // section option
+
+  // subject option
   const subjectOption = !sectionId
     ? [{ label: "Not found", value: 1 }]
     : subject.map((sub) => ({

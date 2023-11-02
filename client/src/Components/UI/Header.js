@@ -68,6 +68,10 @@ const Header = ({ isLogin }) => {
     logout();
     navigate("/login"); // Use the navigate function from the outer scope
   };
+  const myAccount = () => {
+    navigate("myAccount"); // Use the navigate function from the outer scope
+    handleMenuClose();
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -120,7 +124,7 @@ const Header = ({ isLogin }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={myAccount}>My Account</MenuItem>
       <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
     </Menu>
   );
@@ -166,7 +170,7 @@ const Header = ({ isLogin }) => {
         <IconButton>
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <Link to="/myAccount">My Account</Link>
       </MenuItem>
     </Menu>
   );
@@ -182,7 +186,7 @@ const Header = ({ isLogin }) => {
         sx={{ background: "#FDFDFE" }}
         className="flex w-full justify-between"
       >
-        <StyledLink to="/">
+        <StyledLink to={user ? "/studentInfo" : "/"}>
           <Box sx={{ margin: "0", display: "flex", alignItems: "center" }}>
             <img
               src={require("../../assets/unnamed.png")}
@@ -196,12 +200,29 @@ const Header = ({ isLogin }) => {
           </Box>
         </StyledLink>
         <Box className="flex justify-end gap-5 items-center">
-          <StyledLink to="/">Home</StyledLink>
+          <StyledLink
+            to={
+              user
+                ? user.role.includes("student")
+                  ? "/studentInfo"
+                  : "/"
+                : "/"
+            }
+          >
+            {user
+              ? user.role.includes("student")
+                ? "My Home"
+                : "Home"
+              : "Home"}
+          </StyledLink>
           {user && user.role.includes("student") && (
-            <StyledLink to="/studentInfo">My Docs</StyledLink>
+            <StyledLink to="myDocs">My Docs</StyledLink>
           )}
-          <StyledLink to="/">About</StyledLink>
-          <StyledLink to="/">Contacts</StyledLink>
+          {!user && <StyledLink to="/">About</StyledLink>}
+          {!user && <StyledLink to="/">Contacts</StyledLink>}
+          {user && !user.role.includes("student") && (
+            <StyledLink to="/dashboard">Dashboard</StyledLink>
+          )}
           {isLogin && !user && (
             <Button
               sx={{

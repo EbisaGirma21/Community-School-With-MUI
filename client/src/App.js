@@ -24,7 +24,7 @@ import { NewStudentProvider } from "./context/NewStudentContext";
 import axios from "axios";
 import { Box } from "@mui/material";
 import Login from "./pages/Login/Login";
-import { Home } from "./pages/Home/Home";
+import { Home } from "./pages/Landing/Landing";
 import Result from "./pages/Result/Result";
 import AuthContext from "./context/AuthContext";
 import { useContext } from "react";
@@ -38,6 +38,9 @@ import { StudentProvider } from "./context/StudentContext";
 import ClubTab from "./pages/Clubs/ClubTab";
 import { ClubMemberProvider } from "./context/ClubMemberContext";
 import { StudentInfo } from "./pages/StudentInfo/StudentInfo";
+import MyAccount from "./pages/StudentInfo/MyAccount";
+import MyDocs from "./pages/StudentInfo/MyDocs";
+import StudentHome from "./pages/StudentInfo/StudentHome";
 function App() {
   axios.defaults.baseURL = "http://localhost:8000/api";
   const { user } = useContext(AuthContext);
@@ -51,8 +54,15 @@ function App() {
           <Route
             path="/studentInfo"
             element={user !== null ? <StudentInfo /> : <Navigate to="/login" />}
-          />
-
+          >
+            <Route index element={<StudentHome />} />
+            <Route path="myAccount">
+              <Route index element={<MyAccount />} />
+            </Route>
+            <Route path="myDocs">
+              <Route index element={<MyDocs />} />
+            </Route>
+          </Route>
           <Route
             path="/dashboard"
             element={user !== null ? <Layout /> : <Navigate to="/login" />}
