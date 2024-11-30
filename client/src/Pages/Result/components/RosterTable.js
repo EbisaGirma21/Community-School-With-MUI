@@ -137,8 +137,8 @@ const RosterTable = ({
   return (
     <Box>
       <Box
-        className="border-2 border-gray-200 p-2 h-16 rounded-md m-1 flex justify-end"
-        sx={{ display: user.role.includes("homeRoom") ? "block" : "none" }}
+        className="border-2 border-gray-200  h-16 rounded-md m-1 flex justify-end"
+        sx={{ display: user.role.includes("homeRoom") ? "flex" : "none" }}
       >
         <Button variant="contained" onClick={handleRosterApprovalClick}>
           {semesterId === "average" ? "Enroll to next" : "Request Approval"}

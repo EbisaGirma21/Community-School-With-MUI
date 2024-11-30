@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 function AcademicCurriculum() {
   return (
     <Box>
-      <Box>Academic Curriculum</Box>
+      <Box className="bg-white p-4 text-lg rounded-lg">Academic Curriculum</Box>
       {localStorage.setItem("path", JSON.stringify("academicCurriculum"))}
       <Box>
         <Box>

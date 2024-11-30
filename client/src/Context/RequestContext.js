@@ -20,7 +20,8 @@ function RequestProvider({ children }) {
     requestedAcademicCurriculum,
     requestedGrade,
     requestedSection,
-    requestedSemester
+    requestedSemester,
+    requestType
   ) => {
     setIsLoading(true);
     setError(null);
@@ -31,7 +32,7 @@ function RequestProvider({ children }) {
         requestedGrade,
         requestedSection,
         requestedSemester,
-        requestType: "rosterApproval",
+        requestType,
       });
       if (response.status !== 200) {
         setError(response.data.error);

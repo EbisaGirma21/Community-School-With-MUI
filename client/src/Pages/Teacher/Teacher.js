@@ -8,7 +8,6 @@ import TeacherContext from "../../context/TeacherContext";
 function Teacher() {
   const { setError, setIsLoading } = useContext(TeacherContext);
 
-
   {
     localStorage.setItem("path", JSON.stringify("teacher"));
   }
@@ -25,7 +24,7 @@ function Teacher() {
 
   return (
     <Box>
-      <Box>Teacher</Box>
+      <Box className="bg-white p-4 text-lg rounded-lg">Teacher </Box>
       <Box>
         <Box>
           <Button onClick={handleOpen} variant="contained" sx={{ m: 1 }}>

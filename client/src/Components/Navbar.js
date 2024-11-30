@@ -107,6 +107,9 @@ export default function Navbar() {
   // context
   const { request, fetchRequests } = useContext(RequestContext);
 
+  // the current url
+  const currentPath = window.location.pathname;
+
   const theme = createTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
   const drawerWidth = 260;
@@ -210,7 +213,11 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        <Link to={currentPath !== "/myAccount" ? "/myAccount" : "myAccount"}>
+          My Account
+        </Link>
+      </MenuItem>
       <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
     </Menu>
   );

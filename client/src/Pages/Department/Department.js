@@ -25,7 +25,7 @@ function Department() {
 
   return (
     <Box>
-      <Box>Department</Box>
+      <Box className="bg-white p-4 text-lg rounded-lg">Department</Box>
       <Box>
         <Box>
           <Button onClick={handleOpen} variant="contained" sx={{ m: 1 }}>

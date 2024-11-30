@@ -142,6 +142,16 @@ const createAssessmentWeight = async (req, res) => {
         message: "Grade not found",
       });
     }
+    const totalWeight = Object.values(weights).reduce(
+      (sum, weight) => sum + weight,
+      0
+    );
+    if (totalWeight > 100) {
+      return res.status(500).json({
+        status: "Failed",
+        message: "The assessment sum exceed 100%",
+      });
+    }
 
     subjects.forEach((subjectId) => {
       const subject = grade.subjects.find(

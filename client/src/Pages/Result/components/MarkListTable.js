@@ -6,13 +6,20 @@ import Dropdown from "../../../components/UI/Dropdown";
 import { DataGrid } from "@mui/x-data-grid";
 import RequestContext from "../../../context/RequestContext";
 import { toast } from "react-toastify";
+import MarkListChecker from "./MarkListChecker";
+import AcademicSessionContext from "../../../context/AcademicSessionContext";
+import AcademicCurriculumContext from "../../../context/AcademicCurriculumContext";
 
 const MarkListTable = ({
+  acCurriculumId,
   curriculumId,
   gradeId,
   sectionId,
   semesterId,
   currentStatus,
+  subjectIds,
+  classStartDate,
+  classEndDate,
 }) => {
   // getting user from local storage
   const user = JSON.parse(localStorage.getItem("user"));
@@ -22,12 +29,15 @@ const MarkListTable = ({
   const [subjectColumns, setSubjectColumns] = useState([]);
   const [rows, setRows] = useState([]);
   const [editedStatus, setEditedStatus] = useState(0);
+  const [approveOpen, setApproveOpen] = useState(false);
+  const currentDate = new Date();
 
   // Component contexts
   const { markList, fetchMarkLists, fetchAverageMarkLists, addSubjectMarks } =
     useContext(MarkContext);
   const { subject, fetchSubjects } = useContext(SubjectContext);
   const { request, fetchRequests } = useContext(RequestContext);
+
   // Update of prevsemetser check in request
   useEffect(() => {
     fetchRequests();
@@ -50,15 +60,30 @@ const MarkListTable = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subjectId, editedStatus, semesterId]);
 
+  // filtering the authorized subject
 
-  // subject option
+  // Check if subjectIds is defined and an array before using it
+  const filteredSubject =
+    sectionId && subjectIds.length !== 0
+      ? subject.filter((sub) => {
+          return subjectIds.includes(sub._id);
+        })
+      : [];
+
+  // subject option creating depend on the role
   const subjectOption = !sectionId
     ? [{ label: "Not found", value: 1 }]
+    : !user.role.includes("director")
+    ? filteredSubject.map((sub) => ({
+        label: sub.moduleTitle,
+        value: sub._id,
+      }))
     : subject.map((sub) => ({
         label: sub.moduleTitle,
         value: sub._id,
       }));
 
+  // assessment mappin depend on tyhe requirement
   const assessment = subject
     .filter((sub) => {
       return sub._id === subjectId;
@@ -150,6 +175,46 @@ const MarkListTable = ({
     }
   };
 
+  // toggler funcions
+  // funtions open approval modal
+  const handleApproveOpen = () => {
+    if (semesterId.length === 0) {
+      toast.warning("No selected semester");
+    } else if (currentStatus === "REG") {
+      toast.warning("Previous semester not ended");
+    } else if (currentStatus === "ONP") {
+      toast.warning("The semester is on progress");
+    } else if (currentStatus === "CMP") {
+      setApproveOpen(true);
+    }
+  };
+
+  const handleRemarkRequestClick = () => {
+    handleApproveOpen();
+  };
+
+  // funtion close approve modal
+  const handleApproveClose = () => {
+    setApproveOpen(false);
+  };
+
+  // toggle delete modal
+  let content = "";
+  if (approveOpen) {
+    content = (
+      <MarkListChecker
+        open={approveOpen}
+        handleClose={handleApproveClose}
+        acCurriculumId={acCurriculumId}
+        semesterId={semesterId}
+        curriculumId={curriculumId}
+        gradeId={gradeId}
+        sectionId={sectionId}
+        currentStatus={currentStatus}
+      />
+    );
+  }
+
   return (
     <Box>
       <Box className="border-2 border-gray-200 p-2 rounded-md m-1 flex justify-between">
@@ -162,13 +227,26 @@ const MarkListTable = ({
             width={"50%"}
           />
         </Box>
-        <Button
-          variant="contained"
-          disabled={semesterId === "average" ? true : false}
-          onClick={(e) => handleSaveChanges(e)}
-        >
-          Save Changes
-        </Button>
+        <Box className="flex justify-between gap-2">
+          <Button
+            style={{
+              background: "#673AB7",
+              ":hover": { background: "#713AB7" },
+            }}
+            variant="contained"
+            disabled={semesterId === "average" ? true : false}
+            onClick={(e) => handleSaveChanges(e)}
+          >
+            Save Changes
+          </Button>
+          <Button
+            variant="contained"
+            disabled={semesterId === "average" ? true : false}
+            onClick={handleRemarkRequestClick}
+          >
+            Remark Request
+          </Button>
+        </Box>
       </Box>
       <Box style={{ height: 500, m: 1 }}>
         <DataGrid
@@ -183,6 +261,10 @@ const MarkListTable = ({
               return toast.warning("The previous semester not ended");
             } else if (currentStatus === "CMP") {
               return toast.warning("The semester is already ended");
+            } else if (currentDate < classStartDate) {
+              return toast.warning("Class not started yet");
+            } else if (currentDate > classEndDate) {
+              return toast.warning("Class already ended");
             } else {
               return null;
             }
@@ -191,7 +273,7 @@ const MarkListTable = ({
         />
       </Box>
 
-      {/* {content} */}
+      {content}
     </Box>
   );
 };

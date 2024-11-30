@@ -33,32 +33,21 @@ const getStudents = async (req, res) => {
 // get a single Student
 const getStudent = async (req, res) => {
   const { id } = req.params;
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such student" });
   }
-  const students = await Student.findById(id);
 
-  const student = await Promise.all(
-    students.map(async (stud) => {
-      const user = await User.findById(stud._id.toString());
-      return {
-        ...stud._doc,
-        firstName: user ? user.firstName : null,
-        middleName: user ? user.middleName : null,
-        lastName: user ? user.lastName : null,
-        gender: user ? user.gender : null,
-        email: user ? user.email : null,
-        role: user ? user.role : null,
-      };
-    })
-  );
-
-  if (!student) {
-    return res.status(404).json({ error: "No such student" });
+  try {
+    const student = await Student.findById(id);
+    if (!student) {
+      return res.status(404).json({ error: "No such student" });
+    }
+    const user = await User.findById(student._id.toString());
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  res.status(200).json(student);
 };
 
 // create a new Student
@@ -113,6 +102,16 @@ const createStudent = async (req, res) => {
       .status(400)
       .json({ error: "Please fill in all the fields", emptyFields });
   }
+  // check student birthdate if elligbl
+  const birthday = new Date(birthDate);
+  const currentDate = new Date();
+  const ageInMilliseconds = currentDate - birthday;
+  const ageInYears = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
+  if (ageInYears < 4) {
+    return res
+      .status(400)
+      .json({ error: "Student age is not elligble", emptyFields });
+  }
   try {
     // create student
     const user = await createUser(
@@ -137,7 +136,8 @@ const createStudent = async (req, res) => {
       familyPhoneNumber,
       familyAddress
     );
-    console.log(family);
+
+    // student information
     const student = new Student({
       _id: user.user._id,
       birthDate,
@@ -146,7 +146,7 @@ const createStudent = async (req, res) => {
     });
     await student.save();
 
-    res.status(200).json(student);
+    res.status(200).json("student");
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -556,7 +556,6 @@ const getSpecificStudent = async (req, res) => {
 
         results.push(result);
       }
-      console.log(results);
       res.status(200).json(results);
     } else {
       // No match in currentEnrollment, now check enrollment_history
@@ -589,7 +588,7 @@ const getSpecificStudent = async (req, res) => {
 
         res.status(200).json(results);
       } else {
-        res.status(404).json({ message: "No matching students found" });
+        res.status(202).json({ message: "No matching students found" });
       }
     }
   } catch (error) {

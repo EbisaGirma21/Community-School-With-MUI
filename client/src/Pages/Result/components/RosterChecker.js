@@ -23,7 +23,7 @@ export default function RosterChecker({
     if (semesterId === "average") {
       await approveStudent(mark);
     } else {
-      await createRequest(acCurriculumId, gradeId, sectionId, semesterId);
+      await createRequest(acCurriculumId, gradeId, sectionId, semesterId,'rosterApproval');
     }
     handleClose();
   };

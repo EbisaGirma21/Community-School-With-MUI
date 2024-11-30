@@ -21,10 +21,14 @@ function Module() {
 
   return (
     <Box>
-      <Box>Module</Box>
+      <Box className="bg-white p-4 text-lg rounded-lg">Module </Box>
       <Box>
         <Box>
-          <Button onClick={handleOpen} variant="contained" sx={{ m: 1 }}>
+          <Button
+            onClick={handleOpen}
+            variant="contained"
+            sx={{ m: 1, background: "#5E35B1" }}
+          >
             <AddIcon />
             New
           </Button>

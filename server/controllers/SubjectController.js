@@ -126,7 +126,11 @@ const createSubject = async (req, res) => {
     if (!grade) {
       return res.status(404).json({ error: "Grade not found" });
     }
-
+    if (subjects.modules.length * subjectLoad > curriculum.totalMaximumLoad) {
+      return res
+        .status(400)
+        .json({ error: "Subject load exceed the total load" });
+    }
     for (let i = 0; i < subjects.modules.length; i++) {
       const newSubject = {
         module: subjects.modules[i],

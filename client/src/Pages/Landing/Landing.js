@@ -52,7 +52,7 @@ export const Home = () => {
         <Box className="relative hidden lg:flex  max-w-[58%] basis-[58%]  mt-72 z-[9] ">
           <Box className="relative scale-[1]">
             <img
-              src={require("../../assets/dashboard.png")}
+              src={require("../../assets/dashboard2.png")}
               alt={"W"}
               loading="Wolkite"
               className="ml-64 rounded-2xl transform scale-[1.5] origin-bottom"

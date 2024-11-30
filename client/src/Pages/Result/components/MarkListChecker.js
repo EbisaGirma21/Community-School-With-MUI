@@ -1,3 +1,4 @@
+import { Checkbox } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -7,11 +8,29 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useContext } from "react";
 import RequestContext from "../../../context/RequestContext";
 
-export default function RosterApproval({ handleClose, open, semesterId }) {
-  const { approveRequest } = useContext(RequestContext);
+export default function MarkListChecker({
+  handleClose,
+  open,
+  acCurriculumId,
+  semesterId,
+  gradeId,
+  sectionId,
+  mark,
+}) {
+  const { createRequest, approveStudent } = useContext(RequestContext);
 
-  const handleSave = () => {
-    approveRequest(semesterId);
+  const handleSave = async () => {
+    if (semesterId === "average") {
+      await approveStudent(mark);
+    } else {
+      await createRequest(
+        acCurriculumId,
+        gradeId,
+        sectionId,
+        semesterId,
+        "remarkRequest"
+      );
+    }
     handleClose();
   };
 
@@ -24,11 +43,13 @@ export default function RosterApproval({ handleClose, open, semesterId }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle variant="contained" id="alert-dialog-title">
-          {"Request Approval"}
+          {"Approval Request"}
         </DialogTitle>
         <DialogContent className="flex flex-col justify-start">
           <DialogContentText id="alert-dialog-description">
-            Are you sure do you want to approve this request?
+            {semesterId === "average"
+              ? "Are you sure do you want to approve this average roster?"
+              : "Are you sure do you want to send this request?"}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -36,7 +57,7 @@ export default function RosterApproval({ handleClose, open, semesterId }) {
             Cancel
           </Button>
           <Button variant="contained" onClick={handleSave} autoFocus>
-            Approve
+            {semesterId === "average" ? "Approve" : "Send"}
           </Button>
         </DialogActions>
       </Dialog>

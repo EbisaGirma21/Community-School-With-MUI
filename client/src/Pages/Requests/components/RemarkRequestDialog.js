@@ -7,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useContext } from "react";
 import RequestContext from "../../../context/RequestContext";
 
-export default function RosterApproval({ handleClose, open, semesterId }) {
+export default function RemarkRequestDialog({ handleClose, open, semesterId }) {
   const { approveRequest } = useContext(RequestContext);
 
   const handleSave = () => {

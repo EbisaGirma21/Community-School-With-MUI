@@ -156,7 +156,7 @@ const AcademicCurriculumTable = () => {
         <Button
           onClick={handleOpen}
           variant="contained"
-          sx={{ m: 1, background: "#1E88E5" }}
+          sx={{ m: 1, background: "#5E35B1" }}
         >
           <AddIcon />
           New

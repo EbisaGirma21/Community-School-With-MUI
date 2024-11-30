@@ -55,6 +55,9 @@ const Header = ({ isLogin }) => {
   const [hasShadow, setHasShadow] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
 
+  // currentPath of the window
+  const currentPath = window.location.pathname;
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const [isNotification, setIsNotification] = useState(false);
@@ -69,7 +72,9 @@ const Header = ({ isLogin }) => {
     navigate("/login"); // Use the navigate function from the outer scope
   };
   const myAccount = () => {
-    navigate("myAccount"); // Use the navigate function from the outer scope
+    currentPath !== "/myAccount"
+      ? navigate("myAccount")
+      : navigate("/myAccount"); // Use the navigate function from the outer scope
     handleMenuClose();
   };
 
@@ -125,6 +130,7 @@ const Header = ({ isLogin }) => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={myAccount}>My Account</MenuItem>
+
       <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
     </Menu>
   );
@@ -174,7 +180,6 @@ const Header = ({ isLogin }) => {
       </MenuItem>
     </Menu>
   );
-
   return (
     <Box
       sx={{ background: "#FDFDFE" }}
@@ -186,7 +191,11 @@ const Header = ({ isLogin }) => {
         sx={{ background: "#FDFDFE" }}
         className="flex w-full justify-between"
       >
-        <StyledLink to={user ? "/studentInfo" : "/"}>
+        <StyledLink
+          to={
+            user ? (user.role.includes("student") ? "/studentInfo" : "/") : "/"
+          }
+        >
           <Box sx={{ margin: "0", display: "flex", alignItems: "center" }}>
             <img
               src={require("../../assets/unnamed.png")}
@@ -216,9 +225,14 @@ const Header = ({ isLogin }) => {
               : "Home"}
           </StyledLink>
           {user && user.role.includes("student") && (
-            <StyledLink to="myDocs">My Docs</StyledLink>
+            <StyledLink
+              to={currentPath === "/" ? "studentInfo/myDocs" : "myDocs"}
+            >
+              My Docs
+            </StyledLink>
           )}
           {!user && <StyledLink to="/">About</StyledLink>}
+
           {!user && <StyledLink to="/">Contacts</StyledLink>}
           {user && !user.role.includes("student") && (
             <StyledLink to="/dashboard">Dashboard</StyledLink>
@@ -241,16 +255,16 @@ const Header = ({ isLogin }) => {
           )}
           {/* user icon */}
           {user && (
-            <ProfileStyle aria-controls={menuId}>
+            <ProfileStyle
+              aria-controls={menuId}
+              onClick={handleProfileMenuOpen}
+            >
               <img
                 src={require("../../assets/unnamed.png")}
                 alt="CSMS"
                 style={imgStyle}
               />
-              <AccountCircle
-                onClick={handleProfileMenuOpen}
-                sx={{ fontSize: "19px" }}
-              />
+              <AccountCircle sx={{ fontSize: "19px" }} />
             </ProfileStyle>
           )}
         </Box>

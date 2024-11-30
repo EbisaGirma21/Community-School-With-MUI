@@ -11,6 +11,7 @@ export default function ClubTab() {
       value: "1",
       content: (
         <Box>
+          <Box className="bg-white p-4 text-lg rounded-lg">Club</Box>
           <Club />
         </Box>
       ),
@@ -23,6 +24,7 @@ export default function ClubTab() {
       content: (
         <>
           <Box>
+            <Box className="bg-white p-4 text-lg rounded-lg">Club Member</Box>
             <ClubMember />
           </Box>
         </>

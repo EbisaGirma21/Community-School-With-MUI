@@ -29,14 +29,13 @@ function Registration() {
   const { curriculum, fetchCurriculumById } = useContext(CurriculumContext);
   const { grade, fetchGradeByStage } = useContext(GradeContext);
 
-  //   fetch curriculum useEffect
+  //   fetch academic sessions useEffect
   useEffect(() => {
     fetchAcademicSessions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(academicSession);
 
-  //   fetch curriculum useEffect
+  //   fetch academic curriculum useEffect
   useEffect(() => {
     fetchAcademicCurriculums();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,7 +72,7 @@ function Registration() {
           fetchGradeByStage(curriculum.stage);
         })
         .catch((error) => {
-          // Handle any errors
+          console.log(error);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,9 +99,6 @@ function Registration() {
         label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
         value: gr._id,
       }));
-  // academicSession[0].registrationDate
-  //   ? new Date(academicSession[0].registrationDate).getTime()
-  //   :
 
   const countDownDate =
     academicSession.length !== 0
@@ -139,12 +135,16 @@ function Registration() {
     return () => clearInterval(interval); // Cleanup on unmount
   }, [timeRemaining]);
 
-  return (
+  return !academicSession ? (
+    <Box className="text-lg text-center justify-center">
+      No Registration on Progress
+    </Box>
+  ) : (
     <Box>
       <Box>
         {timeRemaining === "EXPIRED" ? (
           <Box>
-            <Typography sx={{ m: 1 }}>Registrations</Typography>
+            <Box className="bg-white p-4 text-lg rounded-lg">Registration</Box>
             <Box
               className="flex p-1 gap-4"
               sx={{ p: 1, border: "1px solid #dbdde0", borderRadius: "10px" }}
@@ -186,7 +186,7 @@ function Registration() {
             />
           </Box>
         ) : timeRemaining !== null ? (
-          <Box className="flex items-center justify-center  mt-40 gap-4 ">
+          <Box className="flex items-center justify-center  mt-48 gap-4 ">
             <Box className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 p-4 rounded-lg">
               {timeRemaining.days} <Typography>Days</Typography>
             </Box>

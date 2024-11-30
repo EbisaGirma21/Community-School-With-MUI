@@ -6,6 +6,7 @@ const StudentContext = createContext();
 
 function StudentProvider({ children }) {
   const [student, setStudent] = useState([]);
+  const [studentById, setStudentById] = useState(null);
   const [specificStudent, setSpecificStudent] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
@@ -25,8 +26,30 @@ function StudentProvider({ children }) {
     const response = await axios.get(
       `/student/specificStudent/${academicYear}/${academicCurriculum}/${grade}/${section}`
     );
+    if (response.status === 200) {
+      setSpecificStudent(response?.data);
+    } else if (response.status === 202) {
+      setSpecificStudent([]);
+    }
+  };
 
-    setSpecificStudent(response.data);
+  // Function to fetch a student by ID from local storage
+  const fetchStudentById = async () => {
+    try {
+      setIsLoading(true);
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user) {
+        throw new Error("No student ID found in local storage.");
+      }
+      const response = await axios.get(`/student/${user._id}`);
+
+      setStudentById(response.data);
+    } catch (err) {
+      setError(err.message);
+      toast.error("Failed to fetch student by ID.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // shared operation between components
@@ -35,10 +58,12 @@ function StudentProvider({ children }) {
     specificStudent,
     error,
     isLoading,
+    studentById,
     setError,
     setIsLoading,
     fetchStudents,
     fetchStudentsBySpecifying,
+    fetchStudentById,
   };
 
   return (

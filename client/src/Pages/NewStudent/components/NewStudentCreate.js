@@ -192,6 +192,21 @@ const NewStudentCreate = ({ handleClose, open }) => {
       setGender("");
       setEmail("");
       setBirthDate("");
+      setRegistrationType("");
+      setFamilyFirstName("");
+      setFamilyMiddleName("");
+      setFamilyLastName("");
+      setFamilyGender("");
+      setfamilyEmail("");
+      setFamilyPhoneNumber("");
+      setFamilyAddress("");
+      setPreviousYear("");
+      setPreviousStage("");
+      setPreviousGrade("");
+      setPreviousClassification("");
+      setPreviousTotalMark("");
+      setPreviousAverage("");
+      setPreviousAcademicStatus("");
       handleClose();
     }
   };
@@ -437,15 +452,34 @@ const NewStudentCreate = ({ handleClose, open }) => {
             />
           </Box>
           <Box className="flex flex-col  items-center">
-            <Typography>Previos Subject(Optional)</Typography>
+            <Typography>Previos School Information(Optional)</Typography>
             <TextField
               margin="dense"
-              label="Average of Completed Grade"
+              label="Name of School"
               type="number"
               sx={{ minWidth: 300 }}
               variant="standard"
-              // value={previousYear}
-              // onChange={handlePreviousYearChange}
+            />
+            <TextField
+              margin="dense"
+              label="Address of School"
+              type="number"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+            />
+            <TextField
+              margin="dense"
+              label="Contact Information of School"
+              type="number"
+              sx={{ minWidth: 300 }}
+              variant="standard"
+            />
+            <TextField
+              margin="dense"
+              label="Other Information of School"
+              type="number"
+              sx={{ minWidth: 300 }}
+              variant="standard"
             />
           </Box>
         </Box>

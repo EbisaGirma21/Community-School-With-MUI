@@ -1,8 +1,14 @@
 import { Box, TextField } from "@mui/material";
-import React from "react";
-import { FormControlLabel } from "@mui/material";
+import React, { useContext, useEffect } from "react";
+import StudentContext from "../../../context/StudentContext";
 
 const CurrentEnrollement = () => {
+  const { fetchStudentById, studentById } = useContext(StudentContext);
+
+  useEffect(() => {
+    fetchStudentById();
+  }, []);
+
   return (
     <Box className="flex gap-10 ">
       <Box className="shadow-md w-full lg:w-1/4">
@@ -18,11 +24,11 @@ const CurrentEnrollement = () => {
           <Box className="flex flex-col w-full p-2">
             <Box className="flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
               <Box>Name</Box>
-              <Box>Ebisa Girma</Box>
+              <Box>{`${studentById?.firstName} ${studentById?.middleName}`}</Box>
             </Box>
             <Box className=" flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
               <Box>Family</Box>
-              <Box>Girma Garedo</Box>
+              <Box>{`${studentById?.middleName} ${studentById?.lastName}`}</Box>
             </Box>
             <Box className=" flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
               <Box>ID Number</Box>

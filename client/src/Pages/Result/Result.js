@@ -23,6 +23,9 @@ function Result() {
   const [semesterId, setSemesterId] = useState("");
   const [currentStatus, setCurrentStatus] = useState("");
   const [currentSectionHomeRoom, setCurrentSectionHomeRoom] = useState(false);
+  const [subjectIds, setSubjectIds] = useState([]);
+  const [classStartDate, setClassStartDate] = useState(null);
+  const [classEndDate, setClassEndDate] = useState(null);
 
   // context
   const { academicCurriculum, fetchAcademicCurriculums } = useContext(
@@ -57,7 +60,7 @@ function Result() {
   });
   //   Curruculum to dropdown
   const acCurriculumOption = !acSession
-    ? [{ label: "Not found", value: 1 }]
+    ? []
     : filteredAcCurriculum.map((acCurriculum) => ({
         label: `${acCurriculum.curriculumTitle}`,
         value: acCurriculum._id,
@@ -97,7 +100,7 @@ function Result() {
 
   // gradeOption
   const gradeOption = !acCurriculumId
-    ? [{ label: "Not found", value: 1 }]
+    ? []
     : grade.map((gr) => ({
         label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
         value: gr._id,
@@ -132,11 +135,33 @@ function Result() {
 
   // section option
   const sectionOption = !acCurriculumId
-    ? [{ label: "Not found", value: 1 }]
+    ? []
     : sections.map((sec) => ({
         label: `Section - ${sec.sectionLabel}`,
         value: sec._id,
       }));
+
+  // Filter subjects where teacher's ID matches the user's ID
+  const filteredSubjects = sectionId
+    ? sections[0].teachers.filter((teacher) => {
+        // Check if teacher's ID is missing or not equal to the user's ID
+        if (teacher.teacher) {
+          return teacher.teacher == user._id; // Exclude this teacher
+        }
+        return false; // Include this teacher
+      })
+    : [];
+
+  // check if teacher is home roomteacher of the current section
+  useEffect(() => {
+    // Extract the subject IDs
+    const subjectIds = filteredSubjects
+      ? filteredSubjects.map((teacher) => teacher.subject)
+      : [];
+
+    filteredSubjects && setSubjectIds(subjectIds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionId]);
 
   // check if teacher is home roomteacher of the current section
   useEffect(() => {
@@ -162,15 +187,16 @@ function Result() {
     }
   );
 
-  const semesterOption = !acCurriculumId
-    ? [{ label: "Not found", value: 1 }]
-    : [
-        ...filteredAcademicCurriculum[0].semesters.map((semester) => ({
-          label: `Semester - ${semester._semesterLabel}`,
-          value: semester._id,
-        })),
-        { label: "Average", value: "average" }, // Add the "Average" option manually
-      ];
+  const semesterOption =
+    !acCurriculumId || !sectionId
+      ? []
+      : [
+          ...filteredAcademicCurriculum[0].semesters.map((semester) => ({
+            label: `Semester - ${semester._semesterLabel}`,
+            value: semester._id,
+          })),
+          { label: "Average", value: "average" }, // Add the "Average" option manually
+        ];
 
   // Event handler for dropdown value change
   const handleAcCurriculumChange = (e) => {
@@ -207,9 +233,24 @@ function Result() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [semesterId]);
 
+  useEffect(() => {
+    const filteredAcademicSession = academicSession.filter((acaSession) => {
+      return acaSession.academicYear === acSession;
+    });
+
+    if (filteredAcademicSession.length > 0) {
+      setClassStartDate(filteredAcademicSession[0].classStartDate);
+      setClassEndDate(filteredAcademicSession[0].classEndDate);
+    } else {
+      setClassStartDate(null);
+      setClassEndDate(null);
+    }
+  }, [acSession, academicSession]);
+  console.log(classStartDate);
+
   return (
     <Box>
-      <Typography sx={{ m: 1 }}>Student Result</Typography>
+      <Box className="bg-white p-4 text-lg rounded-lg">Student Result</Box>
       <Box className="flex justify-between p-2 border-2 border-gray-200 rounded-md">
         <Box className="flex p-1 gap-4">
           <Dropdown
@@ -274,6 +315,9 @@ function Result() {
         sectionId={sectionId}
         currentStatus={currentStatus}
         currentSectionHomeRoom={currentSectionHomeRoom}
+        subjectIds={subjectIds}
+        classStartDate={classStartDate}
+        classEndDate={classEndDate}
       />
     </Box>
   );

@@ -11,6 +11,9 @@ export default function ResultTab({
   sectionId,
   currentStatus,
   currentSectionHomeRoom,
+  subjectIds,
+  classStartDate,
+  classEndDate,
 }) {
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -28,6 +31,9 @@ export default function ResultTab({
             gradeId={gradeId}
             sectionId={sectionId}
             currentStatus={currentStatus}
+            subjectIds={subjectIds}
+            classStartDate={classStartDate}
+            classEndDate={classEndDate}
           />
         </Box>
       ),
