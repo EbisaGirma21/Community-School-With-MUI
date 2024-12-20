@@ -24,11 +24,11 @@ export default function RosterApproval({ handleClose, open, semesterId }) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle variant="contained" id="alert-dialog-title">
-          {"Approval Request"}
+          {"Request Approval"}
         </DialogTitle>
         <DialogContent className="flex flex-col justify-start">
           <DialogContentText id="alert-dialog-description">
-            Are you sure do you want to send this request?
+            Are you sure do you want to approve this request?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -36,7 +36,7 @@ export default function RosterApproval({ handleClose, open, semesterId }) {
             Cancel
           </Button>
           <Button variant="contained" onClick={handleSave} autoFocus>
-            Send
+            Approve
           </Button>
         </DialogActions>
       </Dialog>

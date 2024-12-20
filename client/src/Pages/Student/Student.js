@@ -51,7 +51,7 @@ function Student() {
   });
   //   Curruculum to dropdown
   const acCurriculumOption = !acSession
-    ? [{ label: "Not found", value: 1 }]
+    ? []
     : filteredAcCurriculum.map((acCurriculum) => ({
         label: `${acCurriculum.curriculumTitle}`,
         value: acCurriculum._id,
@@ -95,7 +95,7 @@ function Student() {
 
   // gradeOption
   const gradeOption = !acCurriculumId
-    ? [{ label: "Not found", value: 1 }]
+    ? []
     : grade.map((gr) => ({
         label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
         value: gr._id,
@@ -114,7 +114,7 @@ function Student() {
 
   // section option
   const sectionOption = !acCurriculumId
-    ? [{ label: "Not found", value: 1 }]
+    ? []
     : sections.map((sec) => ({
         label: `Section - ${sec.sectionLabel}`,
         value: sec._id,
@@ -122,7 +122,7 @@ function Student() {
 
   return (
     <Box>
-      <Typography sx={{ m: 1 }}>Student</Typography>
+      <Box className="bg-white p-4 text-lg rounded-lg">Student</Box>
       <Box
         className="flex p-1 gap-4 "
         sx={{ border: "1px solid #dbdde0", borderRadius: "10px" }}

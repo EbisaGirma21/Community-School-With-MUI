@@ -6,6 +6,8 @@ const MarkContext = createContext();
 
 function MarkProvider({ children }) {
   const [mark, setMark] = useState([]);
+  const [firstMark, setFirstMark] = useState([]);
+  const [secondMark, setSecondMark] = useState([]);
   const [markList, setMarkList] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
@@ -16,6 +18,18 @@ function MarkProvider({ children }) {
       `/mark/${gradeId}/${sectionId}/${semesterId}`
     );
     setMark(response.data);
+  };
+  const fetchMarkFirstSemester = async (gradeId, sectionId, semesterId) => {
+    const response = await axios.get(
+      `/mark/${gradeId}/${sectionId}/${semesterId}`
+    );
+    setFirstMark(response.data);
+  };
+  const fetchMarkSecondSemester = async (gradeId, sectionId, semesterId) => {
+    const response = await axios.get(
+      `/mark/${gradeId}/${sectionId}/${semesterId}`
+    );
+    setSecondMark(response.data);
   };
 
   //  fetching marks(roster form database)
@@ -81,8 +95,12 @@ function MarkProvider({ children }) {
   // shared operation between components
   const markOperation = {
     mark,
+    firstMark,
+    secondMark,
     markList,
     fetchMarks,
+    fetchMarkFirstSemester,
+    fetchMarkSecondSemester,
     fetchMarkLists,
     addSubjectMarks,
     fetchAverageMarks,

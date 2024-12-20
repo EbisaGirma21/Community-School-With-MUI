@@ -59,7 +59,6 @@ const AssessmentWeight = () => {
     curriculumId && fetchGradeByStage(selectedCurriculum[0].stage);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [curriculumId]);
-  curriculumId && console.log();
   const gradeOption = !curriculumId
     ? [{ label: "Not found", value: 1 }]
     : grade.map((gr) => ({
@@ -68,7 +67,7 @@ const AssessmentWeight = () => {
       }));
 
   // adding weight menu
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleAddClick = (event) => {
     const selectedSubject = assessmentWeight.find(

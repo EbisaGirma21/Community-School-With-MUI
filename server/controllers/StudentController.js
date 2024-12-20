@@ -8,6 +8,7 @@ const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 const Curriculum = require("../models/CurriculumModel");
 const { format } = require("date-fns");
 const AcademicSession = require("../models/AcademicSessionModel");
+const TransferStudent = require("../models/TranferstudentModel");
 
 // get all Students
 const getStudents = async (req, res) => {
@@ -33,35 +34,134 @@ const getStudents = async (req, res) => {
 // get a single Student
 const getStudent = async (req, res) => {
   const { id } = req.params;
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such student" });
   }
-  const students = await Student.findById(id);
 
-  const student = await Promise.all(
-    students.map(async (stud) => {
-      const user = await User.findById(stud._id.toString());
+  try {
+    const student = await Student.findById(id);
+    if (!student) {
+      return res.status(404).json({ error: "No such student" });
+    }
+    const user = await User.findById(student._id.toString());
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// get a single Student Enrollment
+const getStudentEnrollment = async (req, res) => {
+  const { id } = req.params;
+
+  // Validate the ID
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({ error: "Invalid student ID" });
+  }
+
+  try {
+    // Query and populate
+    const student = await Student.findById(id)
+      .populate("currentEnrollement._academicCurriculum") // Populate AcademicCurriculum
+      .populate("currentEnrollement._grade") // Populate Grade
+      .populate({
+        path: "currentEnrollement._section", // Populate Section
+        populate: {
+          path: "homeRoomTeacher", // Populate homeRoomTeacher inside Section
+          model: "User", // Model of the homeRoomTeacher (replace "User" if needed)
+        },
+      })
+      .populate("enrollment_history._academicCurriculum") // Populate history AcademicCurriculum
+      .populate("enrollment_history._grade") // Populate history Grade
+      .populate("enrollment_history._section"); // Populate history Section
+
+    if (!student) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    // Send populated data
+    res.status(200).json(student);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+const getMarksByStudentId = async (req, res) => {
+  const { gradeId, sectionId, semesterId, id } = req.params;
+  const marks = await Mark.find({ section: sectionId }).sort({
+    createdAt: -1,
+  });
+
+  const marksData = await Promise.all(
+    marks.map(async (mark) => {
+      const user = await User.findById(mark.student);
+      const totalMarksBySubject = {};
+      const results = mark.results.filter((result) => {
+        return result._semesters.toString() == semesterId;
+      });
+
+      // Function to calculate the total mark by subject Id
+      results[0].result.forEach((resultItem) => {
+        const subjectId = resultItem.subject.toString();
+        const assessment = resultItem.assessment;
+        const totalMarks = Object.values(assessment).reduce(
+          (acc, curr) => acc + (curr.value || 0),
+          0
+        );
+
+        if (totalMarksBySubject[subjectId]) {
+          totalMarksBySubject[subjectId] += totalMarks;
+        } else {
+          totalMarksBySubject[subjectId] = totalMarks;
+        }
+      });
+
+      const totalMark = totalMarkResult(totalMarksBySubject);
+      const average = averageResult(totalMarksBySubject);
+
+      const academicCurriculum = await AcademicCurriculum.findById(
+        marks[0].academicCurriculum.toString()
+      );
+
       return {
-        ...stud._doc,
+        ...mark._doc,
         firstName: user ? user.firstName : null,
         middleName: user ? user.middleName : null,
         lastName: user ? user.lastName : null,
         gender: user ? user.gender : null,
-        email: user ? user.email : null,
-        role: user ? user.role : null,
+        totalMark,
+        average,
+        status:
+          average >= academicCurriculum.passTresholdAverage ? "Pass" : "Fail",
+        ...totalMarksBySubject,
       };
     })
   );
 
-  if (!student) {
-    return res.status(404).json({ error: "No such student" });
+  // Filter the data for the specific student
+  const studentMarksData = marksData.find(
+    (mark) => mark.student.toString() === id
+  );
+
+  if (!studentMarksData) {
+    return res.status(404).json({ message: "Student marks not found" });
   }
 
-  res.status(200).json(student);
+  // Add rank calculation if necessary
+  studentMarksData.rank = 1;
+  marksData.forEach((otherMark) => {
+    if (otherMark.average > studentMarksData.average) {
+      studentMarksData.rank++;
+    }
+  });
+
+  res.status(200).json(studentMarksData);
 };
 
 // create a new Student
+
 const createStudent = async (req, res) => {
   const {
     firstName,
@@ -83,38 +183,53 @@ const createStudent = async (req, res) => {
 
   let emptyFields = [];
 
-  if (!firstName) {
-    emptyFields.push("firstName");
-  }
-  if (!middleName) {
-    emptyFields.push("middleName");
-  }
-  if (!lastName) {
-    emptyFields.push("lastName");
-  }
-  if (!gender) {
-    emptyFields.push("gender");
-  }
-  if (!email) {
-    emptyFields.push("email");
-  }
-  if (!role) {
-    emptyFields.push("role");
-  }
-  if (!birthDate) {
-    emptyFields.push("birthDate");
-  }
-  if (!registrationType) {
-    emptyFields.push("registrationType");
-  }
+  if (!firstName) emptyFields.push("firstName");
+  if (!middleName) emptyFields.push("middleName");
+  if (!lastName) emptyFields.push("lastName");
+  if (!gender) emptyFields.push("gender");
+  if (!role) emptyFields.push("role");
+  if (!birthDate) emptyFields.push("birthDate");
+  if (!registrationType) emptyFields.push("registrationType");
 
   if (emptyFields.length > 0) {
-    return res
-      .status(400)
-      .json({ error: "Please fill in all the fields", emptyFields });
+    return res.status(400).json({
+      error: "Please fill in all the fields",
+      emptyFields,
+    });
   }
+
+  const birthday = new Date(birthDate);
+  const currentDate = new Date();
+  const ageInMilliseconds = currentDate - birthday;
+  const ageInYears = ageInMilliseconds / (1000 * 60 * 60 * 24 * 365.25);
+  if (ageInYears < 4) {
+    return res.status(400).json({
+      error: "Student age is not eligible",
+      emptyFields,
+    });
+  }
+
   try {
-    // create student
+    const ethiopianYear = await AcademicSession.find();
+
+    const lastStudent = await Student.findOne()
+      .sort({ createdAt: -1 })
+      .select("studentIdNumber");
+
+    let nextSequence = 1;
+    if (lastStudent && lastStudent.studentIdNumber) {
+      const lastSequence = parseInt(
+        lastStudent.studentIdNumber.split("/")[1],
+        10
+      );
+      nextSequence = lastSequence + 1;
+    }
+
+    const formattedSequence = nextSequence.toString().padStart(4, "0");
+    const studentIdNumber = `${registrationType}/${formattedSequence}/${
+      ethiopianYear[0].academicYear % 100
+    }`;
+
     const user = await createUser(
       firstName,
       middleName,
@@ -126,7 +241,6 @@ const createStudent = async (req, res) => {
       familyAddress
     );
 
-    // create student family
     const family = await createUser(
       familyFirstName,
       familyMiddleName,
@@ -137,11 +251,12 @@ const createStudent = async (req, res) => {
       familyPhoneNumber,
       familyAddress
     );
-    console.log(family);
+
     const student = new Student({
       _id: user.user._id,
       birthDate,
       registrationType,
+      studentIdNumber,
       family: family.user._id,
     });
     await student.save();
@@ -151,6 +266,7 @@ const createStudent = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 // create a transfer Student
 const createSeniorStudent = async (req, res) => {
   const {
@@ -176,8 +292,11 @@ const createSeniorStudent = async (req, res) => {
     previousTotalMark,
     previousAverage,
     previousAcademicStatus,
+    nameOfSchool,
+    addressOfSchool,
+    contactOfSchool,
+    otherInfo,
   } = req.body;
-  console.log(familyAddress);
 
   let emptyFields = [];
 
@@ -193,9 +312,7 @@ const createSeniorStudent = async (req, res) => {
   if (!gender) {
     emptyFields.push("gender");
   }
-  if (!email) {
-    emptyFields.push("email");
-  }
+
   if (!role) {
     emptyFields.push("role");
   }
@@ -219,25 +336,40 @@ const createSeniorStudent = async (req, res) => {
     !previousClassification ||
     !previousTotalMark ||
     !previousAverage ||
-    !previousAcademicStatus
+    !previousAcademicStatus ||
+    !nameOfSchool ||
+    !addressOfSchool ||
+    !contactOfSchool ||
+    !otherInfo
   ) {
     emptyFields.push("familyInfo");
   }
   if (emptyFields.length > 0) {
-    console.log(
-      familyFirstName,
-      familyMiddleName,
-      familyLastName,
-      familyGender,
-      familyEmail,
-      familyPhoneNumber,
-      familyAddress
-    );
     return res
       .status(400)
       .json({ error: "Please fill in all the fields", emptyFields });
   }
   try {
+    const ethiopianYear = await AcademicSession.find();
+
+    const lastStudent = await Student.findOne()
+      .sort({ createdAt: -1 })
+      .select("studentIdNumber");
+
+    let nextSequence = 1;
+    if (lastStudent && lastStudent.studentIdNumber) {
+      const lastSequence = parseInt(
+        lastStudent.studentIdNumber.split("/")[1],
+        10
+      );
+      nextSequence = lastSequence + 1;
+    }
+
+    const formattedSequence = nextSequence.toString().padStart(4, "0");
+    const studentIdNumber = `${registrationType}/${formattedSequence}/${
+      ethiopianYear[0].academicYear % 100
+    }`;
+
     const seniorEnrollment = {
       _academicYear: previousYear,
       _grade: previousGrade,
@@ -245,7 +377,6 @@ const createSeniorStudent = async (req, res) => {
       _classification: previousClassification,
       _totalMark: previousTotalMark,
       _average: previousAverage,
-      _grade: previousGrade,
       _status: previousAcademicStatus,
     };
 
@@ -277,16 +408,34 @@ const createSeniorStudent = async (req, res) => {
       familyPhoneNumber,
       familyAddress
     );
-    console.log(family._id);
     const student = new Student({
       _id: user.user._id,
       birthDate,
+      studentIdNumber,
       registrationType,
       family: family.user._id,
       currentEnrollement: seniorEnrollment,
       enrollment_history: [seniorEnrollment],
     });
+
     await student.save();
+
+    const transferstudent = new TransferStudent({
+      _id: user.user._id,
+      transferYear: previousYear,
+      transferGrade: previousGrade,
+      transferStage: previousStage,
+      transferClassification: previousClassification,
+      transferTotalMark: previousTotalMark,
+      transferAverage: previousAverage,
+      transferAcademicStatus: previousAcademicStatus,
+      nameOfSchool,
+      addressOfSchool,
+      contactOfSchool,
+      otherInfo,
+    });
+
+    await transferstudent.save();
 
     // add senior information
 
@@ -404,7 +553,7 @@ const enrollStudents = async (req, res) => {
             const value = subject.assessment[type];
             if (value > 0) {
               assessment[type] = {
-                value: 0,
+                value: null,
                 status: "assigned",
               };
             }
@@ -453,6 +602,68 @@ const enrollStudents = async (req, res) => {
   }
 };
 
+const deregisterStudents = async (req, res) => {
+  const { studentIds, acCurriculumId, gradeId, sectionId } = req.body;
+
+  try {
+    await Promise.all(
+      studentIds.map(async (studentId) => {
+        const student = await Student.findById(studentId);
+        if (!student) {
+          throw new Error(`Student with ID ${studentId} not found`);
+        }
+
+        // Find the enrollment history excluding "_status: 'NEW'"
+        const previousEnrollmentHistory = student.enrollment_history.filter(
+          (history) => history._status !== "NEW"
+        );
+
+        let updatedEnrollment = {};
+
+        if (previousEnrollmentHistory.length > 0) {
+          const recentHistory =
+            previousEnrollmentHistory[previousEnrollmentHistory.length - 1];
+          updatedEnrollment = {
+            _academicYear: recentHistory?._academicYear,
+            _academicCurriculum: recentHistory?._academicCurriculum,
+            _grade: recentHistory?._grade,
+            _stage: recentHistory?._stage,
+            _classification: recentHistory?._classification,
+            _totalMark: recentHistory?._totalMark,
+            _average: recentHistory?._average,
+            _status: recentHistory?._status,
+          };
+        } else {
+          updatedEnrollment = null;
+        }
+
+        await Student.findByIdAndUpdate(
+          studentId,
+          {
+            ...(updatedEnrollment
+              ? { $set: { currentEnrollement: updatedEnrollment } } // Set to the recent enrollment
+              : { $unset: { currentEnrollement: "" } }), // Unset if no previous enrollment
+            $pull: { enrollment_history: { _status: "NEW" } }, // Remove the "NEW" entry
+          },
+          { new: true }
+        );
+
+        // Delete the related Mark record
+        await Mark.deleteOne({
+          academicCurriculum: acCurriculumId,
+          grade: gradeId,
+          section: sectionId,
+          student: studentId,
+        });
+      })
+    );
+
+    res.status(200).json({ message: "Students deregistered successfully" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const getElligibleStudent = async (req, res) => {
   const { gradeId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(gradeId)) {
@@ -471,8 +682,6 @@ const getElligibleStudent = async (req, res) => {
         { enrollment_history: { $size: 0 } },
       ],
     });
-
-    console.log(gradeId);
 
     // integrating students and user collecton
     const student = await Promise.all(
@@ -556,7 +765,6 @@ const getSpecificStudent = async (req, res) => {
 
         results.push(result);
       }
-      console.log(results);
       res.status(200).json(results);
     } else {
       // No match in currentEnrollment, now check enrollment_history
@@ -589,7 +797,7 @@ const getSpecificStudent = async (req, res) => {
 
         res.status(200).json(results);
       } else {
-        res.status(404).json({ message: "No matching students found" });
+        res.status(202).json({ message: "No matching students found" });
       }
     }
   } catch (error) {
@@ -619,6 +827,34 @@ function previousGrade(grade) {
   }
 }
 
+const totalMarkResult = (mark) => {
+  let totalResult = 0;
+  for (key in mark) {
+    totalResult += mark[key];
+  }
+  return totalResult;
+};
+
+const totalAverageMark = (mark, semester) => {
+  let totalResult = 0;
+  let subjectNumber = 0;
+  for (key in mark) {
+    totalResult += mark[key];
+    subjectNumber += 1;
+  }
+  return totalResult / semester;
+};
+
+const averageResult = (mark) => {
+  let totalResult = 0;
+  let subjectNumber = 0;
+  for (key in mark) {
+    totalResult += mark[key];
+    subjectNumber += 1;
+  }
+  return totalResult / subjectNumber;
+};
+
 // function formating date
 const dateFormating = (date) => {
   const dates = new Date(date);
@@ -635,5 +871,8 @@ module.exports = {
   updateStudent,
   getElligibleStudent,
   enrollStudents,
+  deregisterStudents,
   getSpecificStudent,
+  getStudentEnrollment,
+  getMarksByStudentId,
 };

@@ -1,3 +1,4 @@
+const AcademicCurriculum = require("../models/AcademicCurriculumModel");
 const Mark = require("../models/MarkModel");
 const User = require("../models/UserModel");
 
@@ -35,6 +36,10 @@ const getMarks = async (req, res) => {
       const totalMark = totalMarkResult(totalMarksBySubject);
       const average = averageResult(totalMarksBySubject);
 
+      const academicCurriculum = await AcademicCurriculum.findById(
+        marks[0].academicCurriculum.toString()
+      );
+
       return {
         ...mark._doc,
         firstName: user ? user.firstName : null,
@@ -43,7 +48,8 @@ const getMarks = async (req, res) => {
         gender: user ? user.gender : null,
         totalMark,
         average,
-        status: average >= 50 ? "Pass" : "Fail",
+        status:
+          average >= academicCurriculum.passTresholdAverage ? "Pass" : "Fail",
         ...totalMarksBySubject,
       };
     })
@@ -106,6 +112,10 @@ const getAverageMarks = async (req, res) => {
       const totalMark = totalMarkResult(totalMarksBySubject);
       const average = totalAverageMark(totalMarksBySubject, totalSubject);
 
+      const academicCurriculum = await AcademicCurriculum.findById(
+        marks[0].academicCurriculum.toString()
+      );
+
       return {
         ...mark._doc,
         firstName: user ? user.firstName : null,
@@ -114,7 +124,8 @@ const getAverageMarks = async (req, res) => {
         gender: user ? user.gender : null,
         totalMark,
         average,
-        status: average >= 50 ? "Pass" : "Fail",
+        status:
+          average >= academicCurriculum.passTresholdAverage ? "Pass" : "Fail",
         ...totalMarksBySubject,
       };
     })
@@ -295,8 +306,8 @@ const addSubjectMarks = async (req, res) => {
         const subjectResult = resultSemester.result.find(
           (result) => result.subject.toString() === subject
         );
-        // Update the result array for the specific subject and student
 
+        // Update the result array for the specific subject and student
         const updatedResult = Object.keys(assessment).reduce((acc, key) => {
           acc[key] = {
             value: assessment[key] ? assessment[key] : 0,
@@ -308,12 +319,15 @@ const addSubjectMarks = async (req, res) => {
         // updating subject
         subjectResult.assessment = updatedResult;
         await studentMark.save();
-
-        res.status(200).json(subjectResult);
       })
     );
+
+    // Send response after all marks are updated
+    res.status(200).json({ message: "Marks updated successfully" });
   } catch (error) {
-    throw new Error("Error updating marks: " + error.message);
+    // Handle errors gracefully
+    console.error("Error updating marks:", error);
+    res.status(500).json({ error: "Error updating marks" });
   }
 };
 

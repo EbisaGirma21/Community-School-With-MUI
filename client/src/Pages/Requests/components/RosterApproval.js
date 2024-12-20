@@ -98,18 +98,23 @@ const RosterApproval = () => {
     );
   }
 
+  const rosterApproval = request.filter((reque) => {
+    return reque.requestType === "rosterApproval";
+  });
   // convert department object to array if necessary
-  const tableRows = Array.isArray(request) ? request : [request];
+  const tableRows = Array.isArray(rosterApproval)
+    ? rosterApproval
+    : [rosterApproval];
   return (
     <Box>
       {/* <Box className="border-2 border-gray-200 p-2 rounded-md m-1 flex justify-between"></Box> */}
       <Box style={{ height: 500, m: 1 }}>
         <DataGrid
           columns={tableColumns}
-          key={request._id}
+          key={rosterApproval._id}
           rows={tableRows}
           setSelectedRows={setSelectedRows}
-          getRowId={(row) => row._id || request.indexOf(row)}
+          getRowId={(row) => row._id || rosterApproval.indexOf(row)}
         />
       </Box>
       {content}

@@ -22,6 +22,7 @@ export default function Tabs(props) {
                 label={tab_content.label}
                 value={tab_content.value || 1}
                 style={tab_content.style}
+                disabled={tab_content.disabled}
               />
             ))}
           </TabList>

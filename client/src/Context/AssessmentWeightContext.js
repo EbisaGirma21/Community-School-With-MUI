@@ -55,7 +55,7 @@ function AssessmentWeightProvider({ children }) {
       }
     } catch (error) {
       if (error.response) {
-        toast.error("Curriculum already registered on academic curriculum!");
+        toast.error("The assessment sum exceed 100%");
         setError(error.response.data.error);
         setIsLoading(false);
       } else {

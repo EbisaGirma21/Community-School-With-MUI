@@ -29,14 +29,13 @@ function Registration() {
   const { curriculum, fetchCurriculumById } = useContext(CurriculumContext);
   const { grade, fetchGradeByStage } = useContext(GradeContext);
 
-  //   fetch curriculum useEffect
+  //   fetch academic sessions useEffect
   useEffect(() => {
     fetchAcademicSessions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(academicSession);
 
-  //   fetch curriculum useEffect
+  //   fetch academic curriculum useEffect
   useEffect(() => {
     fetchAcademicCurriculums();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,7 +72,7 @@ function Registration() {
           fetchGradeByStage(curriculum.stage);
         })
         .catch((error) => {
-          // Handle any errors
+          console.log(error);
         });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,9 +99,6 @@ function Registration() {
         label: gr.stage === "KG" ? `KG - ${gr.level}` : `Grade - ${gr.level}`,
         value: gr._id,
       }));
-  // academicSession[0].registrationDate
-  //   ? new Date(academicSession[0].registrationDate).getTime()
-  //   :
 
   const countDownDate =
     academicSession.length !== 0
@@ -139,12 +135,56 @@ function Registration() {
     return () => clearInterval(interval); // Cleanup on unmount
   }, [timeRemaining]);
 
-  return (
+  return !academicSession ? (
+    <Box className="text-lg text-center justify-center">
+      No Registration on Progress
+    </Box>
+  ) : (
     <Box>
       <Box>
-        {timeRemaining === "EXPIRED" ? (
+        {new Date(academicSession[0]?.registrationDeadLine).getTime() <
+        new Date().getTime() ? (
+          <>
+            <Box className="flex flex-col items-center justify-center mt-24 gap-4 text-4xl font-bold uppercase text-red-500">
+              Registration Period Ended
+            </Box>
+            <Box className="flex flex-col items-center justify-center mt-16 text-center gap-8">
+              <Typography className="text-2xl text-gray-600">
+                Registration is now closed.
+              </Typography>
+              <Typography className="text-lg text-gray-500 max-w-3xl">
+                The registration period has successfully ended. Please review
+                the applications received and proceed with the next steps in the
+                admissions process. If additional information or adjustments are
+                needed, use the admin portal to manage student data or
+                communicate with applicants.
+              </Typography>
+              <Typography className="text-lg text-gray-500">
+                For any special cases or exceptions, please consult the
+                admissions office or update the registration settings as
+                necessary.
+              </Typography>
+              <Box className="flex justify-center gap-4">
+                <button className="px-6 py-3 bg-[#C7E4FC] text-[#1E88E5] rounded-lg hover:bg-[#1E88E5] hover:text-[#C7E4FC]">
+                  Review Applications
+                </button>
+                <button className="px-6 py-3 bg-[#EDE7F6] text-[#673AB7] rounded-lg hover:bg-[#673AB7] hover:text-[#EDE7F6]">
+                  Update Registration Settings
+                </button>
+              </Box>
+            </Box>
+            <Box className="flex justify-center mt-16 text-gray-500">
+              <Typography className="text-sm">
+                For support or technical assistance, contact the IT team at
+                <span className="text-blue-500"> support@school.com</span> or
+                call us at
+                <span className="text-blue-500"> +123 456 7890</span>.
+              </Typography>
+            </Box>
+          </>
+        ) : timeRemaining === "EXPIRED" ? (
           <Box>
-            <Typography sx={{ m: 1 }}>Registrations</Typography>
+            <Box className="bg-white p-4 text-lg rounded-lg">Registration</Box>
             <Box
               className="flex p-1 gap-4"
               sx={{ p: 1, border: "1px solid #dbdde0", borderRadius: "10px" }}
@@ -181,26 +221,58 @@ function Registration() {
               />
             </Box>
             <RegistrationTab
+              acSession={acSession}
               acCurriculumId={acCurriculumId}
               gradeId={gradeId}
             />
           </Box>
         ) : timeRemaining !== null ? (
-          <Box className="flex items-center justify-center  mt-40 gap-4 ">
-            <Box className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 p-4 rounded-lg">
-              {timeRemaining.days} <Typography>Days</Typography>
+          <>
+            <Box className="flex flex-col items-center justify-center mt-20 gap-4 text-4xl font-bold uppercase text-slate-500">
+              Registration starts in
             </Box>
-            <Box className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 p-4 rounded-lg">
-              {timeRemaining.hours}
-              <Typography>Hours</Typography>
+            <Box className="flex items-center justify-center mt-8 gap-4">
+              <Box className="text-9xl text-white bg-gradient-to-r from-[#77c2ff65] via-indigo-500 to-purple-500 p-4 rounded-lg font-bold">
+                {timeRemaining.days}{" "}
+                <Typography className="text-2xl">Days</Typography>
+              </Box>
+              <Box className="text-9xl text-white bg-gradient-to-r from-[#77c2ff65] via-indigo-500 to-purple-500 p-4 rounded-lg font-bold">
+                {timeRemaining.hours}{" "}
+                <Typography className="text-2xl">Hours</Typography>
+              </Box>
+              <Box className="text-9xl text-white bg-gradient-to-r from-[#77c2ff65] via-indigo-500 to-purple-500 p-4 rounded-lg font-bold">
+                {timeRemaining.minutes}{" "}
+                <Typography className="text-2xl">Minutes</Typography>
+              </Box>
+              <Box className="text-9xl text-white bg-gradient-to-r from-[#77c2ff65] via-indigo-500 to-purple-500 p-4 rounded-lg font-bold">
+                {timeRemaining.seconds}{" "}
+                <Typography className="text-2xl">Seconds</Typography>
+              </Box>
             </Box>
-            <Box className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 p-4 rounded-lg">
-              {timeRemaining.minutes} <Typography>Minutes</Typography>
+            <Box className="flex flex-col items-center justify-center mt-16 text-center gap-8">
+              <Typography className="text-2xl text-gray-600">
+                Get ready to join our school community!
+              </Typography>
+              <Typography className="text-lg text-gray-500 max-w-3xl">
+                Our registration portal will open soon. Once live, you’ll be
+                able to register, check admission requirements, and complete the
+                onboarding process seamlessly. Stay tuned and prepare your
+                documents in advance!
+              </Typography>
+              <Typography className="text-lg text-gray-500">
+                If you have any questions, feel free to reach out to our support
+                team.
+              </Typography>
+              <Box className="flex justify-center gap-4">
+                <button className="px-6 py-3 bg-[#C7E4FC] text-[#1E88E5] rounded-lg hover:bg-[#1E88E5] hover:text-[#C7E4FC]">
+                  Learn More
+                </button>
+                <button className="px-6 py-3 bg-[#EDE7F6] text-[#673AB7] rounded-lg hover:bg-[#673AB7] hover:text-[#EDE7F6]">
+                  Contact Support
+                </button>
+              </Box>
             </Box>
-            <Box className="text-9xl text-white bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 p-4 rounded-lg">
-              {timeRemaining.seconds} <Typography>Seconds</Typography>
-            </Box>
-          </Box>
+          </>
         ) : (
           <Box className=" mt-64 flex justify-center items-start ">
             <Spinner className="" />

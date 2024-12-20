@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const TranscriptApproval = () => {
-  return (
-    <div>TranscriptApproval</div>
-  )
-}
+  return <div>Up on Progress</div>;
+};
 
-export default TranscriptApproval
+export default TranscriptApproval;

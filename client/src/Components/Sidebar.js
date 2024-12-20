@@ -444,26 +444,28 @@ function SideBar() {
   // returned drawer
   return (
     <Drawer variant="permanent" anchor="left" sx={styledDrawer}>
-      <SideBarTitle sx={styledSidebarTitle}>
-        <img
-          src={require("../assets/unnamed.png")}
-          alt={"W"}
-          loading="W"
-          style={styledImage}
-        />
-        <Typography
-          variant="p"
-          sx={{
-            display: isSidebarOpen ? "block" : "none",
-            textAlign: "center",
-            marginLeft: "10px",
-            fontWeight: 600,
-            fontSize: "20px",
-          }}
-        >
-          WKU-CSMS
-        </Typography>
-      </SideBarTitle>
+      <Link to="/" className="cursor-pointer">
+        <SideBarTitle sx={styledSidebarTitle}>
+          <img
+            src={require("../assets/unnamed.png")}
+            alt={"W"}
+            loading="W"
+            style={styledImage}
+          />
+          <Typography
+            variant="p"
+            sx={{
+              display: isSidebarOpen ? "block" : "none",
+              textAlign: "center",
+              marginLeft: "10px",
+              fontWeight: 600,
+              fontSize: "20px",
+            }}
+          >
+            WKU-CSMS
+          </Typography>
+        </SideBarTitle>
+      </Link>
 
       {/* list of admin page */}
       <Box sx={{ marginTop: "83px", padding: "0" }}>

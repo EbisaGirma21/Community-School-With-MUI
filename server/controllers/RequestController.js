@@ -68,25 +68,14 @@ const createRequest = async (req, res) => {
   const exists = exist.some(
     (item) =>
       item.requestedSemester.equals(requestedSemester) &&
-      item.requestedSection.equals(requestedSection)
+      item.requestedSection.equals(requestedSection) &&
+      item.requestType === requestType
   );
-  console.log(exists);
   if (exists) {
     res.status(409).json({ error: "Request already sent" });
   } else {
     // Process the request because it's not a duplicate
 
-    let emptyFields = [];
-
-    if (!req.body) {
-      emptyFields.push("all");
-    }
-
-    if (emptyFields.length > 0) {
-      return res
-        .status(400)
-        .json({ error: "Please fill in all required the fields", emptyFields });
-    }
     const requestStatus = "notApproved";
     try {
       const request = await Request.create({
@@ -203,35 +192,45 @@ const approveRequest = async (req, res) => {
       return res.status(409).json({ error: "Request already approved" });
     }
 
-    // Find the current semester
-    const section = await Section.findOneAndUpdate(
-      {
-        _id: request.requestedSection,
-        "semesters._semester": request.requestedSemester,
-      },
-      { $set: { "semesters.$._status": "CMP" } }
-    );
-    // console.log(section);
-    // Find the index of the current semester
-    const currentIndex = section.semesters.findIndex((semester) => {
-      return (
-        semester._semester.toString() === request.requestedSemester.toString()
-      );
-    });
-    console.log(currentIndex);
-
-    // Check if there is a next semester
-    if (currentIndex < section.semesters.length - 1) {
-      // Update the next semester's _status to 'ONP'
-      const nextSemesterId = section.semesters[currentIndex + 1]._semester;
-      await Section.updateOne(
+    // update by checking the type
+    if (request.requestType === "remarkRequest") {
+      const section = await Section.findOneAndUpdate(
         {
           _id: request.requestedSection,
-          "semesters._semester": nextSemesterId,
+          "semesters._semester": request.requestedSemester,
         },
         { $set: { "semesters.$._status": "ONP" } }
       );
+    } else if (request.requestType === "rosterApproval") {
+      const section = await Section.findOneAndUpdate(
+        {
+          _id: request.requestedSection,
+          "semesters._semester": request.requestedSemester,
+        },
+        { $set: { "semesters.$._status": "CMP" } }
+      );
+
+      // Find the index of the current semester
+      const currentIndex = section.semesters.findIndex((semester) => {
+        return (
+          semester._semester.toString() === request.requestedSemester.toString()
+        );
+      });
+
+      // Check if there is a next semester
+      if (currentIndex < section.semesters.length - 1) {
+        // Update the next semester's _status to 'ONP'
+        const nextSemesterId = section.semesters[currentIndex + 1]._semester;
+        await Section.updateOne(
+          {
+            _id: request.requestedSection,
+            "semesters._semester": nextSemesterId,
+          },
+          { $set: { "semesters.$._status": "ONP" } }
+        );
+      }
     }
+
     // Update the request status
     await Request.findByIdAndUpdate(id, { requestStatus: "approved" });
 

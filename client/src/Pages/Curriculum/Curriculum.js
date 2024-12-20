@@ -5,7 +5,7 @@ function Curriculum() {
   return (
     <Box>
       {localStorage.setItem("path", JSON.stringify("curriculum"))}
-      <Box>Curriculum</Box>
+      <Box className="bg-white p-4 text-lg rounded-lg">Curriculum</Box>
       <Box>
         <CurriculumTab />
       </Box>

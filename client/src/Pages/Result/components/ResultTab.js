@@ -11,6 +11,10 @@ export default function ResultTab({
   sectionId,
   currentStatus,
   currentSectionHomeRoom,
+  subjectIds,
+  classStartDate,
+  classEndDate,
+  semesterOption,
 }) {
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -28,6 +32,9 @@ export default function ResultTab({
             gradeId={gradeId}
             sectionId={sectionId}
             currentStatus={currentStatus}
+            subjectIds={subjectIds}
+            classStartDate={classStartDate}
+            classEndDate={classEndDate}
           />
         </Box>
       ),
@@ -35,15 +42,19 @@ export default function ResultTab({
 
     {
       id: "2",
-      label: "Roster",
+      label:
+        user.role.includes("director") || currentSectionHomeRoom
+          ? "Roster"
+          : "",
       value: "2",
-      style: {
+      sx: {
         display:
-          user.role.includes("director") || user.role.includes("homeRoom")
+          user.role.includes("director") || currentSectionHomeRoom
             ? "block"
             : "none",
       },
-
+      disabled:
+        user.role.includes("director") || currentSectionHomeRoom ? false : true,
       content: (
         <Box
           display={
@@ -52,14 +63,17 @@ export default function ResultTab({
               : "none"
           }
         >
-          <RosterTable
-            acCurriculumId={acCurriculumId}
-            semesterId={semesterId}
-            curriculumId={curriculumId}
-            gradeId={gradeId}
-            sectionId={sectionId}
-            currentStatus={currentStatus}
-          />
+          {user.role.includes("director") || currentSectionHomeRoom ? (
+            <RosterTable
+              acCurriculumId={acCurriculumId}
+              semesterId={semesterId}
+              curriculumId={curriculumId}
+              gradeId={gradeId}
+              sectionId={sectionId}
+              currentStatus={currentStatus}
+              semesterOption={semesterOption}
+            />
+          ) : null}
         </Box>
       ),
     },

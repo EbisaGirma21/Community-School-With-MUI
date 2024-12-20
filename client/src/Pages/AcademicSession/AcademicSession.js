@@ -6,7 +6,6 @@ import AcademicSessionCreate from "./components/AcademicSessionCreate";
 import AcademicSessionContext from "../../context/AcademicSessionContext";
 
 function AcademicSession() {
-
   const { setError, setIsLoading } = useContext(AcademicSessionContext);
 
   // first process
@@ -28,12 +27,11 @@ function AcademicSession() {
 
   return (
     <Box>
-      <Box>Academic Session</Box>
-
+      <Box className="bg-white p-4 text-lg rounded-lg">Academic Session</Box>
       <Button
         onClick={handleOpen}
         variant="contained"
-        sx={{ m: 1, background: "#1E88E5" }}
+        sx={{ m: 1, background: "#5E35B1" }}
       >
         <AddIcon />
         New

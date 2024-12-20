@@ -3,6 +3,14 @@ import Modal from "../../../components/UI/Modal";
 import { TextField } from "@mui/material";
 import TeacherContext from "../../../context/TeacherContext";
 import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
+import Dropdown from "../../../components/UI/Dropdown";
+
+const educationLevelOption = [
+  { label: "Level IV", value: "Level IV" },
+  { label: "BSc", value: "BSc" },
+  { label: "MSc", value: "MSc" },
+  { label: "PhD", value: "PhD" },
+];
 
 const TeacherUpdate = (props) => {
   const { handleClose, open, teacherId } = props;
@@ -20,8 +28,13 @@ const TeacherUpdate = (props) => {
   const [lastName, setLastName] = useState(filteredTeacher[0].lastName);
   const [gender, setGender] = useState(filteredTeacher[0].gender);
   const [email, setEmail] = useState(filteredTeacher[0].email);
-  const [phoneNumber, setPhoneNumber] = useState(filteredTeacher[0].phoneNumber);
+  const [phoneNumber, setPhoneNumber] = useState(
+    filteredTeacher[0].phoneNumber
+  );
   const [address, setAddress] = useState(filteredTeacher[0].address);
+  const [educationLevel, setEducationLevel] = useState(
+    filteredTeacher[0].educationLevel
+  );
 
   // Change handler funtions
   const handleFirstNameChange = (e) => {
@@ -61,7 +74,8 @@ const TeacherUpdate = (props) => {
       gender,
       email,
       phoneNumber,
-      address
+      address,
+      educationLevel
     );
     if (success) {
       setFirstName("");
@@ -152,6 +166,15 @@ const TeacherUpdate = (props) => {
           variant="standard"
           value={address}
           onChange={handleAddressChange}
+        />
+        <Dropdown
+          label="EducationLevel"
+          options={educationLevelOption}
+          value={educationLevel}
+          onChange={(e) => {
+            setEducationLevel(e.target.value);
+          }}
+          width={"100%"}
         />
       </form>
     </Modal>

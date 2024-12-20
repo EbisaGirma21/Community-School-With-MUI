@@ -6,6 +6,7 @@ const SectionContext = createContext();
 
 function SectionProvider({ children }) {
   const [section, setSection] = useState([]);
+  const [sectionById, setSectionById] = useState([]);
   const [sectionSubject, setSectionSubject] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
@@ -14,6 +15,11 @@ function SectionProvider({ children }) {
   const fetchSections = async () => {
     const response = await axios.get("/section");
     setSection(response.data);
+  };
+
+  const fetchSectionById = async (sectionId) => {
+    const response = await axios.get(`/section/${sectionId}`);
+    setSectionById(response.data);
   };
 
   const fetchSectionSubject = async (acCurriculumId, gradeId, sectionId) => {
@@ -202,11 +208,13 @@ function SectionProvider({ children }) {
     isLoading,
     section,
     sectionSubject,
+    sectionById,
     setError,
     setIsLoading,
     assignHomeRoomTeacher,
     assignTeacher,
     fetchSectionSubject,
+    fetchSectionById,
     fetchSections,
     createSection,
     deleteSectionById,

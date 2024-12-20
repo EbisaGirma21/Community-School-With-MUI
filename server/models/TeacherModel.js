@@ -6,6 +6,10 @@ const TeacherSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    educationLevel: {
+      type: String,
+      required: true,
+    },
     department: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Deparment",

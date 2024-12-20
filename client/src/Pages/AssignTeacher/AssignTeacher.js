@@ -101,7 +101,7 @@ function AssignTeacher() {
 
   return (
     <Box>
-      <Typography sx={{ m: 1 }}>AssignTeachers</Typography>
+      <Box className="bg-white p-4 text-lg rounded-lg">Assign Teacher </Box>
       <Box
         className="flex p-1 gap-4"
         sx={{ border: "1px solid #dbdde0", borderRadius: "10px" }}
