@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 const ElligibleStudentContext = createContext();
 
-function ElligibleStudentProvider({ children }) {
+function StudentEnrollmentProvider({ children }) {
   const [elligibleStudent, setElligibleStudent] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
@@ -55,6 +55,46 @@ function ElligibleStudentProvider({ children }) {
     }
   };
 
+  const deregisterStudents = async (
+    studentIds,
+    gradeId,
+    sectionId,
+    acCurriculumId
+  ) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await axios.patch("/student/deregister", {
+        studentIds,
+        gradeId,
+        sectionId,
+        acCurriculumId,
+      });
+
+      if (response.status !== 200) {
+        setError(response.data.error);
+        setIsLoading(false);
+        return false;
+      } else {
+        setError(null);
+        setIsLoading(false);
+        fetchElligibleStudents(gradeId);
+        toast.success("Student deregistered successfully");
+        return true;
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(error.response.data.error);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        toast.error("Failed to deregister student");
+        return false;
+      }
+    }
+  };
+
   // shared operation between components
   const elligibleStudentOperation = {
     elligibleStudent,
@@ -63,6 +103,7 @@ function ElligibleStudentProvider({ children }) {
     setError,
     setIsLoading,
     enrollStudents,
+    deregisterStudents,
     fetchElligibleStudents,
   };
 
@@ -73,5 +114,5 @@ function ElligibleStudentProvider({ children }) {
   );
 }
 
-export { ElligibleStudentProvider };
+export { StudentEnrollmentProvider as StudentEnrollmentProvider };
 export default ElligibleStudentContext;

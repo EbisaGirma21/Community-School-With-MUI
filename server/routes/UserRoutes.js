@@ -8,6 +8,8 @@ const {
   deleteUser,
   updateUser,
   createOtherUser,
+  getFamily,
+  changePassword,
 } = require("../controllers/UserController");
 const requireAuth = require("../middleware/requireAuth");
 
@@ -21,7 +23,7 @@ router.post(
 );
 
 // GET all users (requires authentication)
-router.get("/",  getUsers);
+router.get("/", getUsers);
 
 // GET a single user (requires authentication)
 router.get("/:id", getUser);
@@ -34,5 +36,7 @@ router.delete("/:id", deleteUser);
 
 // UPDATE a user (requires authentication)
 router.patch("/:id", updateUser);
+
+router.post("/change-password", changePassword);
 
 module.exports = router;

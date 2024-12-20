@@ -2,11 +2,11 @@ import { createContext, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-
 const TeacherContext = createContext();
 
 function TeacherProvider({ children }) {
   const [teachers, setTeachers] = useState([]);
+  const [teacher, setTeacher] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
 
@@ -14,6 +14,16 @@ function TeacherProvider({ children }) {
   const fetchTeachers = async () => {
     const response = await axios.get("/teacher");
     setTeachers(response.data);
+  };
+
+  //  function  used to fetch data from database
+  const fetchTeacher = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (!user) {
+      throw new Error("No Teacher ID found in local storage.");
+    }
+    const response = await axios.get(`/teacher/${user?._id}`);
+    setTeacher(response.data);
   };
 
   // function used to create teacher
@@ -24,7 +34,8 @@ function TeacherProvider({ children }) {
     gender,
     email,
     phoneNumber,
-    address
+    address,
+    educationLevel
   ) => {
     setIsLoading(true);
     setError(null);
@@ -39,6 +50,7 @@ function TeacherProvider({ children }) {
         role: "teacher",
         phoneNumber,
         address,
+        educationLevel,
       });
 
       if (response.status !== 200) {
@@ -96,7 +108,8 @@ function TeacherProvider({ children }) {
     newGender,
     newEmail,
     newPhoneNumber,
-    newAddress
+    newAddress,
+    newEducationLevel
   ) => {
     setIsLoading(true);
     setError(null);
@@ -109,6 +122,7 @@ function TeacherProvider({ children }) {
         email: newEmail,
         phoneNumber: newPhoneNumber,
         address: newAddress,
+        educationLevel: newEducationLevel,
       });
 
       if (response.status !== 200) {
@@ -138,9 +152,11 @@ function TeacherProvider({ children }) {
     error,
     isLoading,
     teachers,
+    teacher,
     setError,
     setIsLoading,
     fetchTeachers,
+    fetchTeacher,
     createTeacher,
     deleteTeacherById,
     editTeacherById,

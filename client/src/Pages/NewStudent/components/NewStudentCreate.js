@@ -60,6 +60,10 @@ const NewStudentCreate = ({ handleClose, open }) => {
   const [previousAcademicStatus, setPreviousAcademicStatus] = useState("");
   const [previousTotalMark, setPreviousTotalMark] = useState("");
   const [previousAverage, setPreviousAverage] = useState("");
+  const [nameOfSchool, setNameOfSchool] = useState("");
+  const [addressOfSchool, setAddressOfSchool] = useState("");
+  const [contactOfSchool, setContactOfSchool] = useState("");
+  const [otherInfo, setOtherInfo] = useState("");
   const [isMainRegistration, setIsMainRegistration] = useState(true);
 
   // context creation
@@ -133,6 +137,18 @@ const NewStudentCreate = ({ handleClose, open }) => {
   const handlePreviousAverageChange = (e) => {
     setPreviousAverage(e.target.value);
   };
+  const handleNameOfSchoolChange = (e) => {
+    setNameOfSchool(e.target.value);
+  };
+  const handleAddressOfSchoolChange = (e) => {
+    setAddressOfSchool(e.target.value);
+  };
+  const handleContactOfSchoolChange = (e) => {
+    setContactOfSchool(e.target.value);
+  };
+  const handleOtherInfoChange = (e) => {
+    setOtherInfo(e.target.value);
+  };
 
   const handleNextClick = () => {
     setIsMainRegistration(false);
@@ -183,7 +199,11 @@ const NewStudentCreate = ({ handleClose, open }) => {
             previousClassification,
             previousTotalMark,
             previousAverage,
-            previousAcademicStatus
+            previousAcademicStatus,
+            nameOfSchool,
+            addressOfSchool,
+            contactOfSchool,
+            otherInfo
           );
     if (success) {
       setFirstName("");
@@ -207,6 +227,10 @@ const NewStudentCreate = ({ handleClose, open }) => {
       setPreviousTotalMark("");
       setPreviousAverage("");
       setPreviousAcademicStatus("");
+      setNameOfSchool("");
+      setAddressOfSchool("");
+      setContactOfSchool("");
+      setOtherInfo("");
       handleClose();
     }
   };
@@ -273,7 +297,7 @@ const NewStudentCreate = ({ handleClose, open }) => {
             </RadioGroup>
             <TextField
               margin="dense"
-              label="Email"
+              label="Email (Optional)"
               type="email"
               sx={{ minWidth: 300 }}
               variant="standard"
@@ -456,28 +480,32 @@ const NewStudentCreate = ({ handleClose, open }) => {
             <TextField
               margin="dense"
               label="Name of School"
-              type="number"
+              type="text"
+              onChange={handleNameOfSchoolChange}
               sx={{ minWidth: 300 }}
               variant="standard"
             />
             <TextField
               margin="dense"
               label="Address of School"
-              type="number"
+              type="text"
+              onChange={handleAddressOfSchoolChange}
               sx={{ minWidth: 300 }}
               variant="standard"
             />
             <TextField
               margin="dense"
               label="Contact Information of School"
-              type="number"
+              type="text"
+              onChange={handleContactOfSchoolChange}
               sx={{ minWidth: 300 }}
               variant="standard"
             />
             <TextField
               margin="dense"
               label="Other Information of School"
-              type="number"
+              type="text"
+              onChange={handleOtherInfoChange}
               sx={{ minWidth: 300 }}
               variant="standard"
             />

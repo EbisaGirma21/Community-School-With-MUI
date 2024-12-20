@@ -48,6 +48,10 @@ const CurriculumSchema = new mongoose.Schema(
               ref: "Module",
               required: true,
             },
+            subjectName: {
+              type: String,
+              required: false,
+            },
             subject_load: {
               type: Number,
               required: true,

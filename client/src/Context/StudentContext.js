@@ -7,11 +7,12 @@ const StudentContext = createContext();
 function StudentProvider({ children }) {
   const [student, setStudent] = useState([]);
   const [studentById, setStudentById] = useState(null);
+  const [studentEnrollment, setStudentEnrollment] = useState(null);
+  const [studentMark, setStudentMark] = useState(null);
   const [specificStudent, setSpecificStudent] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
 
-  //  function  used to fetch data from database
   const fetchStudents = async () => {
     const response = await axios.get("/student");
     setStudent(response.data);
@@ -33,7 +34,6 @@ function StudentProvider({ children }) {
     }
   };
 
-  // Function to fetch a student by ID from local storage
   const fetchStudentById = async () => {
     try {
       setIsLoading(true);
@@ -52,6 +52,30 @@ function StudentProvider({ children }) {
     }
   };
 
+  const fetchStudentEnrollment = async () => {
+    try {
+      setIsLoading(true);
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user) {
+        throw new Error("No student ID found in local storage.");
+      }
+      const response = await axios.get(`/student/enrollment/${user._id}`);
+
+      setStudentEnrollment(response.data);
+    } catch (err) {
+      setError(err.message);
+      toast.error("Failed to fetch student by ID.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchStudentMark = async (gradeId, sectionId, semesterId, id) => {
+    const response = await axios.get(
+      `/student/single-mark/${gradeId}/${sectionId}/${semesterId}/${id}`
+    );
+    setStudentMark(response.data);
+  };
+
   // shared operation between components
   const studentOperation = {
     student,
@@ -59,11 +83,15 @@ function StudentProvider({ children }) {
     error,
     isLoading,
     studentById,
+    studentEnrollment,
+    studentMark,
     setError,
     setIsLoading,
     fetchStudents,
     fetchStudentsBySpecifying,
     fetchStudentById,
+    fetchStudentEnrollment,
+    fetchStudentMark,
   };
 
   return (

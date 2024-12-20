@@ -13,6 +13,10 @@ const TransferStudentSchema = new mongoose.Schema(
     transferTotalMark: { type: Number, required: true },
     transferAverage: { type: Number, required: true },
     transferAcademicStatus: { type: String, required: true },
+    nameOfSchool: { type: String, required: true },
+    addressOfSchool: { type: String, required: true },
+    contactOfSchool: { type: String, required: true },
+    otherInfo: { type: String, required: true },
   },
   { timestamps: true },
   { _id: false }

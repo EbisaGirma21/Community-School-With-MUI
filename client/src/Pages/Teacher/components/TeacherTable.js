@@ -13,6 +13,12 @@ const tableColumns = [
   { field: "email", headerName: "Email", flex: 1, minWidth: 150 },
   { field: "phoneNumber", headerName: "Phone Number", flex: 1, minWidth: 150 },
   { field: "address", headerName: "Address", flex: 1, minWidth: 150 },
+  {
+    field: "educationLevel",
+    headerName: "Education Level",
+    flex: 1,
+    minWidth: 150,
+  },
 ];
 
 const TeacherTable = () => {

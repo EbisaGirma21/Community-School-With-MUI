@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
+const Student = require("./StudentModel");
 
 const Schema = mongoose.Schema;
 
@@ -23,7 +24,6 @@ const userSchema = new Schema({
   },
   email: {
     type: String,
-    required: true,
     unique: true,
   },
   phoneNumber: {
@@ -54,18 +54,10 @@ userSchema.statics.createUser = async function (
   address,
   password
 ) {
-  if (
-    !email ||
-    !password ||
-    !firstName ||
-    !middleName ||
-    !lastName ||
-    !gender ||
-    !role
-  ) {
+  if (!password || !firstName || !middleName || !lastName || !gender || !role) {
     throw Error("All fields must be filled");
   }
-  if (!validator.isEmail(email)) {
+  if (email && !validator.isEmail(email)) {
     throw Error("Email is not valid");
   }
   if (!validator.isStrongPassword(password)) {
@@ -74,7 +66,7 @@ userSchema.statics.createUser = async function (
 
   const exists = await this.findOne({ email });
 
-  if (exists) {
+  if (email && exists) {
     throw Error("Email already in use");
   }
   const salt = await bcrypt.genSalt(10);
@@ -85,7 +77,7 @@ userSchema.statics.createUser = async function (
     middleName,
     lastName,
     gender,
-    email,
+    email: email ? email : null,
     role,
     phoneNumber,
     address,
@@ -95,24 +87,101 @@ userSchema.statics.createUser = async function (
 };
 
 // static login method
-userSchema.statics.login = async function (email, password) {
-  if (!email || !password) {
+userSchema.statics.login = async function (username, password) {
+  if (!username || !password) {
     throw Error("All fields must be filled");
   }
-  const user = await this.findOne({ email });
+
+  let user;
+
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username);
+
+  if (isEmail) {
+    user = await this.findOne({ email: username });
+  } else {
+    const student = await Student.findOne({ studentIdNumber: username });
+    if (student) {
+      user = await this.findOne({ _id: student._id });
+    }
+  }
 
   if (!user) {
-    throw Error("Incorrect Email");
+    throw Error("Invalid Email or Student ID");
   }
 
   const match = await bcrypt.compare(password, user.password);
-
   if (!match) {
     throw Error("Incorrect Password");
   }
 
   return user;
 };
+
+// Static method to initialize a super admin
+userSchema.statics.initSuperAdmin = async function () {
+  if (!validator.isStrongPassword(process.env.PASSWORD)) {
+    throw new Error("Password not strong enough");
+  }
+  const exists = await this.findOne({ role: "director" });
+  if (exists) {
+    console.log("Super admin already exists. Skipping initialization.");
+    return;
+  }
+
+  const requiredEnvVars = [
+    "FIRST_NAME",
+    "MIDDLE_NAME",
+    "LAST_NAME",
+    "GENDER",
+    "EMAIL",
+    "ROLE",
+    "PHONE_NUMBER",
+    "ADDRESS",
+    "PASSWORD",
+  ];
+
+  requiredEnvVars.forEach((varName) => {
+    if (!process.env[varName]) {
+      throw new Error(`Environment variable ${varName} is missing`);
+    }
+  });
+
+  // Hash the password
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(process.env.PASSWORD, salt);
+
+  // Create the superadmin
+  const superAdmin = await this.create({
+    firstName: process.env.FIRST_NAME,
+    middleName: process.env.MIDDLE_NAME,
+    lastName: process.env.LAST_NAME,
+    gender: process.env.GENDER,
+    email: process.env.EMAIL,
+    role: process.env.ROLE,
+    phoneNumber: process.env.PHONE_NUMBER,
+    address: process.env.ADDRESS,
+    password: hash,
+  });
+
+  console.log("Super admin initialized successfully:", superAdmin.email);
+};
+
+// Method to compare passwords
+userSchema.methods.comparePassword = async function (password) {
+  return await bcrypt.compare(password, this.password);
+};
+
+// Method to update the password
+userSchema.methods.updatePassword = async function (newPassword) {
+  if (!validator.isStrongPassword(newPassword)) {
+    throw new Error("Password not strong enough");
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(newPassword, salt);
+  return this.save();
+};
+
+module.exports = mongoose.model("User", userSchema);
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

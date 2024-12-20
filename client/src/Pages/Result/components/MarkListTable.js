@@ -136,11 +136,12 @@ const MarkListTable = ({
   ];
 
   // Convert mark object to array if necessary
-  const tableRows = subjectId
-    ? Array.isArray(markList)
-      ? markList
-      : [markList]
-    : [];
+  const tableRows =
+    subjectId && semesterId
+      ? Array.isArray(markList)
+        ? markList
+        : [markList]
+      : [];
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };

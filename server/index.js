@@ -19,6 +19,7 @@ const AssessmentWeightRoutes = require("./routes/AssessmentWeightRoutes");
 const RequestRoutes = require("./routes/RequestRoutes");
 const ClubRoutes = require("./routes/ClubRoutes");
 const ClubMemberRoutes = require("./routes/ClubMemberRoutes");
+const User = require("./models/UserModel");
 
 // express app
 const app = express();
@@ -53,8 +54,9 @@ app.use("/api/clubMember", ClubMemberRoutes);
 // MONGOOSE CONFIGURATION
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => {
+  .then(async () => {
     console.log("connected to database");
+    await User.initSuperAdmin();
     // listen to port
     app.listen(process.env.PORT, () => {
       console.log("listening for requests on port", process.env.PORT);

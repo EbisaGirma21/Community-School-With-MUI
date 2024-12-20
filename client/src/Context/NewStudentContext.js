@@ -97,7 +97,11 @@ function NewStudentProvider({ children }) {
     previousClassification,
     previousTotalMark,
     previousAverage,
-    previousAcademicStatus
+    previousAcademicStatus,
+    nameOfSchool,
+    addressOfSchool,
+    contactOfSchool,
+    otherInfo
   ) => {
     setIsLoading(true);
     setError(null);
@@ -126,6 +130,10 @@ function NewStudentProvider({ children }) {
         previousTotalMark,
         previousAverage,
         previousAcademicStatus,
+        nameOfSchool,
+        addressOfSchool,
+        contactOfSchool,
+        otherInfo,
       });
 
       if (response.status !== 200) {

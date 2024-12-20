@@ -3,6 +3,14 @@ import Modal from "../../../components/UI/Modal";
 import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import { TextField } from "@mui/material";
 import TeacherContext from "../../../context/TeacherContext";
+import Dropdown from "../../../components/UI/Dropdown";
+
+const educationLevelOption = [
+  { label: "Level IV", value: "IV" },
+  { label: "BSc", value: "BSc" },
+  { label: "MSc", value: "MSc" },
+  { label: "PhD", value: "PhD" },
+];
 
 const TeacherCreate = ({ handleClose, open }) => {
   // useSate for hte for input
@@ -13,6 +21,7 @@ const TeacherCreate = ({ handleClose, open }) => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [educationLevel, setEducationLevel] = useState("");
 
   // context creation
   const { createTeacher, error, isLoading } = useContext(TeacherContext);
@@ -53,7 +62,8 @@ const TeacherCreate = ({ handleClose, open }) => {
       gender,
       email,
       phoneNumber,
-      address
+      address,
+      educationLevel
     );
     if (success) {
       setFirstName("");
@@ -63,6 +73,7 @@ const TeacherCreate = ({ handleClose, open }) => {
       setEmail("");
       setPhoneNumber("");
       setAddress("");
+      setEducationLevel("");
       handleClose();
     }
   };
@@ -144,6 +155,15 @@ const TeacherCreate = ({ handleClose, open }) => {
           variant="standard"
           value={address}
           onChange={handleAddressChange}
+        />
+        <Dropdown
+          label="EducationLevel"
+          options={educationLevelOption}
+          value={educationLevel}
+          onChange={(e) => {
+            setEducationLevel(e.target.value);
+          }}
+          width={"100%"}
         />
       </form>
     </Modal>

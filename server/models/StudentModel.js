@@ -10,6 +10,10 @@ const StudentSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    studentIdNumber: {
+      type: String,
+      required: true,
+    },
     registrationType: {
       type: String,
       enum: ["NOR", "TRN"],

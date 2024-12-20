@@ -8,6 +8,7 @@ import TabPanel from "@mui/lab/TabPanel";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import ChangePassword from "./components/ChangePassword";
 import PersonalDetail from "./components/PersonalDetail";
+import Club from "./components/Club";
 const MyAccount = () => {
   const [value, setValue] = useState("1");
 
@@ -43,13 +44,13 @@ const MyAccount = () => {
                 aria-label="lab API tabs example"
                 className="capitalize"
               >
-                <Tab label="Profile" value="1" />
-                <Tab label="Personal Detail" value="2" />
+                <Tab label="Club" value="1" />
+                <Tab label="Profile" value="2" />
                 <Tab label="Change Password" value="3" />
               </TabList>
             </Box>
             <TabPanel value="1">
-              <ChangePassword />
+              <Club />
             </TabPanel>
             <TabPanel value="2">
               <PersonalDetail />

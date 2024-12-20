@@ -19,6 +19,7 @@ const getTeachers = async (req, res) => {
         role: user ? user.role : null,
         phoneNumber: user ? user.phoneNumber : null,
         address: user ? user.address : null,
+        educationLevel: teach.educationLevel,
       };
     })
   );
@@ -32,28 +33,28 @@ const getTeacher = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(404).json({ error: "No such teacher" });
   }
-  const teachers = await Teacher.findById(id);
-  const teacher = await Promise.all(
-    teachers.map(async (teach) => {
-      const user = await User.findById(teach._id.toString());
-      return {
-        _id: teach._id,
-        firstName: user ? user.firstName : null,
-        middleName: user ? user.middleName : null,
-        lastName: user ? user.lastName : null,
-        gender: user ? user.gender : null,
-        email: user ? user.email : null,
-        role: user ? user.role : null,
-        phoneNumber: user ? user.phoneNumber : null,
-        address: user ? user.address : null,
-      };
-    })
-  );
+  const teacher = await Teacher.findById(id);
+
+  const user = await User.findById(teacher._id.toString());
+
+  const teach = {
+    _id: teacher._id,
+    firstName: user ? user.firstName : null,
+    middleName: user ? user.middleName : null,
+    lastName: user ? user.lastName : null,
+    gender: user ? user.gender : null,
+    email: user ? user.email : null,
+    role: user ? user.role : null,
+    phoneNumber: user ? user.phoneNumber : null,
+    address: user ? user.address : null,
+    educationLevel: teacher.educationLevel,
+  };
+
   if (!teacher) {
     return res.status(404).json({ error: "No such teacher" });
   }
 
-  res.status(200).json(teacher);
+  res.status(200).json(teach);
 };
 
 // create a new Teacher
@@ -67,6 +68,7 @@ const createTeacher = async (req, res) => {
     role,
     phoneNumber,
     address,
+    educationLevel,
   } = req.body;
 
   let emptyFields = [];
@@ -95,6 +97,9 @@ const createTeacher = async (req, res) => {
   if (!address) {
     emptyFields.push("address");
   }
+  if (!educationLevel) {
+    emptyFields.push("educationLevel");
+  }
 
   if (emptyFields.length > 0) {
     return res
@@ -115,6 +120,7 @@ const createTeacher = async (req, res) => {
     );
     const teacher = new Teacher({
       _id: user.user._id,
+      educationLevel: educationLevel,
     });
     await teacher.save();
     res.status(200).json(teacher);
@@ -155,27 +161,50 @@ const updateTeacher = async (req, res) => {
     email,
     phoneNumber,
     address,
+    educationLevel,
   } = req.body;
+  console.log(educationLevel);
 
+  // Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "No such Teacher" });
+    return res.status(400).json({ error: "Invalid teacher ID" });
   }
-  const user = await updateUser(
-    id,
-    firstName,
-    middleName,
-    lastName,
-    gender,
-    email,
-    phoneNumber,
-    address
-  );
-  if (!user) {
-    return res.status(400).json({ error: "No such Teacher" });
-  }
-  const teacher = await Teacher.findById({ _id: id });
 
-  res.status(200).json(teacher);
+  try {
+    // Update user details
+    const user = await updateUser(
+      id,
+      firstName,
+      middleName,
+      lastName,
+      gender,
+      email,
+      phoneNumber,
+      address
+    );
+
+    if (!user) {
+      return res.status(404).json({ error: "Teacher not found" });
+    }
+
+    // Update teacher-specific details
+    const updatedTeacher = await Teacher.findOneAndUpdate(
+      { _id: id },
+      { educationLevel },
+      { new: true }
+    );
+
+    if (!updatedTeacher) {
+      return res.status(404).json({ error: "Teacher update failed" });
+    }
+
+    console.log(updateTeacher);
+
+    res.status(200).json(updatedTeacher);
+  } catch (error) {
+    console.error("Error updating teacher:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 module.exports = {

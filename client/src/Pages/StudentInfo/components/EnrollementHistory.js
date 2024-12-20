@@ -1,8 +1,8 @@
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Datatable from "../../../components/UI/Datatable";
+import StudentContext from "../../../context/StudentContext";
 
-// history Basic information datatable Column
 const tableColumns = [
   {
     field: "academicYear",
@@ -43,79 +43,75 @@ const tableColumns = [
 ];
 
 const EnrollementHistory = () => {
-  const [history, SetHistory] = useState([]);
+  const [history, setHistory] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
 
-  // convert history object to array if necessary
+  const {
+    fetchStudentById,
+    fetchStudentEnrollment,
+    studentById,
+    studentEnrollment,
+  } = useContext(StudentContext);
+
+  useEffect(() => {
+    fetchStudentById();
+    fetchStudentEnrollment();
+  }, []);
+
   const tableRows = Array.isArray(history) ? history : [history];
 
   return (
-    <Box className="flex gap-10 ">
-      <Box className="shadow-md w-full lg:w-1/4">
-        <Box>Current Enrollement</Box>
-        <Box className="">
+    <Box className="flex flex-col lg:flex-row gap-8 p-4">
+      <Box className="shadow-md w-full lg:w-1/3 flex flex-col gap-4 bg-white rounded-md p-4">
+        <Box className="font-bold text-lg">Current Enrollment</Box>
+        <Box className="w-full flex justify-center">
           <img
             src={require("../../../assets/student.jpg")}
-            alt={"W"}
-            loading="Wolkite"
-            className=""
+            alt="Student"
+            className="rounded-full object-cover w-24 h-24"
           />
         </Box>
-        <Box>
-          <Box className="flex flex-col w-full p-2">
-            <Box className="flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
-              <Box>Name</Box>
-              <Box>Ebisa Girma</Box>
+        <Box className="flex flex-col gap-4 p-4">
+          {[
+            {
+              label: "Name",
+              value: `${studentById?.firstName} ${studentById?.middleName}`,
+            },
+            {
+              label: "Family",
+              value: `${studentById?.middleName} ${studentById?.lastName}`,
+            },
+            { label: "ID Number", value: "01/23/2015" },
+            { label: "Year", value: "2015" },
+            {
+              label: "Grade",
+              value: `${studentEnrollment?.currentEnrollement?._grade?.stage} - ${studentEnrollment?.currentEnrollement?._grade?.level}`,
+            },
+            {
+              label: "Section",
+              value: `${studentEnrollment?.currentEnrollement?._section?.sectionLabel}`,
+            },
+            { label: "Roll No", value: "1" },
+          ].map((item, index) => (
+            <Box
+              key={index}
+              className="flex justify-between w-full p-2 border-b last:border-none"
+            >
+              <Box className="font-medium">{item.label}</Box>
+              <Box className="text-gray-700">{item.value}</Box>
             </Box>
-            <Box className=" flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
-              <Box>Family</Box>
-              <Box>Girma Garedo</Box>
-            </Box>
-            <Box className=" flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
-              <Box>ID Number</Box>
-              <Box>01/23/2015</Box>
-            </Box>
-            <Box className=" flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
-              <Box>Year</Box>
-              <Box>2015</Box>
-            </Box>
-            <Box className=" flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
-              <Box>Grade</Box>
-              <Box>KG-1</Box>
-            </Box>
-            <Box className=" flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
-              <Box>Section</Box>
-              <Box>A</Box>
-            </Box>
-            <Box className=" flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
-              <Box>Roll No</Box>
-              <Box>1</Box>
-            </Box>
-            <Box className=" flex justify-between w-full hover:bg-slate-100 hover:cursor-pointer p-2">
-              <Box> Current Status</Box>
-              <Box>Pass</Box>
-            </Box>
-          </Box>
+          ))}
         </Box>
       </Box>
-      <Box className="shadow-md w-3/4 flex flex-col p-4 gap-4">
-        <Box className="w-20 h-20 ">
-          <img
-            src={require("../../../assets/student.jpg")}
-            alt={"W"}
-            loading="Wolkite"
-            className="rounded-full object-cover"
-          />
-        </Box>
-        <Box>
-          <Datatable
-            tableColumns={tableColumns}
-            key={history._id}
-            tableRows={tableRows}
-            setSelectedRows={setSelectedRows}
-            getRowId={(row) => row._id}
-          />
-        </Box>
+      <Box className="shadow-md w-full lg:w-2/3 bg-white rounded-md p-4">
+        <Box className="text-lg font-bold mb-4">Enrollment History</Box>
+        <Datatable
+          tableColumns={tableColumns}
+          key={history._id}
+          tableRows={tableRows}
+          setSelectedRows={setSelectedRows}
+          getRowId={(row) => row._id}
+        />
       </Box>
     </Box>
   );

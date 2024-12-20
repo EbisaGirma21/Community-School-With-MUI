@@ -132,8 +132,11 @@ const createSubject = async (req, res) => {
         .json({ error: "Subject load exceed the total load" });
     }
     for (let i = 0; i < subjects.modules.length; i++) {
+      const module = await Module.findById(subjects.modules[i]);
+
       const newSubject = {
         module: subjects.modules[i],
+        subjectName: module.moduleTitle,
         subject_load: subjectLoad,
       };
 

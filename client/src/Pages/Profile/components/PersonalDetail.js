@@ -1,67 +1,93 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
-import React from "react";
+import { Box, Grid, Typography } from "@mui/material";
+import React, { useContext, useEffect } from "react";
+import AuthContext from "../../../context/AuthContext";
+import UserContext from "../../../context/UserContext";
 
 const PersonalDetail = () => {
+  const { user } = useContext(AuthContext);
+
+  const { userInfo, fetchUser } = useContext(UserContext);
+
+  // Fetch data when component mounts based on user role
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
   return (
-    <Box className="flex w-full gap-4">
-      <Box className="border border-gray-300 rounded-md hover:shadow-lg hover:border-gray-200 hover:transition-all duration-300 w-1/2">
-        <Typography className="p-4">Personal Information</Typography>
-        <Box className="flex flex-col w-full p-2 border-t">
-          <Box className="flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Full Name</Box>
-            <Box>Ebisa Girma</Box>
+    <Box className="w-full ">
+      <Grid container spacing={4}>
+        {/* Personal Information Section */}
+        <Grid item xs={12} md={6}>
+          <Box className="border border-gray-300 rounded-md hover:shadow-lg hover:border-gray-200 hover:transition-all duration-300 w-full">
+            <Typography className="p-4 font-semibold">
+              Personal Information
+            </Typography>
+            <Box className="flex flex-col w-full p-2 border-t">
+              <Box className="flex justify-between w-full hover:bg-slate-100 border-b rounded-md hover:cursor-pointer p-4">
+                <Box>Full Name</Box>
+                <Box>{`${userInfo?.user?.firstName} ${userInfo?.user?.middleName}`}</Box>
+              </Box>
+
+              <Box className="flex justify-between w-full hover:bg-slate-100 border-b rounded-md hover:cursor-pointer p-4">
+                <Box>Role</Box>
+                <Box className="capitalize">{user?.role[0]}</Box>
+              </Box>
+              <Box className="flex justify-between w-full hover:bg-slate-100 border-b rounded-md hover:cursor-pointer p-4">
+                <Box>School ID Number</Box>
+                {user?.role[0] === "student" && (
+                  <Box>{`${userInfo?.student?.studentIdNumber}`}</Box>
+                )}
+                {user?.role[0] === "teacher" && <Box>123456</Box>}
+              </Box>
+              <Box className="flex justify-between w-full hover:bg-slate-100 border-b rounded-md hover:cursor-pointer p-4">
+                <Box>Education Level</Box>
+                {user?.role[0] === "student" &&
+                userInfo?.student?.currentEnrollement._grade ? (
+                  <Box>{`${userInfo?.student?.currentEnrollement?._grade?.stage} - ${userInfo?.student?.currentEnrollement?._grade?.level}`}</Box>
+                ) : (
+                  user?.role[0] === "student" && <Box>TBA</Box>
+                )}
+                {user?.role[0] === "teacher" && (
+                  <Box>{userInfo?.teacher?.educationLevel}</Box>
+                )}
+              </Box>
+            </Box>
           </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Full Family Name</Box>
-            <Box>Girma Garedo</Box>
+        </Grid>
+
+        {/* Contact Information Section */}
+        <Grid item xs={12} md={6}>
+          <Box className="border border-gray-300 rounded-md hover:shadow-lg hover:border-gray-200 hover:transition-all duration-300 w-full">
+            <Typography className="p-4 font-semibold">
+              Contact Information
+            </Typography>
+            <Box className="flex flex-col w-full p-2 border-t">
+              <Box className="flex justify-between w-full hover:bg-slate-100 border-b rounded-md hover:cursor-pointer p-4">
+                <Box>Contact Phone</Box>
+
+                <Box>{userInfo?.user?.phoneNumber}</Box>
+              </Box>
+              <Box className="flex justify-between w-full hover:bg-slate-100 border-b rounded-md hover:cursor-pointer p-4">
+                <Box>Email</Box>
+                {user?.role[0] === "student" && (
+                  <Box>{userInfo?.family?.email}</Box>
+                )}
+                {user?.role[0] === "teacher" && (
+                  <Box>{userInfo?.user?.email}</Box>
+                )}
+              </Box>
+              <Box className="flex justify-between w-full hover:bg-slate-100 border-b rounded-md hover:cursor-pointer p-4">
+                <Box>Family Name</Box>
+                <Box>{`${userInfo?.user?.middleName} ${userInfo?.user?.lastName}`}</Box>
+              </Box>
+              <Box className="flex justify-between w-full hover:bg-slate-100 border-b rounded-md hover:cursor-pointer p-4">
+                <Box>Address</Box>
+                <Box>{userInfo?.user?.address}</Box>
+              </Box>
+            </Box>
           </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>School ID Number</Box>
-            <Box>01/23/2015</Box>
-          </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Year</Box>
-            <Box>2015</Box>
-          </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Grade</Box>
-            <Box>KG-1</Box>
-          </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Section</Box>
-            <Box>A</Box>
-          </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Roll No</Box>
-            <Box>1</Box>
-          </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box> Current Status</Box>
-            <Box>Pass</Box>
-          </Box>
-        </Box>
-      </Box>
-      <Box className="border border-gray-300 rounded-md hover:shadow-lg hover:border-gray-200 hover:transition-all duration-300 w-1/2">
-        <Typography className="p-4">Contact Information</Typography>
-        <Box className="flex flex-col w-full p-2 border-t">
-          <Box className="flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Contact Phone</Box>
-            <Box>+251908765423</Box>
-          </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Email</Box>
-            <Box>example@dev.com</Box>
-          </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Office Number</Box>
-            <Box>01/23/2015</Box>
-          </Box>
-          <Box className=" flex justify-between w-full hover:bg-violet-100 rounded-md hover:cursor-pointer p-4">
-            <Box>Address</Box>
-            <Box>3379 Monroe Avenue, Fort Myers, Florida(33912)</Box>
-          </Box>
-        </Box>
-      </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

@@ -6,6 +6,11 @@ import { Box, Button } from "@mui/material";
 import RosterChecker from "./RosterChecker";
 import { toast } from "react-toastify";
 import RequestContext from "../../../context/RequestContext";
+// import { generatePDF } from "../../../utils/RosterGenerator";
+import { generateReportCard } from "../../../utils/ReportCardGenerator";
+
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const RosterTable = ({
   acCurriculumId,
@@ -14,6 +19,7 @@ const RosterTable = ({
   gradeId,
   sectionId,
   currentStatus,
+  semesterOption,
 }) => {
   // get user from local storage
   const user = JSON.parse(localStorage.getItem("user"));
@@ -23,7 +29,15 @@ const RosterTable = ({
   const [approveOpen, setApproveOpen] = useState(false);
 
   // Component contexts
-  const { mark, fetchMarks, fetchAverageMarks } = useContext(MarkContext);
+  const {
+    mark,
+    firstMark,
+    secondMark,
+    fetchMarkFirstSemester,
+    fetchMarkSecondSemester,
+    fetchMarks,
+    fetchAverageMarks,
+  } = useContext(MarkContext);
   const { subject, fetchSubjects } = useContext(SubjectContext);
   const { request, fetchRequests } = useContext(RequestContext);
 
@@ -40,6 +54,16 @@ const RosterTable = ({
       fetchMarks(gradeId, sectionId, semesterId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sectionId, semesterId]);
+
+  useEffect(() => {
+    sectionId &&
+      semesterOption &&
+      fetchMarkFirstSemester(gradeId, sectionId, semesterOption[0].value);
+    sectionId &&
+      semesterOption &&
+      fetchMarkSecondSemester(gradeId, sectionId, semesterOption[1].value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectionId, semesterOption]);
 
   // Update local mark state when context mark changes
   useEffect(() => {
@@ -90,6 +114,8 @@ const RosterTable = ({
 
   // Convert mark object to array if necessary
   const tableRows = Array.isArray(mark) ? mark : [mark];
+  const firstTableRows = Array.isArray(firstMark) ? firstMark : [firstMark];
+  const secondTableRows = Array.isArray(secondMark) ? secondMark : [secondMark];
 
   // toggler funcions
   // funtions open approval modal
@@ -134,17 +160,64 @@ const RosterTable = ({
     );
   }
 
+  const generatePDF = async () => {
+    // Fetch the table HTML element
+    const tableElement = document.getElementById("roster-table");
+
+    if (tableElement) {
+      // Use html2canvas to capture the table as an image
+      const canvas = await html2canvas(tableElement, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+
+      // Create jsPDF instance (landscape mode)
+      const pdf = new jsPDF("landscape", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      // Add the image of the table to the PDF
+      pdf.addImage(imgData, "PNG", 10, 10, pageWidth - 20, pageHeight - 20);
+
+      // Save the PDF
+      pdf.save("roster.pdf");
+    } else {
+      console.error("Table element not found!");
+    }
+  };
+
   return (
     <Box>
       <Box
-        className="border-2 border-gray-200  h-16 rounded-md m-1 flex justify-end"
+        className="border-2 border-gray-200  h-16 rounded-md m-1 flex justify-end gap-5"
         sx={{ display: user.role.includes("homeRoom") ? "flex" : "none" }}
       >
         <Button variant="contained" onClick={handleRosterApprovalClick}>
           {semesterId === "average" ? "Enroll to next" : "Request Approval"}
         </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => generatePDF()}
+        >
+          Generate Roster PDF
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            generateReportCard(
+              tableRows,
+              firstTableRows,
+              secondTableRows,
+              subjectColumns
+            );
+          }}
+          disabled={semesterId === "average" ? false : true}
+        >
+          Generate Report Cards
+        </Button>
       </Box>
       <Table
+        id="roster-table"
         tableColumns={tableColumns}
         key={mark._id}
         tableRows={tableRows}

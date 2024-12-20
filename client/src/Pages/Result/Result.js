@@ -318,6 +318,7 @@ function Result() {
         subjectIds={subjectIds}
         classStartDate={classStartDate}
         classEndDate={classEndDate}
+        semesterOption={semesterOption}
       />
     </Box>
   );

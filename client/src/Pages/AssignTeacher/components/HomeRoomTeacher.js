@@ -68,7 +68,6 @@ function HomeRoomTeacher({ gradeId, acCurriculumId }) {
         </Button>
       </Box>
       <Table
-        
         tableColumns={tableColumns}
         key={sections._id}
         tableRows={tableRows}
